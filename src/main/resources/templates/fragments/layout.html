@@ -164,6 +164,7 @@
         <nav class="flex items-center gap-5 text-sm md:gap-8" aria-label="主导航">
             <a th:href="@{/}" th:classappend="${pageTitle == '首页'} ? ' nav-active' : ''" class="nav-link">首页</a>
             <a th:href="@{/about}" th:classappend="${pageTitle == '关于我'} ? ' nav-active' : ''" class="nav-link">关于我</a>
+            <a th:href="@{/resources}" th:classappend="${pageTitle == '资源库'} ? ' nav-active' : ''" class="nav-link">资源库</a>
             <a href="#contact" class="nav-link">联系</a>
         </nav>
     </header>

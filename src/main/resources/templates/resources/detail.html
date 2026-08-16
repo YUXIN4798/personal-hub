@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout('资源详情', ~{::content})}">
+<article th:fragment="content" class="mx-auto max-w-4xl space-y-10">
+    <a th:href="@{/resources}" class="link-slide text-sm text-[#a9bfc0]">← 返回资源库</a>
+    <header class="border-b border-[#a9c9c9]/20 pb-8">
+        <p class="section-index text-[0.68rem] text-[#56e3cd]"
+           th:text="${category != null ? category.name : 'Resource'}">Resource</p>
+        <h1 class="display mt-4 text-4xl leading-tight text-[#e5eeee] md:text-5xl" th:text="${resource.title}">资源名称</h1>
+        <p class="mt-5 text-base leading-8 text-[#a9bfc0]" th:text="${resource.summary}">资源摘要</p>
+        <div class="mt-6 flex flex-wrap gap-4 font-mono text-xs text-[#6f898b]">
+            <span th:text="${resource.version}">v1.0</span>
+            <span th:text="${#numbers.formatDecimal(resource.fileSize / 1024.0 / 1024.0, 1, 2)} + ' MB'">0 MB</span>
+            <span th:text="'下载 ' + ${resource.downloadCount}">下载 0</span>
+        </div>
+    </header>
+    <div class="border-l border-[#56e3cd]/60 pl-5 text-base leading-8 text-[#c2d2d2]" th:text="${resource.description}">
+        资源详细介绍
+    </div>
+    <a th:href="@{/resources/{id}/download(id=${resource.id})}"
+       class="cta-button inline-flex items-center gap-3 border border-[#56e3cd] bg-[#56e3cd] px-5 py-3 text-sm font-medium text-[#071b1a]">
+        下载资源 <span aria-hidden="true">↓</span>
+    </a>
+</article>
+</html>
