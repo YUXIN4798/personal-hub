@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 
@@ -64,7 +65,7 @@ public class ResourceController {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .contentLength(Files.size(download.path()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment()
-                        .filename(resource.getOriginalName())
+                        .filename(resource.getOriginalName(), StandardCharsets.UTF_8)
                         .build()
                         .toString())
                 .body(body);

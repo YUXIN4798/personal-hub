@@ -18,7 +18,8 @@ VALUES
     ('JUnit', 'junit'),
     ('JDBC', 'jdbc'),
     ('Apache POI', 'apache-poi'),
-    ('JSP', 'jsp');
+    ('JSP', 'jsp')
+ON DUPLICATE KEY UPDATE name = name;
 
 INSERT INTO projects (
     title, slug, summary, description, tech_stack, status, featured, sort_order,
@@ -104,13 +105,30 @@ SELECT '零食商城原型',
 FROM categories c
 WHERE c.slug = 'portfolio' AND c.type = 'project';
 
-INSERT INTO project_tags (project_id, tag_id)
+INSERT IGNORE INTO project_tags (project_id, tag_id)
 SELECT p.id, t.id
 FROM projects p
-JOIN tags t ON
-    (p.slug = 'finally-system-exam' AND t.slug IN ('java', 'servlet', 'mybatis', 'mysql', 'maven'))
-    OR (p.slug = 'lab2-javaweb' AND t.slug IN ('java', 'javaweb', 'servlet', 'mysql'))
-    OR (p.slug = 'mybatis-demo' AND t.slug IN ('java', 'mybatis', 'mysql', 'junit'))
-    OR (p.slug = 'jdbc-layered-practice' AND t.slug IN ('java', 'jdbc', 'mysql'))
-    OR (p.slug = 'excel-automation' AND t.slug IN ('java', 'apache-poi'))
-    OR (p.slug = 'snack-shop-prototype' AND t.slug IN ('java', 'jsp', 'mysql'));
+JOIN (
+    SELECT 'finally-system-exam' AS project_slug, 'Java' AS tag_name
+    UNION ALL SELECT 'finally-system-exam', 'Servlet'
+    UNION ALL SELECT 'finally-system-exam', 'MyBatis'
+    UNION ALL SELECT 'finally-system-exam', 'MySQL'
+    UNION ALL SELECT 'finally-system-exam', 'Maven'
+    UNION ALL SELECT 'lab2-javaweb', 'Java'
+    UNION ALL SELECT 'lab2-javaweb', 'JavaWeb'
+    UNION ALL SELECT 'lab2-javaweb', 'Servlet'
+    UNION ALL SELECT 'lab2-javaweb', 'MySQL'
+    UNION ALL SELECT 'mybatis-demo', 'Java'
+    UNION ALL SELECT 'mybatis-demo', 'MyBatis'
+    UNION ALL SELECT 'mybatis-demo', 'MySQL'
+    UNION ALL SELECT 'mybatis-demo', 'JUnit'
+    UNION ALL SELECT 'jdbc-layered-practice', 'Java'
+    UNION ALL SELECT 'jdbc-layered-practice', 'JDBC'
+    UNION ALL SELECT 'jdbc-layered-practice', 'MySQL'
+    UNION ALL SELECT 'excel-automation', 'Java'
+    UNION ALL SELECT 'excel-automation', 'Apache POI'
+    UNION ALL SELECT 'snack-shop-prototype', 'Java'
+    UNION ALL SELECT 'snack-shop-prototype', 'JSP'
+    UNION ALL SELECT 'snack-shop-prototype', 'MySQL'
+) tag_links ON tag_links.project_slug = p.slug
+JOIN tags t ON t.id = (SELECT id FROM tags WHERE name = tag_links.tag_name);

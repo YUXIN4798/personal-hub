@@ -22,7 +22,7 @@ VALUES
     ('Git', 'git'),
     ('WSL2', 'wsl2'),
     ('JavaWeb', 'javaweb-course')
-ON DUPLICATE KEY UPDATE name = VALUES(name);
+ON DUPLICATE KEY UPDATE name = name;
 
 INSERT INTO resources (
     title, slug, summary, description, url, type, file_path, original_name, file_size,
@@ -129,12 +129,18 @@ SELECT '天狮学院 JavaWeb 课件合集.zip',
 FROM categories c
 WHERE c.slug = 'courseware' AND c.type = 'resource';
 
-INSERT INTO resource_tags (resource_id, tag_id)
+INSERT IGNORE INTO resource_tags (resource_id, tag_id)
 SELECT r.id, t.id
 FROM resources r
-JOIN tags t ON
-    (r.slug = 'java-interview-notes' AND t.slug IN ('java'))
-    OR (r.slug = 'spring-boot-annotations-cheatsheet' AND t.slug IN ('java', 'spring-boot'))
-    OR (r.slug = 'mysql-index-optimization-notes' AND t.slug IN ('mysql'))
-    OR (r.slug = 'wsl2-dev-environment-checklist' AND t.slug IN ('linux', 'git', 'wsl2'))
-    OR (r.slug = 'tianshi-javaweb-courseware' AND t.slug IN ('java', 'javaweb-course'));
+JOIN (
+    SELECT 'java-interview-notes' AS resource_slug, 'Java' AS tag_name
+    UNION ALL SELECT 'spring-boot-annotations-cheatsheet', 'Java'
+    UNION ALL SELECT 'spring-boot-annotations-cheatsheet', 'Spring Boot'
+    UNION ALL SELECT 'mysql-index-optimization-notes', 'MySQL'
+    UNION ALL SELECT 'wsl2-dev-environment-checklist', 'Linux'
+    UNION ALL SELECT 'wsl2-dev-environment-checklist', 'Git'
+    UNION ALL SELECT 'wsl2-dev-environment-checklist', 'WSL2'
+    UNION ALL SELECT 'tianshi-javaweb-courseware', 'Java'
+    UNION ALL SELECT 'tianshi-javaweb-courseware', 'JavaWeb'
+) tag_links ON tag_links.resource_slug = r.slug
+JOIN tags t ON t.id = (SELECT id FROM tags WHERE name = tag_links.tag_name);
