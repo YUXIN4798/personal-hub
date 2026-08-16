@@ -1,44 +1,45 @@
 <!DOCTYPE html>
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: layout('关于我', ~{::content})}">
-<section th:fragment="content" class="space-y-12">
-    <section class="reveal max-w-4xl space-y-4">
-        <p class="text-xs uppercase tracking-[0.22em] text-[#6f8c97]">About Me</p>
-        <h1 class="text-4xl font-semibold text-[#ecf4f8] md:text-5xl"
-            style="font-family: 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;">关于我</h1>
-        <p class="text-base leading-8 text-[#c2d4dc] md:text-lg">
-            我是曹铭轩，天狮学院计算机应用技术专业学生，即将进入大三。主攻 Java 后端开发，正在把 AI 工具与工程实践结合到真实项目中。
-        </p>
-        <p class="text-base leading-8 text-[#c2d4dc] md:text-lg">
-            GitHub：<a href="https://github.com/YUXIN4798" class="text-[#21d4c0] underline underline-offset-4 transition-colors duration-200 hover:text-[#57e8d8]">YUXIN4798</a>
-        </p>
+<section th:fragment="content" class="space-y-20 md:space-y-28">
+    <section class="reveal grid gap-10 border-b border-[#a9c9c9]/20 pb-14 lg:grid-cols-[0.45fr_1fr] lg:gap-20">
+        <div>
+            <p class="section-index text-[0.68rem] text-[#56e3cd]">01 / About</p>
+            <p class="mt-5 font-mono text-xs leading-6 text-[#718b8d]">A student of systems,<br>an apprentice of craft.</p>
+        </div>
+        <div class="max-w-3xl">
+            <h1 class="display text-5xl leading-none text-[#e5eeee] md:text-7xl">关于我<span class="text-[#56e3cd]">。</span></h1>
+            <p class="mt-8 text-base leading-8 text-[#b5c8c9] md:text-lg">
+                我是曹铭轩，天狮学院计算机应用技术专业学生，即将进入大三。主攻 Java 后端开发，正在把 AI 工具与工程实践结合到真实项目中。
+            </p>
+            <p class="mt-5 text-base leading-8 text-[#b5c8c9] md:text-lg">
+                我相信好的技术工作，最终应该让复杂的事情变得可靠、清楚，而且能够继续生长。
+            </p>
+            <p class="mt-8 text-sm text-[#9eb5b6]">GitHub：<a href="https://github.com/YUXIN4798" class="link-slide text-[#56e3cd]">YUXIN4798</a></p>
+        </div>
     </section>
 
-    <section class="grid gap-6 md:grid-cols-2">
-        <article class="reveal motion-card border border-[#23353d] bg-[#0f161b] p-6">
-            <h2 class="text-xl text-[#e7f1f6]" style="font-family: 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;">技能栈</h2>
-            <ul class="mt-4 space-y-3 text-sm leading-7 text-[#b8ccd4]">
-                <li><span class="text-[#d7e1e8]">后端：</span>Java / Spring Boot / MyBatis</li>
-                <li><span class="text-[#d7e1e8]">数据库：</span>MySQL</li>
-                <li><span class="text-[#d7e1e8]">AI 应用：</span>Prompt 设计、Agent 协作、AI 辅助开发流程</li>
-                <li><span class="text-[#d7e1e8]">其他：</span>Git、Docker、Linux 基础运维</li>
+    <section class="grid gap-12 lg:grid-cols-2">
+        <article class="reveal">
+            <p class="section-index text-[0.68rem] text-[#56e3cd]">02 / Toolkit</p>
+            <h2 class="display mt-4 text-3xl text-[#e5eeee]">手里的工具</h2>
+            <ul class="mt-8 divide-y divide-[#a9c9c9]/15 border-y border-[#a9c9c9]/15 text-sm text-[#b5c8c9]">
+                <li class="flex justify-between gap-6 py-4"><span class="text-[#e5eeee]">后端</span><span>Java / Spring Boot / MyBatis</span></li>
+                <li class="flex justify-between gap-6 py-4"><span class="text-[#e5eeee]">数据</span><span>MySQL / 数据建模</span></li>
+                <li class="flex justify-between gap-6 py-4"><span class="text-[#e5eeee]">AI 应用</span><span>Prompt / Agent 协作</span></li>
+                <li class="flex justify-between gap-6 py-4"><span class="text-[#e5eeee]">基础设施</span><span>Git / Docker / Linux</span></li>
             </ul>
         </article>
-        <article class="reveal motion-card border border-[#23353d] bg-[#0f161b] p-6">
-            <h2 class="text-xl text-[#e7f1f6]" style="font-family: 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;">学习路线</h2>
-            <ul class="mt-4 space-y-5 border-l border-[#2f4a55] pl-5 text-sm leading-7 text-[#b8ccd4]">
-                <li>
-                    <p class="text-[#d7e1e8]">进行中：Java 后端工程实践</p>
-                    <p>围绕 Spring Boot 项目提升接口设计、数据建模与部署能力。</p>
-                </li>
-                <li>
-                    <p class="text-[#d7e1e8]">目标节点：2026 年 9 月下旬</p>
-                    <p>备考 Java 2 级 + 人工智能 1 级，强化理论与实战的同步推进。</p>
-                </li>
-            </ul>
+        <article class="reveal lg:pt-16" style="transition-delay: 100ms;">
+            <p class="section-index text-[0.68rem] text-[#56e3cd]">03 / Next</p>
+            <h2 class="display mt-4 text-3xl text-[#e5eeee]">接下来</h2>
+            <div class="mt-8 border-l border-[#56e3cd] pl-6 text-sm leading-7 text-[#b5c8c9]">
+                <p class="text-[#e5eeee]">进行中：Java 后端工程实践</p>
+                <p class="mt-1">围绕 Spring Boot 项目提升接口设计、数据建模与部署能力。</p>
+                <p class="mt-7 text-[#e5eeee]">目标节点：2026 年 9 月下旬</p>
+                <p class="mt-1">备考 Java 2 级 + 人工智能 1 级，强化理论与实战的同步推进。</p>
+            </div>
         </article>
     </section>
-
-    <!-- 待铭轩确认：可补充邮箱、城市、求职意向等个人信息 -->
 </section>
 </html>

@@ -8,137 +8,180 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Phase 2 换 standalone CLI 编译 -->
     <style>
-        :root { color-scheme: dark; }
-        body::before,
-        body::after {
+        :root {
+            color-scheme: dark;
+            --ink: #080d10;
+            --paper: #dce8e8;
+            --muted: #8aa1a3;
+            --line: rgba(169, 201, 201, 0.17);
+            --teal: #56e3cd;
+            --teal-dim: rgba(86, 227, 205, 0.13);
+            --display: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+            --utility: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+        }
+        html { scroll-behavior: smooth; }
+        body { overflow-x: hidden; background: var(--ink); }
+        body::before {
             content: "";
             position: fixed;
             inset: 0;
             pointer-events: none;
+            z-index: -2;
+            background:
+                linear-gradient(rgba(86, 227, 205, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(86, 227, 205, 0.035) 1px, transparent 1px);
+            background-size: 32px 32px;
+            mask-image: linear-gradient(to bottom, black, transparent 78%);
+        }
+        .cursor-glow {
+            position: fixed;
             z-index: -1;
+            width: 25rem;
+            height: 25rem;
+            border-radius: 999px;
+            pointer-events: none;
+            opacity: 0;
+            background: radial-gradient(circle, rgba(86, 227, 205, 0.11), transparent 68%);
+            transform: translate(-50%, -50%);
+            transition: opacity 400ms ease;
         }
-        body::before {
-            background:
-                    radial-gradient(42rem 42rem at 10% 12%, rgba(33, 212, 192, 0.08), transparent 68%),
-                    radial-gradient(38rem 38rem at 88% 18%, rgba(33, 212, 192, 0.06), transparent 70%),
-                    radial-gradient(30rem 30rem at 50% 88%, rgba(33, 212, 192, 0.05), transparent 72%);
-        }
-        body::after {
-            background:
-                    linear-gradient(rgba(33, 212, 192, 0.03) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(33, 212, 192, 0.03) 1px, transparent 1px);
-            background-size: 30px 30px;
-            opacity: 0.55;
-        }
+        .site-header { border-color: var(--line); }
         .nav-link {
             position: relative;
+            color: var(--muted);
+            transition: color 220ms ease;
         }
         .nav-link::after {
             content: "";
             position: absolute;
             left: 0;
-            bottom: -0.35rem;
+            bottom: -0.45rem;
             width: 100%;
             height: 1px;
-            background: #21d4c0;
+            background: var(--teal);
             transform: scaleX(0);
             transform-origin: left;
-            transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+            transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .nav-link:hover::after,
-        .nav-link:focus-visible::after {
-            transform: scaleX(1);
+        .nav-link:hover, .nav-link:focus-visible, .nav-link.nav-active { color: var(--teal); }
+        .nav-link:hover::after, .nav-link:focus-visible::after, .nav-link.nav-active::after { transform: scaleX(1); }
+        .eyebrow, .section-index, .meta-label {
+            font-family: var(--utility);
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
         }
-        .reveal {
-            opacity: 0;
-            transform: translateY(12px);
-            transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1), transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
-            will-change: transform, opacity;
+        .display { font-family: var(--display); }
+        .hero-title {
+            font-size: clamp(4.25rem, 13vw, 11rem);
+            letter-spacing: -0.045em;
+            line-height: 0.84;
         }
-        .reveal.reveal-in {
-            opacity: 1;
-            transform: translateY(0);
+        .ghost-mark {
+            position: absolute;
+            top: -0.2em;
+            right: -0.08em;
+            z-index: -1;
+            color: rgba(220, 232, 232, 0.035);
+            font-family: var(--display);
+            font-size: clamp(12rem, 32vw, 31rem);
+            line-height: 0.8;
+            letter-spacing: -0.08em;
+            user-select: none;
         }
-        .cta-button {
-            transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), filter 260ms cubic-bezier(0.22, 1, 0.36, 1), background-color 260ms cubic-bezier(0.22, 1, 0.36, 1), border-color 260ms cubic-bezier(0.22, 1, 0.36, 1), color 260ms cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .cta-button:hover,
-        .cta-button:focus-visible {
-            transform: scale(1.02);
-            filter: brightness(1.06);
-        }
-        .cta-button:active {
-            transform: scale(0.98);
-            filter: brightness(1.02);
-        }
-        .motion-card {
-            transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1), border-color 320ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .motion-card:hover,
-        .motion-card:focus-visible {
-            transform: translateY(-4px);
-            border-color: #21d4c0;
-            box-shadow: 0 0 0 1px rgba(33, 212, 192, 0.65), 0 12px 26px rgba(33, 212, 192, 0.16);
-        }
-        .card-accent {
-            transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .motion-card:hover .card-accent,
-        .motion-card:focus-visible .card-accent {
-            transform: translateX(4px);
-        }
-        .hero-entrance {
-            opacity: 0;
-            transform: translateY(12px);
-            animation: heroRise 460ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        .hero-rule {
+            background: linear-gradient(90deg, var(--teal), rgba(86, 227, 205, 0));
         }
         @keyframes heroRise {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+        .link-slide {
+            position: relative;
+            text-decoration: none;
+        }
+        .link-slide::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            bottom: -0.2rem;
+            left: 0;
+            height: 1px;
+            background: var(--teal);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .link-slide:hover::after, .link-slide:focus-visible::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+        .coordinate {
+            background:
+                linear-gradient(90deg, transparent 49.8%, rgba(86, 227, 205, 0.18) 50%, transparent 50.2%),
+                linear-gradient(0deg, transparent 49.8%, rgba(86, 227, 205, 0.18) 50%, transparent 50.2%);
+            background-size: 100% 100%;
+        }
+        .motion-card {
+            border-color: var(--line);
+            background: rgba(13, 23, 26, 0.78);
+            transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1), border-color 320ms ease, box-shadow 320ms ease;
+        }
+        .motion-card:hover, .motion-card:focus-visible {
+            transform: translateY(-5px) rotate(0.8deg);
+            border-color: rgba(86, 227, 205, 0.76);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.24), 0 0 0 1px rgba(86, 227, 205, 0.2);
+        }
+        .card-accent { transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1); }
+        .motion-card:hover .card-accent, .motion-card:focus-visible .card-accent { transform: translateX(5px); }
+        .cta-button {
+            transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), filter 260ms ease, border-color 260ms ease;
+        }
+        .cta-button:hover, .cta-button:focus-visible { transform: translateY(-2px); filter: brightness(1.08); }
+        .cta-button:active { transform: translateY(1px) scale(0.98); }
+        .reveal {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 480ms cubic-bezier(0.22, 1, 0.36, 1), transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal.reveal-in { opacity: 1; transform: translateY(0); }
+        :focus-visible { outline: 2px solid var(--teal); outline-offset: 4px; }
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation: none !important;
                 transition: none !important;
-                transform: none !important;
                 scroll-behavior: auto !important;
             }
-            .reveal {
-                opacity: 1 !important;
-            }
+            .reveal { opacity: 1 !important; transform: none !important; }
+            .cursor-glow { display: none; }
         }
     </style>
 </head>
-<body class="min-h-screen bg-[#0b0f12] text-[#d7e1e8] antialiased selection:bg-[#15c9b5]/30 selection:text-white">
-<div class="mx-auto flex min-h-screen max-w-6xl flex-col px-6 md:px-10">
-    <header class="flex items-center justify-between border-b border-[#20323a] py-6">
-        <a th:href="@{/}" class="tracking-[0.16em] text-xs uppercase text-[#7ca0ab]">Cao Mingxuan</a>
-        <nav class="flex items-center gap-6 text-sm text-[#aac2cb]">
-            <a th:href="@{/}" class="nav-link transition-colors duration-200 hover:text-[#21d4c0]">首页</a>
-            <a th:href="@{/about}" class="nav-link transition-colors duration-200 hover:text-[#21d4c0]">关于我</a>
-            <a href="#contact" class="nav-link transition-colors duration-200 hover:text-[#21d4c0]">联系</a>
+<body class="min-h-screen text-[#dce8e8] antialiased selection:bg-[#56e3cd]/30 selection:text-white">
+<div class="cursor-glow" aria-hidden="true"></div>
+<div class="mx-auto flex min-h-screen max-w-[1440px] flex-col px-6 md:px-12 lg:px-16">
+    <header class="site-header flex items-center justify-between border-b py-6">
+        <a th:href="@{/}" class="eyebrow text-[0.68rem] text-[#b1c6c7]">Cao Mingxuan<span class="ml-2 text-[#56e3cd]">/ 26</span></a>
+        <nav class="flex items-center gap-5 text-sm md:gap-8" aria-label="主导航">
+            <a th:href="@{/}" th:classappend="${pageTitle == '首页'} ? ' nav-active' : ''" class="nav-link">首页</a>
+            <a th:href="@{/about}" th:classappend="${pageTitle == '关于我'} ? ' nav-active' : ''" class="nav-link">关于我</a>
+            <a href="#contact" class="nav-link">联系</a>
         </nav>
     </header>
 
-    <main class="flex-1 py-12" th:replace="${content}"></main>
+    <main class="flex-1 py-10 md:py-16" th:replace="${content}"></main>
 
-    <footer id="contact" class="border-t border-[#20323a] py-8">
-        <div class="flex flex-col gap-2 text-sm text-[#8ea6af] md:flex-row md:items-center md:justify-between">
+    <footer id="contact" class="site-header border-t py-8">
+        <div class="flex flex-col gap-3 text-sm text-[#8aa1a3] md:flex-row md:items-center md:justify-between">
             <p>© 2026 曹铭轩 · Personal Hub</p>
-            <!-- 待铭轩确认：邮箱、微信、Telegram 等联系信息 -->
-            <p>联系邮箱：to-be-confirmed@example.com</p>
+            <p class="text-[#9eb5b6]">邮箱待公布 <span class="mx-2 text-[#56e3cd]">·</span> 联系方式整理中</p>
         </div>
     </footer>
 </div>
 <script>
     (function () {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            return;
-        }
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const reveals = document.querySelectorAll('.reveal');
-        if (reveals.length > 0 && 'IntersectionObserver' in window) {
+        if (!reducedMotion && reveals.length > 0 && 'IntersectionObserver' in window) {
             const observer = new IntersectionObserver((entries, revealObserver) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
@@ -146,9 +189,30 @@
                         revealObserver.unobserve(entry.target);
                     }
                 });
-            }, {threshold: 0.2, rootMargin: '0px 0px -8% 0px'});
+            }, { threshold: 0.16, rootMargin: '0px 0px -8% 0px' });
             reveals.forEach((element) => observer.observe(element));
+        } else {
+            reveals.forEach((element) => element.classList.add('reveal-in'));
         }
+        if (reducedMotion || !window.matchMedia('(pointer: fine)').matches) return;
+        const glow = document.querySelector('.cursor-glow');
+        let targetX = window.innerWidth * 0.5;
+        let targetY = window.innerHeight * 0.25;
+        let currentX = targetX;
+        let currentY = targetY;
+        window.addEventListener('pointermove', (event) => {
+            targetX = event.clientX;
+            targetY = event.clientY;
+            glow.style.opacity = '1';
+        }, { passive: true });
+        function renderGlow() {
+            currentX += (targetX - currentX) * 0.1;
+            currentY += (targetY - currentY) * 0.1;
+            glow.style.left = currentX + 'px';
+            glow.style.top = currentY + 'px';
+            requestAnimationFrame(renderGlow);
+        }
+        renderGlow();
     })();
 </script>
 </body>

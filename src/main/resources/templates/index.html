@@ -1,43 +1,60 @@
 <!DOCTYPE html>
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: layout('首页', ~{::content})}">
-<section th:fragment="content" class="space-y-16">
-    <section class="max-w-3xl space-y-8">
-        <p class="text-xs uppercase tracking-[0.22em] text-[#6f8c97]">Personal Hub</p>
-        <h1 class="hero-entrance text-4xl font-semibold leading-tight text-[#ecf4f8] md:text-6xl"
-            style="animation-delay: 80ms; font-family: 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;">
-            曹铭轩
-        </h1>
-        <p class="hero-entrance text-lg text-[#28d6c3]" style="animation-delay: 180ms;">Java 后端方向 · AI 应用实践者</p>
-        <p class="hero-entrance max-w-2xl text-base leading-8 text-[#c2d4dc] md:text-lg" style="animation-delay: 280ms;">
-            在真实项目里磨代码，在每次迭代里练判断：我更在意系统是否可靠，而不是它看起来多炫。
-        </p>
-        <div class="hero-entrance flex flex-wrap gap-4 pt-2" style="animation-delay: 360ms;">
-            <a href="#featured" class="cta-button rounded-none border border-[#21d4c0] bg-[#21d4c0] px-6 py-3 text-sm font-medium text-[#062a28] transition-colors duration-200 hover:bg-[#2be0cc]">
-                查看作品集
-            </a>
-            <a th:href="@{/about}" class="cta-button rounded-none border border-[#38505a] px-6 py-3 text-sm font-medium text-[#d7e1e8] transition-colors duration-200 hover:border-[#21d4c0] hover:text-[#21d4c0]">
-                了解关于我
-            </a>
+<section th:fragment="content" class="space-y-24 md:space-y-32">
+    <section class="relative grid min-h-[31rem] items-center gap-10 overflow-hidden py-10 lg:grid-cols-[1.15fr_0.85fr] lg:py-20">
+        <span class="ghost-mark" aria-hidden="true">MX</span>
+        <div class="relative z-10 max-w-4xl">
+            <p class="hero-entrance eyebrow mb-8 text-[0.68rem] text-[#56e3cd]" style="animation: heroRise 520ms 60ms both;">Personal Hub / 01</p>
+            <h1 class="hero-entrance display hero-title max-w-4xl text-[#e5eeee]" style="animation: heroRise 620ms 120ms both;">把想法<br><span class="text-[#56e3cd]">做成系统。</span></h1>
+            <div class="hero-rule hero-entrance my-9 h-px w-32" style="animation: heroRise 520ms 220ms both;"></div>
+            <p class="hero-entrance max-w-xl text-base leading-8 text-[#b5c8c9] md:text-lg" style="animation: heroRise 520ms 280ms both;">
+                曹铭轩 · Java 后端方向 · AI 应用实践者<br>
+                在真实项目里磨代码，在每次迭代里练判断。
+            </p>
+            <div class="hero-entrance mt-9 flex flex-wrap gap-4" style="animation: heroRise 520ms 360ms both;">
+                <a href="#featured" class="cta-button inline-flex items-center gap-3 border border-[#56e3cd] bg-[#56e3cd] px-5 py-3 text-sm font-medium text-[#071b1a]">
+                    查看作品集 <span aria-hidden="true">↘</span>
+                </a>
+                <a th:href="@{/about}" class="cta-button inline-flex items-center gap-3 border border-[#385054] px-5 py-3 text-sm font-medium text-[#dce8e8] hover:border-[#56e3cd] hover:text-[#56e3cd]">
+                    认识我 <span aria-hidden="true">↗</span>
+                </a>
+            </div>
+        </div>
+        <div class="coordinate relative hidden h-64 border border-[#385054]/70 lg:block">
+            <div class="absolute left-5 top-5 font-mono text-[0.65rem] tracking-[0.2em] text-[#6f898b]">LAT 43° / LON 125°</div>
+            <div class="absolute bottom-5 right-5 text-right font-mono text-[0.65rem] leading-6 text-[#6f898b]">
+                BUILDING IN PUBLIC<br><span class="text-[#56e3cd]">STATUS: IN PROGRESS</span>
+            </div>
+            <span class="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#56e3cd] shadow-[0_0_0_8px_rgba(86,227,205,0.12),0_0_30px_rgba(86,227,205,0.8)]"></span>
         </div>
     </section>
 
-    <section id="featured" class="grid gap-6 md:grid-cols-3">
-        <a href="#" class="reveal motion-card group border border-[#23353d] bg-[#0f161b] p-6">
-            <p class="text-xs uppercase tracking-[0.16em] text-[#6f8c97]">精选作品</p>
-            <h2 class="mt-4 flex items-center gap-2 text-xl text-[#e7f1f6]" style="font-family: 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;">Projects <span class="card-accent text-[#21d4c0]">→</span></h2>
-            <p class="mt-3 text-sm leading-7 text-[#b8ccd4]">围绕后端工程、工具链和 AI 场景落地的阶段成果展示。</p>
-        </a>
-        <a href="#" class="reveal motion-card group border border-[#23353d] bg-[#0f161b] p-6">
-            <p class="text-xs uppercase tracking-[0.16em] text-[#6f8c97]">最新笔记</p>
-            <h2 class="mt-4 flex items-center gap-2 text-xl text-[#e7f1f6]" style="font-family: 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;">Notes <span class="card-accent text-[#21d4c0]">→</span></h2>
-            <p class="mt-3 text-sm leading-7 text-[#b8ccd4]">记录知识拆解、问题复盘与阶段学习路径。</p>
-        </a>
-        <a href="#" class="reveal motion-card group border border-[#23353d] bg-[#0f161b] p-6">
-            <p class="text-xs uppercase tracking-[0.16em] text-[#6f8c97]">资源库</p>
-            <h2 class="mt-4 flex items-center gap-2 text-xl text-[#e7f1f6]" style="font-family: 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;">Resources <span class="card-accent text-[#21d4c0]">→</span></h2>
-            <p class="mt-3 text-sm leading-7 text-[#b8ccd4]">沉淀可复用的文档、工具和开发实践清单。</p>
-        </a>
+    <section id="featured" class="space-y-8">
+        <div class="flex items-end justify-between border-b border-[#a9c9c9]/20 pb-4">
+            <div>
+                <p class="section-index text-[0.68rem] text-[#56e3cd]">01 / Selected work</p>
+                <h2 class="display mt-3 text-3xl text-[#e5eeee] md:text-4xl">正在发生的事</h2>
+            </div>
+            <span class="hidden font-mono text-xs text-[#6f898b] md:block">2026 — NOW</span>
+        </div>
+        <div class="grid gap-4 md:grid-cols-3">
+            <a href="#" class="motion-card reveal group border p-6 md:p-7">
+                <p class="meta-label text-[0.62rem] text-[#829b9d]">01 / Projects</p>
+                <h3 class="display mt-14 flex items-center justify-between text-2xl text-[#e5eeee]">Projects <span class="card-accent text-[#56e3cd]" aria-hidden="true">↗</span></h3>
+                <p class="mt-4 text-sm leading-7 text-[#a9bfc0]">围绕后端工程、工具链和 AI 场景落地的阶段成果。</p>
+            </a>
+            <a href="#" class="motion-card reveal group border p-6 md:mt-10 md:p-7" style="transition-delay: 80ms;">
+                <p class="meta-label text-[0.62rem] text-[#829b9d]">02 / Notes</p>
+                <h3 class="display mt-14 flex items-center justify-between text-2xl text-[#e5eeee]">Notes <span class="card-accent text-[#56e3cd]" aria-hidden="true">↗</span></h3>
+                <p class="mt-4 text-sm leading-7 text-[#a9bfc0]">记录知识拆解、问题复盘与阶段学习路径。</p>
+            </a>
+            <a href="#" class="motion-card reveal group border p-6 md:p-7" style="transition-delay: 160ms;">
+                <p class="meta-label text-[0.62rem] text-[#829b9d]">03 / Resources</p>
+                <h3 class="display mt-14 flex items-center justify-between text-2xl text-[#e5eeee]">Resources <span class="card-accent text-[#56e3cd]" aria-hidden="true">↗</span></h3>
+                <p class="mt-4 text-sm leading-7 text-[#a9bfc0]">沉淀可复用的文档、工具和开发实践清单。</p>
+            </a>
+        </div>
     </section>
 </section>
 </html>
