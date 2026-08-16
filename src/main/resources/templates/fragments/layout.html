@@ -9,6 +9,106 @@
     <!-- Phase 2 换 standalone CLI 编译 -->
     <style>
         :root { color-scheme: dark; }
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+        body::before {
+            background:
+                    radial-gradient(42rem 42rem at 10% 12%, rgba(33, 212, 192, 0.08), transparent 68%),
+                    radial-gradient(38rem 38rem at 88% 18%, rgba(33, 212, 192, 0.06), transparent 70%),
+                    radial-gradient(30rem 30rem at 50% 88%, rgba(33, 212, 192, 0.05), transparent 72%);
+        }
+        body::after {
+            background:
+                    linear-gradient(rgba(33, 212, 192, 0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(33, 212, 192, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.55;
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -0.35rem;
+            width: 100%;
+            height: 1px;
+            background: #21d4c0;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .nav-link:hover::after,
+        .nav-link:focus-visible::after {
+            transform: scaleX(1);
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1), transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+            will-change: transform, opacity;
+        }
+        .reveal.reveal-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .cta-button {
+            transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), filter 260ms cubic-bezier(0.22, 1, 0.36, 1), background-color 260ms cubic-bezier(0.22, 1, 0.36, 1), border-color 260ms cubic-bezier(0.22, 1, 0.36, 1), color 260ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .cta-button:hover,
+        .cta-button:focus-visible {
+            transform: scale(1.02);
+            filter: brightness(1.06);
+        }
+        .cta-button:active {
+            transform: scale(0.98);
+            filter: brightness(1.02);
+        }
+        .motion-card {
+            transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1), border-color 320ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .motion-card:hover,
+        .motion-card:focus-visible {
+            transform: translateY(-4px);
+            border-color: #21d4c0;
+            box-shadow: 0 0 0 1px rgba(33, 212, 192, 0.65), 0 12px 26px rgba(33, 212, 192, 0.16);
+        }
+        .card-accent {
+            transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .motion-card:hover .card-accent,
+        .motion-card:focus-visible .card-accent {
+            transform: translateX(4px);
+        }
+        .hero-entrance {
+            opacity: 0;
+            transform: translateY(12px);
+            animation: heroRise 460ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes heroRise {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation: none !important;
+                transition: none !important;
+                transform: none !important;
+                scroll-behavior: auto !important;
+            }
+            .reveal {
+                opacity: 1 !important;
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen bg-[#0b0f12] text-[#d7e1e8] antialiased selection:bg-[#15c9b5]/30 selection:text-white">
@@ -16,9 +116,9 @@
     <header class="flex items-center justify-between border-b border-[#20323a] py-6">
         <a th:href="@{/}" class="tracking-[0.16em] text-xs uppercase text-[#7ca0ab]">Cao Mingxuan</a>
         <nav class="flex items-center gap-6 text-sm text-[#aac2cb]">
-            <a th:href="@{/}" class="transition-colors duration-200 hover:text-[#21d4c0]">首页</a>
-            <a th:href="@{/about}" class="transition-colors duration-200 hover:text-[#21d4c0]">关于我</a>
-            <a href="#contact" class="transition-colors duration-200 hover:text-[#21d4c0]">联系</a>
+            <a th:href="@{/}" class="nav-link transition-colors duration-200 hover:text-[#21d4c0]">首页</a>
+            <a th:href="@{/about}" class="nav-link transition-colors duration-200 hover:text-[#21d4c0]">关于我</a>
+            <a href="#contact" class="nav-link transition-colors duration-200 hover:text-[#21d4c0]">联系</a>
         </nav>
     </header>
 
@@ -32,5 +132,24 @@
         </div>
     </footer>
 </div>
+<script>
+    (function () {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            return;
+        }
+        const reveals = document.querySelectorAll('.reveal');
+        if (reveals.length > 0 && 'IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries, revealObserver) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('reveal-in');
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            }, {threshold: 0.2, rootMargin: '0px 0px -8% 0px'});
+            reveals.forEach((element) => observer.observe(element));
+        }
+    })();
+</script>
 </body>
 </html>
