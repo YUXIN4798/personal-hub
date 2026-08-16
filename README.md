@@ -1,17 +1,17 @@
 # Personal Hub
 
-铭轩的个人数字基地：作品集 · 资源库 · 笔记 · 联系方式。
+Spring Boot 3 + Thymeleaf + MySQL 的个人数字基地项目。
 
-- **状态**：Phase 0（规划中），MVP 开发未开始
-- **技术栈**：Java 17 · Spring Boot 3 · Thymeleaf · Tailwind · MySQL · Flyway · Docker
-- **协作规范**：见 [AGENTS.md](AGENTS.md)（三 AI + 铭轩的项目宪法）
-- **产品文档**：docs/（待婉萤撰写 PROJECT_SPEC）
+## 启动步骤
 
-## 目录结构（规划）
+1. 启动 MySQL（Docker）
 
+```bash
+sg docker -c 'docker compose up -d'
 ```
-src/main/java/com/tianshi/hub/   # 后端
-src/main/resources/templates/    # Thymeleaf 页面
-src/main/resources/db/migration/ # Flyway SQL
-docker-compose.yml               # MySQL + 应用
+
+2. 启动应用
+
+```bash
+mvn spring-boot:run
 ```

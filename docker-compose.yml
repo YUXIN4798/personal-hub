@@ -1,0 +1,23 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: personal-hub-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: personal_hub
+      MYSQL_USER: hub
+      MYSQL_PASSWORD: hub123456
+      MYSQL_ROOT_PASSWORD: root123456
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot123456"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mysql_data:
+    name: personal_hub_mysql_data
