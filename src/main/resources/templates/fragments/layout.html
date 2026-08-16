@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(pageTitle, content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} + ' | 曹铭轩 Personal Hub'">曹铭轩 Personal Hub</title>
+    <meta name="description" content="曹铭轩的个人数字基地，聚焦 Java 后端与 AI 应用实践。">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Phase 2 换 standalone CLI 编译 -->
+    <style>
+        :root { color-scheme: dark; }
+    </style>
+</head>
+<body class="min-h-screen bg-[#0b0f12] text-[#d7e1e8] antialiased selection:bg-[#15c9b5]/30 selection:text-white">
+<div class="mx-auto flex min-h-screen max-w-6xl flex-col px-6 md:px-10">
+    <header class="flex items-center justify-between border-b border-[#20323a] py-6">
+        <a th:href="@{/}" class="tracking-[0.16em] text-xs uppercase text-[#7ca0ab]">Cao Mingxuan</a>
+        <nav class="flex items-center gap-6 text-sm text-[#aac2cb]">
+            <a th:href="@{/}" class="transition-colors duration-200 hover:text-[#21d4c0]">首页</a>
+            <a th:href="@{/about}" class="transition-colors duration-200 hover:text-[#21d4c0]">关于我</a>
+            <a href="#contact" class="transition-colors duration-200 hover:text-[#21d4c0]">联系</a>
+        </nav>
+    </header>
+
+    <main class="flex-1 py-12" th:replace="${content}"></main>
+
+    <footer id="contact" class="border-t border-[#20323a] py-8">
+        <div class="flex flex-col gap-2 text-sm text-[#8ea6af] md:flex-row md:items-center md:justify-between">
+            <p>© 2026 曹铭轩 · Personal Hub</p>
+            <!-- 待铭轩确认：邮箱、微信、Telegram 等联系信息 -->
+            <p>联系邮箱：to-be-confirmed@example.com</p>
+        </div>
+    </footer>
+</div>
+</body>
+</html>

@@ -1,20 +1,43 @@
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Hub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="min-h-screen bg-slate-950 text-slate-100">
-<main class="mx-auto flex min-h-screen max-w-5xl items-center px-6 py-16">
-    <section class="space-y-6">
-        <p class="inline-flex rounded-full border border-emerald-400/40 bg-emerald-400/10 px-4 py-1 text-sm text-emerald-300">Personal Hub</p>
-        <h1 class="text-4xl font-bold tracking-tight sm:text-6xl">铭轩的个人数字基地</h1>
-        <p class="max-w-2xl text-lg text-slate-300">
-            Phase 1 工程骨架已就绪。后续将逐步接入作品集、资源库、博客与管理后台。
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout('首页', ~{::content})}">
+<section th:fragment="content" class="space-y-16">
+    <section class="max-w-3xl space-y-8">
+        <p class="text-xs uppercase tracking-[0.22em] text-[#6f8c97]">Personal Hub</p>
+        <h1 class="text-4xl font-semibold leading-tight text-[#ecf4f8] md:text-6xl"
+            style="font-family: 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;">
+            曹铭轩
+        </h1>
+        <p class="text-lg text-[#28d6c3]">Java 后端方向 · AI 应用实践者</p>
+        <p class="max-w-2xl text-base leading-8 text-[#abc0c9] md:text-lg">
+            在真实项目里磨代码，在每次迭代里练判断：我更在意系统是否可靠，而不是它看起来多炫。
         </p>
+        <div class="flex flex-wrap gap-4 pt-2">
+            <a href="#featured" class="rounded-none border border-[#21d4c0] bg-[#21d4c0] px-6 py-3 text-sm font-medium text-[#062a28] transition-colors duration-200 hover:bg-[#2be0cc]">
+                查看作品集
+            </a>
+            <a th:href="@{/about}" class="rounded-none border border-[#38505a] px-6 py-3 text-sm font-medium text-[#d7e1e8] transition-colors duration-200 hover:border-[#21d4c0] hover:text-[#21d4c0]">
+                了解关于我
+            </a>
+        </div>
     </section>
-</main>
-</body>
+
+    <section id="featured" class="grid gap-6 md:grid-cols-3">
+        <a href="#" class="group border border-[#23353d] bg-[#0f161b] p-6 transition-all duration-200 hover:-translate-y-1 hover:border-[#21d4c0]">
+            <p class="text-xs uppercase tracking-[0.16em] text-[#6f8c97]">精选作品</p>
+            <h2 class="mt-4 text-xl text-[#e7f1f6]" style="font-family: 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;">Projects</h2>
+            <p class="mt-3 text-sm leading-7 text-[#9eb4bd]">围绕后端工程、工具链和 AI 场景落地的阶段成果展示。</p>
+        </a>
+        <a href="#" class="group border border-[#23353d] bg-[#0f161b] p-6 transition-all duration-200 hover:-translate-y-1 hover:border-[#21d4c0]">
+            <p class="text-xs uppercase tracking-[0.16em] text-[#6f8c97]">最新笔记</p>
+            <h2 class="mt-4 text-xl text-[#e7f1f6]" style="font-family: 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;">Notes</h2>
+            <p class="mt-3 text-sm leading-7 text-[#9eb4bd]">记录知识拆解、问题复盘与阶段学习路径。</p>
+        </a>
+        <a href="#" class="group border border-[#23353d] bg-[#0f161b] p-6 transition-all duration-200 hover:-translate-y-1 hover:border-[#21d4c0]">
+            <p class="text-xs uppercase tracking-[0.16em] text-[#6f8c97]">资源库</p>
+            <h2 class="mt-4 text-xl text-[#e7f1f6]" style="font-family: 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;">Resources</h2>
+            <p class="mt-3 text-sm leading-7 text-[#9eb4bd]">沉淀可复用的文档、工具和开发实践清单。</p>
+        </a>
+    </section>
+</section>
 </html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout('关于我', ~{::content})}">
+<section th:fragment="content" class="space-y-14">
+    <section class="max-w-4xl space-y-6">
+        <p class="text-xs uppercase tracking-[0.22em] text-[#6f8c97]">About Me</p>
+        <h1 class="text-4xl font-semibold text-[#ecf4f8] md:text-5xl"
+            style="font-family: 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;">关于我</h1>
+        <p class="text-base leading-8 text-[#abc0c9] md:text-lg">
+            我是曹铭轩，天狮学院计算机应用技术专业学生，即将进入大三。主攻 Java 后端开发，正在把 AI 工具与工程实践结合到真实项目中。
+        </p>
+        <p class="text-base leading-8 text-[#abc0c9] md:text-lg">
+            GitHub：<a href="https://github.com/YUXIN4798" class="text-[#21d4c0] underline underline-offset-4 transition-colors duration-200 hover:text-[#57e8d8]">YUXIN4798</a>
+        </p>
+    </section>
+
+    <section class="grid gap-6 md:grid-cols-2">
+        <article class="border border-[#23353d] bg-[#0f161b] p-6">
+            <h2 class="text-xl text-[#e7f1f6]" style="font-family: 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;">技能栈</h2>
+            <ul class="mt-4 space-y-3 text-sm leading-7 text-[#9eb4bd]">
+                <li><span class="text-[#d7e1e8]">后端：</span>Java / Spring Boot / MyBatis</li>
+                <li><span class="text-[#d7e1e8]">数据库：</span>MySQL</li>
+                <li><span class="text-[#d7e1e8]">AI 应用：</span>Prompt 设计、Agent 协作、AI 辅助开发流程</li>
+                <li><span class="text-[#d7e1e8]">其他：</span>Git、Docker、Linux 基础运维</li>
+            </ul>
+        </article>
+        <article class="border border-[#23353d] bg-[#0f161b] p-6">
+            <h2 class="text-xl text-[#e7f1f6]" style="font-family: 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;">学习路线</h2>
+            <ul class="mt-4 space-y-5 border-l border-[#2f4a55] pl-5 text-sm leading-7 text-[#9eb4bd]">
+                <li>
+                    <p class="text-[#d7e1e8]">进行中：Java 后端工程实践</p>
+                    <p>围绕 Spring Boot 项目提升接口设计、数据建模与部署能力。</p>
+                </li>
+                <li>
+                    <p class="text-[#d7e1e8]">目标节点：2026 年 9 月下旬</p>
+                    <p>备考 Java 2 级 + 人工智能 1 级，强化理论与实战的同步推进。</p>
+                </li>
+            </ul>
+        </article>
+    </section>
+
+    <!-- 待铭轩确认：可补充邮箱、城市、求职意向等个人信息 -->
+</section>
+</html>
