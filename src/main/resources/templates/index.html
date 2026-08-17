@@ -13,7 +13,7 @@
                 在真实项目里磨代码，在每次迭代里练判断。
             </p>
             <div class="hero-entrance mt-9 flex flex-wrap gap-4" style="animation: heroRise 520ms 360ms both;">
-                <a href="/projects" class="cta-button inline-flex items-center gap-3 border border-[#56e3cd] bg-[#56e3cd] px-5 py-3 text-sm font-medium text-[#071b1a]">
+                <a th:href="@{/projects}" class="cta-button inline-flex items-center gap-3 border border-[#56e3cd] bg-[#56e3cd] px-5 py-3 text-sm font-medium text-[#071b1a]">
                     查看作品集 <span aria-hidden="true">↘</span>
                 </a>
                 <a th:href="@{/about}" class="cta-button inline-flex items-center gap-3 border border-[#385054] px-5 py-3 text-sm font-medium text-[#dce8e8] hover:border-[#56e3cd] hover:text-[#56e3cd]">
@@ -39,7 +39,7 @@
             <span class="hidden font-mono text-xs text-[#6f898b] md:block">2026 — NOW</span>
         </div>
         <div class="grid gap-4 md:grid-cols-3">
-            <a href="/projects" class="motion-card reveal group border p-6 md:p-7">
+            <a th:href="@{/projects}" class="motion-card reveal group border p-6 md:p-7">
                 <p class="meta-label text-[0.62rem] text-[#829b9d]">01 / Projects</p>
                 <h3 class="display mt-14 flex items-center justify-between text-2xl text-[#e5eeee]">Projects <span class="card-accent text-[#56e3cd]" aria-hidden="true">↗</span></h3>
                 <p class="mt-4 text-sm leading-7 text-[#a9bfc0]">围绕后端工程、工具链和 AI 场景落地的阶段成果。</p>
@@ -49,7 +49,7 @@
                 <h3 class="display mt-14 flex items-center justify-between text-2xl text-[#e5eeee]">Notes <span class="card-accent text-[#56e3cd]" aria-hidden="true">↗</span></h3>
                 <p class="mt-4 text-sm leading-7 text-[#a9bfc0]">记录知识拆解、问题复盘与阶段学习路径。</p>
             </a>
-            <a href="/resources" class="motion-card reveal group border p-6 md:p-7" style="transition-delay: 160ms;">
+            <a th:href="@{/resources}" class="motion-card reveal group border p-6 md:p-7" style="transition-delay: 160ms;">
                 <p class="meta-label text-[0.62rem] text-[#829b9d]">03 / Resources</p>
                 <h3 class="display mt-14 flex items-center justify-between text-2xl text-[#e5eeee]">Resources <span class="card-accent text-[#56e3cd]" aria-hidden="true">↗</span></h3>
                 <p class="mt-4 text-sm leading-7 text-[#a9bfc0]">沉淀可复用的文档、工具和开发实践清单。</p>

@@ -3,6 +3,7 @@ package com.tianshi.hub.service;
 import com.tianshi.hub.entity.Project;
 import com.tianshi.hub.exception.ResourceNotFoundException;
 import com.tianshi.hub.repository.ProjectRepository;
+import com.tianshi.hub.util.PaginationUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -25,12 +26,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Page<Project> findPublishedProjects(int page, int size) {
-        int safePage = Math.max(page, 0);
-        int safeSize = size > 0 ? Math.min(size, MAX_PAGE_SIZE) : DEFAULT_PAGE_SIZE;
+        PaginationUtil.PageBounds bounds = PaginationUtil.clamp(page, size, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE);
         PageRequest pageRequest = PageRequest.of(
-                safePage,
-                safeSize,
-                Sort.by(Sort.Direction.ASC, "sortOrder")
+                bounds.page(),
+                bounds.size(),
+                Sort.by(Sort.Direction.ASC, "sortOrder").and(Sort.by(Sort.Direction.DESC, "id"))
         );
         return projectRepository.findByStatus(PUBLISHED_STATUS, pageRequest);
     }

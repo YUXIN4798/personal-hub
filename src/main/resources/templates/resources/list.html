@@ -31,7 +31,7 @@
             <h2 class="display mt-10 text-2xl text-[#e5eeee] md:text-3xl" th:text="${resource.title}">资源名称</h2>
             <p class="mt-4 text-sm leading-7 text-[#a9bfc0]" th:text="${resource.summary}">资源说明</p>
             <div class="mt-6 flex flex-wrap items-center gap-4 font-mono text-xs text-[#6f898b]">
-                <span th:text="'分类 #' + ${resource.categoryId}">分类 #1</span>
+                <span th:text="${categoryNames[resource.categoryId] ?: '未分类'}">未分类</span>
                 <span th:text="'下载 ' + ${resource.downloadCount}">下载 0</span>
             </div>
         </a>

@@ -42,8 +42,9 @@
             pointer-events: none;
             opacity: 0;
             background: radial-gradient(circle, rgba(86, 227, 205, 0.11), transparent 68%);
-            transform: translate(-50%, -50%);
+            transform: translate3d(-999px, -999px, 0) translate(-50%, -50%);
             transition: opacity 400ms ease;
+            will-change: transform, opacity;
         }
         .site-header { border-color: var(--line); }
         .nav-link {
@@ -201,19 +202,45 @@
         let targetY = window.innerHeight * 0.25;
         let currentX = targetX;
         let currentY = targetY;
+        let frameId = 0;
+        let lastMoveAt = 0;
+        let idleTimer = 0;
+        const idleTimeout = 3000;
+        const epsilon = 1;
+
+        function scheduleGlow() {
+            if (frameId === 0) {
+                frameId = requestAnimationFrame(renderGlow);
+            }
+        }
+
         window.addEventListener('pointermove', (event) => {
             targetX = event.clientX;
             targetY = event.clientY;
+            lastMoveAt = performance.now();
             glow.style.opacity = '1';
+            clearTimeout(idleTimer);
+            idleTimer = setTimeout(() => {
+                glow.style.opacity = '0';
+            }, idleTimeout);
+            scheduleGlow();
         }, { passive: true });
+
         function renderGlow() {
+            frameId = 0;
             currentX += (targetX - currentX) * 0.1;
             currentY += (targetY - currentY) * 0.1;
-            glow.style.left = currentX + 'px';
-            glow.style.top = currentY + 'px';
-            requestAnimationFrame(renderGlow);
+            glow.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%)`;
+
+            const closeToTarget = Math.abs(targetX - currentX) < epsilon && Math.abs(targetY - currentY) < epsilon;
+            if (performance.now() - lastMoveAt > idleTimeout) {
+                glow.style.opacity = '0';
+                return;
+            }
+            if (!closeToTarget) {
+                scheduleGlow();
+            }
         }
-        renderGlow();
     })();
 </script>
 </body>

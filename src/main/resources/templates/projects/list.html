@@ -21,6 +21,7 @@
             <p class="mt-6 font-mono text-xs leading-6 text-[#6f898b]" th:text="${project.techStack}">Java, MySQL</p>
         </a>
     </div>
+    <p th:if="${projects.empty}" class="border border-[#a9c9c9]/20 p-6 text-sm text-[#a9bfc0]">暂无项目，敬请期待。</p>
     <nav th:if="${projects.totalPages > 1}" class="flex items-center justify-between border-t border-[#a9c9c9]/20 pt-5 text-sm">
         <a th:if="${projects.hasPrevious()}" th:href="@{/projects(page=${projects.number - 1}, size=${projects.size})}"
            class="link-slide text-[#a9bfc0]">← 上一页</a>

@@ -11,15 +11,22 @@
         <div class="mt-6 flex flex-wrap gap-4 font-mono text-xs text-[#6f898b]">
             <span th:text="${resource.version}">v1.0</span>
             <span th:text="${#numbers.formatDecimal(resource.fileSize / 1024.0 / 1024.0, 1, 2)} + ' MB'">0 MB</span>
-            <span th:text="'下载 ' + ${resource.downloadCount}">下载 0</span>
+            <span th:if="${resource.type == 'file'}" th:text="'下载 ' + ${resource.downloadCount}">下载 0</span>
+            <span th:if="${resource.type == 'link'}">外部资源</span>
         </div>
     </header>
     <div class="border-l border-[#56e3cd]/60 pl-5 text-base leading-8 text-[#c2d2d2]" th:text="${resource.description}">
         资源详细介绍
     </div>
-    <a th:href="@{/resources/{id}/download(id=${resource.id})}"
+    <a th:if="${resource.type == 'file'}"
+       th:href="@{/resources/{id}/download(id=${resource.id})}"
        class="cta-button inline-flex items-center gap-3 border border-[#56e3cd] bg-[#56e3cd] px-5 py-3 text-sm font-medium text-[#071b1a]">
         下载资源 <span aria-hidden="true">↓</span>
+    </a>
+    <a th:if="${resource.type == 'link'}"
+       th:href="${resource.url}"
+       class="link-slide inline-flex text-sm font-medium text-[#56e3cd]">
+        外部资源
     </a>
 </article>
 </html>
