@@ -1,0 +1,21 @@
+package com.tianshi.hub.repository;
+
+import com.tianshi.hub.entity.ResourceTag;
+import com.tianshi.hub.entity.ResourceTagId;
+import com.tianshi.hub.entity.Tag;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+
+public interface ResourceTagRepository extends JpaRepository<ResourceTag, ResourceTagId> {
+
+    void deleteByResource_Id(Long resourceId);
+
+    @Query("select rt.tag from ResourceTag rt where rt.resource.id = :resourceId order by rt.tag.name asc")
+    List<Tag> findTagsByResourceId(@Param("resourceId") Long resourceId);
+
+    List<ResourceTag> findByResource_IdInOrderByTag_NameAsc(List<Long> resourceIds);
+}
+

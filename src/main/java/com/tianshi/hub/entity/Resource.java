@@ -76,60 +76,120 @@ public class Resource {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getSlug() {
         return slug;
     }
 
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
     public String getSummary() {
         return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getUrl() {
         return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getType() {
         return type;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public Long getCategoryId() {
         return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getFilePath() {
         return filePath;
     }
 
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
     public String getOriginalName() {
         return originalName;
+    }
+
+    public void setOriginalName(String originalName) {
+        this.originalName = originalName;
     }
 
     public long getFileSize() {
         return fileSize;
     }
 
+    public void setFileSize(long fileSize) {
+        this.fileSize = fileSize;
+    }
+
     public String getVersion() {
         return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     public long getDownloadCount() {
         return downloadCount;
     }
 
+    public void setDownloadCount(long downloadCount) {
+        this.downloadCount = downloadCount;
+    }
+
     public String getVisibility() {
         return visibility;
     }
 
+    public void setVisibility(String visibility) {
+        this.visibility = visibility;
+    }
+
     public String getChecksum() {
         return checksum;
+    }
+
+    public void setChecksum(String checksum) {
+        this.checksum = checksum;
     }
 
     public LocalDateTime getCreatedAt() {

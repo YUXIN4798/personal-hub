@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/admin-layout :: layout(${pageTitle}, ~{::content})}">
+<section th:fragment="content" class="mx-auto max-w-3xl space-y-5">
+    <div>
+        <a th:href="@{/admin/resources}" class="text-sm text-[var(--ph-accent)] hover:underline">返回列表</a>
+        <h1 class="mt-3 text-2xl font-semibold text-[var(--ph-text-strong)]" th:text="${pageTitle}">资源表单</h1>
+    </div>
+    <form th:action="@{${formAction}}" th:object="${resourceForm}" method="post" class="space-y-5 border border-[var(--ph-border)] bg-[var(--ph-card-solid)] p-5">
+        <div class="grid gap-4 md:grid-cols-2">
+            <div>
+                <label for="title" class="block text-sm text-[var(--ph-text-dim)]">标题</label>
+                <input id="title" type="text" th:field="*{title}" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2">
+                <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="mt-1 text-sm text-[var(--ph-danger)]">错误</p>
+            </div>
+            <div>
+                <label for="slug" class="block text-sm text-[var(--ph-text-dim)]">Slug</label>
+                <input id="slug" type="text" th:field="*{slug}" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2">
+                <p th:if="${#fields.hasErrors('slug')}" th:errors="*{slug}" class="mt-1 text-sm text-[var(--ph-danger)]">错误</p>
+            </div>
+        </div>
+        <div>
+            <label for="summary" class="block text-sm text-[var(--ph-text-dim)]">摘要</label>
+            <textarea id="summary" th:field="*{summary}" rows="4" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2"></textarea>
+            <p th:if="${#fields.hasErrors('summary')}" th:errors="*{summary}" class="mt-1 text-sm text-[var(--ph-danger)]">错误</p>
+        </div>
+        <div class="grid gap-4 md:grid-cols-2">
+            <div>
+                <label for="url" class="block text-sm text-[var(--ph-text-dim)]">URL</label>
+                <input id="url" type="text" th:field="*{url}" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2">
+                <p th:if="${#fields.hasErrors('url')}" th:errors="*{url}" class="mt-1 text-sm text-[var(--ph-danger)]">错误</p>
+            </div>
+            <div>
+                <label for="type" class="block text-sm text-[var(--ph-text-dim)]">类型</label>
+                <select id="type" th:field="*{type}" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2">
+                    <option value="link">link</option>
+                    <option value="file">file</option>
+                </select>
+                <p th:if="${#fields.hasErrors('type')}" th:errors="*{type}" class="mt-1 text-sm text-[var(--ph-danger)]">错误</p>
+            </div>
+        </div>
+        <div>
+            <label for="categoryId" class="block text-sm text-[var(--ph-text-dim)]">分类</label>
+            <select id="categoryId" th:field="*{categoryId}" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2">
+                <option value="">未分类</option>
+                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">分类</option>
+            </select>
+        </div>
+        <fieldset>
+            <legend class="text-sm text-[var(--ph-text-dim)]">标签</legend>
+            <div class="mt-3 grid gap-2 sm:grid-cols-2 md:grid-cols-3">
+                <label th:each="tag : ${tags}" class="flex items-center gap-2 border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2 text-sm text-[var(--ph-text-dim)]">
+                    <input type="checkbox" th:field="*{tagIds}" th:value="${tag.id}" class="accent-[var(--ph-accent)]">
+                    <span th:text="${tag.name}">Tag</span>
+                </label>
+            </div>
+        </fieldset>
+        <div class="flex justify-end gap-3 border-t border-[var(--ph-border)] pt-5">
+            <a th:href="@{/admin/resources}" class="border border-[var(--ph-border)] px-4 py-2 text-sm text-[var(--ph-text-dim)]">取消</a>
+            <button type="submit" class="bg-[var(--ph-accent)] px-4 py-2 text-sm font-medium text-[var(--ph-accent-contrast)] transition hover:brightness-110">保存</button>
+        </div>
+    </form>
+</section>
+</html>
+
