@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/admin-layout :: layout('项目管理', ~{::content})}">
+<section th:fragment="content" class="space-y-5">
+    <div class="flex items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-semibold text-[#eef7f7]">项目管理</h1>
+            <p class="mt-1 text-sm text-[#8aa1a3]">管理作品集展示内容</p>
+        </div>
+        <a th:href="@{/admin/projects/new}" class="bg-[#56e3cd] px-4 py-2 text-sm font-medium text-[#06100f] transition hover:brightness-110">新建项目</a>
+    </div>
+    <div class="overflow-x-auto border border-[#a9c9c9]/20">
+        <table class="min-w-full divide-y divide-[#a9c9c9]/15 text-sm">
+            <thead class="bg-[#0d171a] text-left text-xs uppercase tracking-[0.12em] text-[#8aa1a3]">
+            <tr>
+                <th class="px-4 py-3">标题</th>
+                <th class="px-4 py-3">分类</th>
+                <th class="px-4 py-3">状态</th>
+                <th class="px-4 py-3">发布时间</th>
+                <th class="px-4 py-3 text-right">操作</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-[#a9c9c9]/10">
+            <tr th:each="project : ${projects.content}" class="bg-[#081013]">
+                <td class="px-4 py-3">
+                    <p class="font-medium text-[#eef7f7]" th:text="${project.title}">项目标题</p>
+                    <p class="mt-1 font-mono text-xs text-[#6f898b]" th:text="${project.slug}">slug</p>
+                </td>
+                <td class="px-4 py-3 text-[#a9bfc0]" th:text="${categories[project.categoryId]?.name ?: '-'}">作品集</td>
+                <td class="px-4 py-3">
+                    <span class="border border-[#56e3cd]/35 px-2 py-1 text-xs text-[#56e3cd]" th:text="${project.status}">published</span>
+                </td>
+                <td class="px-4 py-3 text-[#a9bfc0]" th:text="${project.publishedAt != null ? #temporals.format(project.publishedAt, 'yyyy-MM-dd HH:mm') : '-'}">-</td>
+                <td class="px-4 py-3">
+                    <div class="flex justify-end gap-3">
+                        <a th:href="@{/admin/projects/{id}/edit(id=${project.id})}" class="text-[#56e3cd] hover:underline">编辑</a>
+                        <form th:action="@{/admin/projects/{id}/delete(id=${project.id})}" method="post">
+                            <button type="submit" class="text-[#ffb4a8] hover:underline">删除</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <tr th:if="${projects.empty}">
+                <td colspan="5" class="px-4 py-8 text-center text-[#8aa1a3]">暂无项目</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <nav th:if="${projects.totalPages > 1}" class="flex items-center justify-end gap-3 text-sm">
+        <a th:if="${projects.hasPrevious()}" th:href="@{/admin/projects(page=${projects.number - 1})}" class="text-[#56e3cd]">上一页</a>
+        <span class="text-[#8aa1a3]" th:text="${projects.number + 1} + ' / ' + ${projects.totalPages}">1 / 1</span>
+        <a th:if="${projects.hasNext()}" th:href="@{/admin/projects(page=${projects.number + 1})}" class="text-[#56e3cd]">下一页</a>
+    </nav>
+</section>
+</html>

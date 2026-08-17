@@ -9,6 +9,12 @@
         <h1 class="display mt-4 text-4xl leading-tight text-[#e5eeee] md:text-5xl" th:text="${project.title}">项目名称</h1>
         <p class="mt-5 text-base leading-8 text-[#a9bfc0]" th:text="${project.summary}">项目摘要</p>
         <p class="mt-6 font-mono text-xs leading-6 text-[#6f898b]" th:text="${project.techStack}">Java, MySQL</p>
+        <div th:if="${project.sourceUrl != null || project.demoUrl != null}" class="mt-6 flex flex-wrap gap-3 text-sm">
+            <a th:if="${project.sourceUrl != null}" th:href="${project.sourceUrl}" target="_blank" rel="noopener noreferrer"
+               class="border border-[#56e3cd]/45 px-4 py-2 text-[#56e3cd] transition hover:bg-[#56e3cd]/10">GitHub</a>
+            <a th:if="${project.demoUrl != null}" th:href="${project.demoUrl}" target="_blank" rel="noopener noreferrer"
+               class="border border-[#a9c9c9]/25 px-4 py-2 text-[#c2d2d2] transition hover:border-[#56e3cd] hover:text-[#56e3cd]">在线演示</a>
+        </div>
     </header>
     <div class="border-l border-[#56e3cd]/60 pl-5 text-base leading-8 text-[#c2d2d2]" th:text="${project.description}">
         项目详细介绍

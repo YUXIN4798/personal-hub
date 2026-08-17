@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/admin-layout :: layout(${pageTitle}, ~{::content})}">
+<section th:fragment="content" class="mx-auto max-w-3xl space-y-5">
+    <div>
+        <a th:href="@{/admin/projects}" class="text-sm text-[#56e3cd] hover:underline">返回列表</a>
+        <h1 class="mt-3 text-2xl font-semibold text-[#eef7f7]" th:text="${pageTitle}">项目表单</h1>
+    </div>
+    <form th:action="@{${formAction}}" th:object="${projectForm}" method="post" class="space-y-5 border border-[#a9c9c9]/20 bg-[#081013] p-5">
+        <div class="grid gap-4 md:grid-cols-2">
+            <div>
+                <label for="title" class="block text-sm text-[#a9bfc0]">标题</label>
+                <input id="title" type="text" th:field="*{title}" class="mt-2 w-full border border-[#a9c9c9]/20 bg-[#0d171a] px-3 py-2">
+                <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="mt-1 text-sm text-[#ffb4a8]">错误</p>
+            </div>
+            <div>
+                <label for="slug" class="block text-sm text-[#a9bfc0]">Slug</label>
+                <input id="slug" type="text" th:field="*{slug}" class="mt-2 w-full border border-[#a9c9c9]/20 bg-[#0d171a] px-3 py-2">
+                <p th:if="${#fields.hasErrors('slug')}" th:errors="*{slug}" class="mt-1 text-sm text-[#ffb4a8]">错误</p>
+            </div>
+        </div>
+        <div>
+            <label for="description" class="block text-sm text-[#a9bfc0]">描述</label>
+            <textarea id="description" th:field="*{description}" rows="5" class="mt-2 w-full border border-[#a9c9c9]/20 bg-[#0d171a] px-3 py-2"></textarea>
+            <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="mt-1 text-sm text-[#ffb4a8]">错误</p>
+        </div>
+        <div class="grid gap-4 md:grid-cols-3">
+            <div>
+                <label for="coverUrl" class="block text-sm text-[#a9bfc0]">封面 URL</label>
+                <input id="coverUrl" type="url" th:field="*{coverUrl}" class="mt-2 w-full border border-[#a9c9c9]/20 bg-[#0d171a] px-3 py-2">
+            </div>
+            <div>
+                <label for="githubUrl" class="block text-sm text-[#a9bfc0]">GitHub URL</label>
+                <input id="githubUrl" type="url" th:field="*{githubUrl}" class="mt-2 w-full border border-[#a9c9c9]/20 bg-[#0d171a] px-3 py-2">
+            </div>
+            <div>
+                <label for="demoUrl" class="block text-sm text-[#a9bfc0]">演示 URL</label>
+                <input id="demoUrl" type="url" th:field="*{demoUrl}" class="mt-2 w-full border border-[#a9c9c9]/20 bg-[#0d171a] px-3 py-2">
+            </div>
+        </div>
+        <div class="grid gap-4 md:grid-cols-3">
+            <div>
+                <label for="status" class="block text-sm text-[#a9bfc0]">状态</label>
+                <select id="status" th:field="*{status}" class="mt-2 w-full border border-[#a9c9c9]/20 bg-[#0d171a] px-3 py-2">
+                    <option value="draft">draft</option>
+                    <option value="published">published</option>
+                </select>
+            </div>
+            <div>
+                <label for="publishedAt" class="block text-sm text-[#a9bfc0]">发布时间</label>
+                <input id="publishedAt" type="datetime-local" th:field="*{publishedAt}" class="mt-2 w-full border border-[#a9c9c9]/20 bg-[#0d171a] px-3 py-2">
+            </div>
+            <div>
+                <label for="categoryId" class="block text-sm text-[#a9bfc0]">分类</label>
+                <select id="categoryId" th:field="*{categoryId}" class="mt-2 w-full border border-[#a9c9c9]/20 bg-[#0d171a] px-3 py-2">
+                    <option value="">未分类</option>
+                    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">分类</option>
+                </select>
+            </div>
+        </div>
+        <fieldset>
+            <legend class="text-sm text-[#a9bfc0]">标签</legend>
+            <div class="mt-3 grid gap-2 sm:grid-cols-2 md:grid-cols-3">
+                <label th:each="tag : ${tags}" class="flex items-center gap-2 border border-[#a9c9c9]/15 bg-[#0d171a] px-3 py-2 text-sm text-[#c2d2d2]">
+                    <input type="checkbox" th:field="*{tagIds}" th:value="${tag.id}" class="accent-[#56e3cd]">
+                    <span th:text="${tag.name}">Tag</span>
+                </label>
+            </div>
+        </fieldset>
+        <div class="flex justify-end gap-3 border-t border-[#a9c9c9]/15 pt-5">
+            <a th:href="@{/admin/projects}" class="border border-[#a9c9c9]/25 px-4 py-2 text-sm text-[#b9cccc]">取消</a>
+            <button type="submit" class="bg-[#56e3cd] px-4 py-2 text-sm font-medium text-[#06100f] transition hover:brightness-110">保存</button>
+        </div>
+    </form>
+</section>
+</html>

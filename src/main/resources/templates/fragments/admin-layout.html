@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(pageTitle, content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} + ' | Personal Hub 管理台'">Personal Hub 管理台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            color-scheme: dark;
+            --ink: #080d10;
+            --paper: #dce8e8;
+            --muted: #8aa1a3;
+            --line: rgba(169, 201, 201, 0.17);
+            --teal: #56e3cd;
+        }
+        body { background: var(--ink); }
+        :focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+    </style>
+</head>
+<body class="min-h-screen bg-[#080d10] text-[#dce8e8] antialiased">
+<div class="mx-auto flex min-h-screen max-w-6xl flex-col px-5">
+    <header class="flex items-center justify-between border-b border-[#a9c9c9]/20 py-4">
+        <a th:href="@{/admin/projects}" class="font-mono text-sm uppercase tracking-[0.14em] text-[#56e3cd]">Personal Hub 管理台</a>
+        <form th:action="@{/admin/logout}" method="post">
+            <button type="submit" class="rounded border border-[#a9c9c9]/25 px-3 py-2 text-sm text-[#b9cccc] transition hover:border-[#56e3cd] hover:text-[#56e3cd]">退出登录</button>
+        </form>
+    </header>
+    <main class="flex-1 py-6" th:replace="${content}"></main>
+</div>
+</body>
+</html>

@@ -30,4 +30,28 @@ public class ProjectTag {
 
     @Column(name = "updated_at", nullable = false, insertable = false, updatable = false)
     private LocalDateTime updatedAt;
+
+    public ProjectTag() {
+    }
+
+    public ProjectTag(Project project, Tag tag) {
+        this.project = project;
+        this.tag = tag;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public Tag getTag() {
+        return tag;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
 }

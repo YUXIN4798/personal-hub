@@ -12,6 +12,10 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     Optional<Project> findBySlug(String slug);
 
+    boolean existsBySlug(String slug);
+
+    boolean existsBySlugAndIdNot(String slug, Long id);
+
     List<Project> findByStatusOrderBySortOrderAsc(String status);
 
     Page<Project> findByStatus(String status, Pageable pageable);
