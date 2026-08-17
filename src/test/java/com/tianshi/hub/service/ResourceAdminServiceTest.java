@@ -8,11 +8,15 @@ import com.tianshi.hub.repository.ResourceTagRepository;
 import com.tianshi.hub.repository.TagRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.util.unit.DataSize;
 
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,6 +38,9 @@ class ResourceAdminServiceTest {
 
     @Mock
     private ResourceTagRepository resourceTagRepository;
+
+    @TempDir
+    Path tempDir;
 
     @Test
     void create_表单字段_完整写入实体并默认公开() {
@@ -114,8 +121,43 @@ class ResourceAdminServiceTest {
         assertThat(form.getCategoryId()).isEqualTo(3L);
     }
 
+    @Test
+    void create_上传文件_写入文件路径和原始文件名() {
+        FileStorageService fileStorageService = fileStorageService();
+        when(resourceRepository.save(any(Resource.class))).thenAnswer(invocation -> {
+            Resource resource = invocation.getArgument(0);
+            ReflectionTestUtils.setField(resource, "id", 12L);
+            return resource;
+        });
+        when(tagRepository.findAllById(List.of())).thenReturn(List.of());
+        ResourceAdminService service = new ResourceAdminService(
+                resourceRepository, categoryRepository, tagRepository, resourceTagRepository, fileStorageService
+        );
+        ResourceForm form = new ResourceForm();
+        form.setTitle("Courseware");
+        form.setSlug("courseware");
+        form.setType("link");
+        form.setFile(new MockMultipartFile("file", "notes.pdf", "application/pdf", new byte[] {1, 2, 3}));
+
+        service.create(form);
+
+        ArgumentCaptor<Resource> captor = ArgumentCaptor.forClass(Resource.class);
+        verify(resourceRepository).save(captor.capture());
+        Resource saved = captor.getValue();
+        assertThat(saved.getFilePath()).startsWith("/uploads/");
+        assertThat(saved.getUrl()).startsWith("/uploads/");
+        assertThat(saved.getOriginalName()).isEqualTo("notes.pdf");
+        assertThat(saved.getFileSize()).isEqualTo(3);
+    }
+
     private ResourceAdminService service() {
         return new ResourceAdminService(resourceRepository, categoryRepository, tagRepository, resourceTagRepository);
     }
-}
 
+    private FileStorageService fileStorageService() {
+        com.tianshi.hub.config.AppProperties properties = new com.tianshi.hub.config.AppProperties();
+        properties.setUploadDir(tempDir.toString());
+        properties.getUpload().setMaxSize(DataSize.ofMegabytes(5));
+        return new FileStorageService(properties);
+    }
+}

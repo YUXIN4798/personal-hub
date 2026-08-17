@@ -6,7 +6,7 @@
         <a th:href="@{/admin/resources}" class="text-sm text-[var(--ph-accent)] hover:underline">返回列表</a>
         <h1 class="mt-3 text-2xl font-semibold text-[var(--ph-text-strong)]" th:text="${pageTitle}">资源表单</h1>
     </div>
-    <form th:action="@{${formAction}}" th:object="${resourceForm}" method="post" class="space-y-5 border border-[var(--ph-border)] bg-[var(--ph-card-solid)] p-5">
+    <form th:action="@{${formAction}}" th:object="${resourceForm}" method="post" enctype="multipart/form-data" class="space-y-5 border border-[var(--ph-border)] bg-[var(--ph-card-solid)] p-5">
         <div class="grid gap-4 md:grid-cols-2">
             <div>
                 <label for="title" class="block text-sm text-[var(--ph-text-dim)]">标题</label>
@@ -24,10 +24,16 @@
             <textarea id="summary" th:field="*{summary}" rows="4" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2"></textarea>
             <p th:if="${#fields.hasErrors('summary')}" th:errors="*{summary}" class="mt-1 text-sm text-[var(--ph-danger)]">错误</p>
         </div>
+        <div>
+            <label for="file" class="block text-sm text-[var(--ph-text-dim)]">文件上传</label>
+            <input id="file" type="file" th:field="*{file}" accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.zip,.rar,.7z,.txt,.md" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2">
+            <p class="mt-1 text-xs text-[var(--ph-text-muted)]">可选；上传后会自动覆盖文件路径。</p>
+        </div>
         <div class="grid gap-4 md:grid-cols-2">
             <div>
                 <label for="url" class="block text-sm text-[var(--ph-text-dim)]">URL</label>
                 <input id="url" type="text" th:field="*{url}" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2">
+                <p class="mt-1 text-xs text-[var(--ph-text-muted)]">支持外链或手填 /uploads 路径。</p>
                 <p th:if="${#fields.hasErrors('url')}" th:errors="*{url}" class="mt-1 text-sm text-[var(--ph-danger)]">错误</p>
             </div>
             <div>
@@ -62,4 +68,3 @@
     </form>
 </section>
 </html>
-

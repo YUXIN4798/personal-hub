@@ -16,3 +16,6 @@
 
 # Local build tools
 /tools/tailwindcss-linux-x64
+
+# Uploaded files
+/uploads/

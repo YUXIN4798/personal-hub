@@ -2,19 +2,26 @@ package com.tianshi.hub.service;
 
 import com.tianshi.hub.entity.Category;
 import com.tianshi.hub.entity.Resource;
+import com.tianshi.hub.entity.ResourceTag;
+import com.tianshi.hub.entity.Tag;
 import com.tianshi.hub.exception.ResourceNotFoundException;
 import com.tianshi.hub.repository.CategoryRepository;
 import com.tianshi.hub.repository.ResourceRepository;
+import com.tianshi.hub.repository.ResourceTagRepository;
 import com.tianshi.hub.util.PaginationUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ResourceServiceImpl implements ResourceService {
@@ -26,10 +33,32 @@ public class ResourceServiceImpl implements ResourceService {
 
     private final ResourceRepository resourceRepository;
     private final CategoryRepository categoryRepository;
+    private final ResourceTagRepository resourceTagRepository;
+    private final FileStorageService fileStorageService;
 
-    public ResourceServiceImpl(ResourceRepository resourceRepository, CategoryRepository categoryRepository) {
+    @Autowired
+    public ResourceServiceImpl(
+            ResourceRepository resourceRepository,
+            CategoryRepository categoryRepository,
+            ResourceTagRepository resourceTagRepository,
+            FileStorageService fileStorageService
+    ) {
         this.resourceRepository = resourceRepository;
         this.categoryRepository = categoryRepository;
+        this.resourceTagRepository = resourceTagRepository;
+        this.fileStorageService = fileStorageService;
+    }
+
+    public ResourceServiceImpl(ResourceRepository resourceRepository, CategoryRepository categoryRepository) {
+        this(resourceRepository, categoryRepository, null, null);
+    }
+
+    public ResourceServiceImpl(
+            ResourceRepository resourceRepository,
+            CategoryRepository categoryRepository,
+            ResourceTagRepository resourceTagRepository
+    ) {
+        this(resourceRepository, categoryRepository, resourceTagRepository, null);
     }
 
     @Override
@@ -69,11 +98,30 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
+    public List<Tag> findResourceTags(Long resourceId) {
+        return resourceTagRepository.findTagsByResourceId(resourceId);
+    }
+
+    @Override
+    public Map<Long, List<Tag>> findResourceTags(List<Long> resourceIds) {
+        if (resourceIds == null || resourceIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        return resourceTagRepository.findByResource_IdInOrderByTag_NameAsc(resourceIds).stream()
+                .collect(Collectors.groupingBy(
+                        resourceTag -> resourceTag.getResource().getId(),
+                        LinkedHashMap::new,
+                        Collectors.mapping(ResourceTag::getTag, Collectors.toList())
+                ));
+    }
+
+    @Override
     @Transactional
     public ResourceDownload prepareDownload(Long id) {
         Resource resource = findPublicResourceById(id);
-        Path path = Path.of(resource.getFilePath()).normalize();
-        if (!Files.isRegularFile(path) || !Files.isReadable(path)) {
+        String relativePath = resource.getFilePath() != null ? resource.getFilePath() : resource.getUrl();
+        Path path = fileStorageService != null ? fileStorageService.resolve(relativePath) : Path.of(relativePath).normalize();
+        if (!java.nio.file.Files.isRegularFile(path) || !java.nio.file.Files.isReadable(path)) {
             throw new ResourceNotFoundException("资源文件暂不可下载");
         }
         resourceRepository.incrementDownloadCount(id);

@@ -15,3 +15,8 @@ spring:
     locations: classpath:db/migration
   thymeleaf:
     cache: false
+
+app:
+  upload-dir: ./uploads
+  upload:
+    max-size: 5MB

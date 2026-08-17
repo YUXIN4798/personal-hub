@@ -24,21 +24,21 @@
             <tbody class="divide-y divide-[var(--ph-border-soft)]">
             <tr th:each="post : ${posts.content}" class="bg-[var(--ph-card-solid)]">
                 <td class="px-4 py-3">
-                    <p class="font-medium text-[var(--ph-text-strong)]" th:text="${post.title}">笔记标题</p>
-                    <p class="mt-1 font-mono text-xs text-[var(--ph-text-muted)]" th:text="${post.slug}">slug</p>
+                    <p class="[overflow-wrap:anywhere] font-medium text-[var(--ph-text-strong)]" th:text="${post.title}">笔记标题</p>
+                    <p class="mt-1 font-mono text-xs [overflow-wrap:anywhere] text-[var(--ph-text-muted)]" th:text="${post.slug}">slug</p>
                 </td>
                 <td class="px-4 py-3 text-[var(--ph-text-dim)]">
                     <span th:if="${post.categoryId != null and categories[post.categoryId] != null}" th:text="${categories[post.categoryId].name}">笔记</span>
                     <span th:unless="${post.categoryId != null and categories[post.categoryId] != null}">-</span>
                 </td>
-                <td class="px-4 py-3 text-[var(--ph-text-dim)]" th:text="${postTags[post.id] != null ? postTags[post.id] : '-'}">Java、MySQL</td>
+                <td class="px-4 py-3 text-[var(--ph-text-dim)] [overflow-wrap:anywhere]" th:text="${postTags[post.id] != null ? postTags[post.id] : '-'}">Java、MySQL</td>
                 <td class="px-4 py-3">
                     <span th:if="${post.status == 'published'}" class="inline-flex items-center gap-2 border border-[var(--ph-accent)] px-2 py-1 text-xs text-[var(--ph-accent)]">已发布</span>
                     <span th:unless="${post.status == 'published'}" class="inline-flex items-center gap-2 border border-[var(--ph-border-strong)] px-2 py-1 text-xs text-[var(--ph-text-muted)]">草稿</span>
                 </td>
                 <td class="px-4 py-3 text-[var(--ph-text-dim)]" th:text="${post.publishedAt != null ? #temporals.format(post.publishedAt, 'yyyy-MM-dd HH:mm') : '-'}">-</td>
                 <td class="px-4 py-3">
-                    <div class="flex justify-end gap-3">
+                    <div class="flex justify-end gap-3 [overflow-wrap:anywhere]">
                         <a th:if="${post.status == 'published'}" th:href="@{/notes/{slug}(slug=${post.slug})}" target="_blank" rel="noopener noreferrer" class="text-[var(--ph-accent)] hover:underline">查看</a>
                         <a th:href="@{/admin/posts/{id}/edit(id=${post.id})}" class="text-[var(--ph-accent)] hover:underline">编辑</a>
                         <form th:action="@{/admin/posts/{id}/delete(id=${post.id})}" method="post">

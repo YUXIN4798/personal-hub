@@ -3,6 +3,8 @@ package com.tianshi.hub.controller;
 import com.tianshi.hub.entity.Category;
 import com.tianshi.hub.entity.Resource;
 import com.tianshi.hub.service.ResourceService;
+import com.tianshi.hub.service.MarkdownService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -26,9 +28,16 @@ import java.util.stream.Collectors;
 public class ResourceController {
 
     private final ResourceService resourceService;
+    private final MarkdownService markdownService;
 
     public ResourceController(ResourceService resourceService) {
+        this(resourceService, new MarkdownService());
+    }
+
+    @Autowired
+    public ResourceController(ResourceService resourceService, MarkdownService markdownService) {
         this.resourceService = resourceService;
+        this.markdownService = markdownService;
     }
 
     @GetMapping
@@ -39,7 +48,10 @@ public class ResourceController {
             Model model
     ) {
         List<Category> categories = resourceService.findResourceCategories();
-        model.addAttribute("resources", resourceService.findPublicResources(page, size, category));
+        var resources = resourceService.findPublicResources(page, size, category);
+        model.addAttribute("resources", resources);
+        model.addAttribute("resourceTags", resourceService.findResourceTags(
+                resources.getContent().stream().map(resource -> resource.getId()).toList()));
         model.addAttribute("categories", categories);
         model.addAttribute("categoryNames", categories.stream()
                 .collect(Collectors.toMap(Category::getId, Category::getName)));
@@ -52,9 +64,11 @@ public class ResourceController {
     public String detail(@PathVariable Long id, Model model) {
         Resource resource = resourceService.findPublicResourceById(id);
         model.addAttribute("resource", resource);
+        model.addAttribute("renderedDescription", markdownService.render(resource.getDescription()));
         if (resource.getCategoryId() != null) {
             model.addAttribute("category", resourceService.findCategoryById(resource.getCategoryId()));
         }
+        model.addAttribute("tags", resourceService.findResourceTags(resource.getId()));
         model.addAttribute("pageTitle", "资源详情");
         return "resources/detail";
     }
@@ -63,12 +77,13 @@ public class ResourceController {
     public ResponseEntity<InputStreamResource> download(@PathVariable Long id) throws IOException {
         ResourceService.ResourceDownload download = resourceService.prepareDownload(id);
         Resource resource = download.resource();
+        String fileName = resource.getOriginalName() != null ? resource.getOriginalName() : resource.getTitle();
         InputStreamResource body = new InputStreamResource(Files.newInputStream(download.path()));
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .contentLength(Files.size(download.path()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment()
-                        .filename(resource.getOriginalName(), StandardCharsets.UTF_8)
+                        .filename(fileName, StandardCharsets.UTF_8)
                         .build()
                         .toString())
                 .body(body);

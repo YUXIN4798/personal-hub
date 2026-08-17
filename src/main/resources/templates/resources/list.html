@@ -22,19 +22,21 @@
     <div class="grid gap-4 md:grid-cols-2">
         <a th:each="resource : ${resources.content}"
            th:href="@{/resources/{id}(id=${resource.id})}"
-           class="motion-card reveal group border p-6 md:p-8">
+           class="motion-card reveal group min-h-[16rem] border p-6 md:p-8">
             <div class="flex flex-wrap items-start justify-between gap-3">
                 <p class="meta-label text-[0.62rem] text-[var(--ph-text-muted)]" th:text="${resource.version} + ' / Resource'">v1.0 / Resource</p>
                 <span class="font-mono text-xs text-[var(--ph-accent)]"
                       th:text="${#numbers.formatDecimal(resource.fileSize / 1024.0 / 1024.0, 1, 2)} + ' MB'">0 MB</span>
             </div>
-            <h2 class="display mt-10 text-2xl text-[var(--ph-text)] md:text-3xl" th:text="${resource.title}">资源名称</h2>
-            <p class="mt-4 text-sm leading-7 text-[var(--ph-text-dim)]" th:text="${resource.summary}">资源说明</p>
+            <h2 class="display mt-6 text-2xl [overflow-wrap:anywhere] text-[var(--ph-text)] md:text-3xl" th:text="${resource.title}">资源名称</h2>
+            <p th:if="${!#strings.isEmpty(resource.summary)}" class="[overflow-wrap:anywhere] mt-4 text-sm leading-7 text-[var(--ph-text-dim)]" th:text="${resource.summary}">资源说明</p>
             <div class="mt-6 flex flex-wrap items-center gap-4 font-mono text-xs text-[var(--ph-text-muted)]">
+                <span th:text="${resource.createdAt != null ? #temporals.format(resource.createdAt, 'yyyy-MM-dd') : '-'}">2026-08-17</span>
                 <span th:if="${resource.categoryId != null and categoryNames[resource.categoryId] != null}"
                       th:text="${categoryNames[resource.categoryId]}">未分类</span>
                 <span th:unless="${resource.categoryId != null and categoryNames[resource.categoryId] != null}">未分类</span>
                 <span th:text="'下载 ' + ${resource.downloadCount}">下载 0</span>
+                <span th:each="tag : ${resourceTags[resource.id]}" class="rounded border border-[var(--ph-border-strong)] px-2 py-1 text-[0.68rem] [overflow-wrap:anywhere]" th:text="${tag.name}">Java</span>
             </div>
         </a>
     </div>

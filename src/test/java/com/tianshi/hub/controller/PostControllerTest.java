@@ -44,7 +44,7 @@ class PostControllerTest {
         ReflectionTestUtils.setField(post, "id", 4L);
         post.setTitle("Java Notes");
         post.setSlug("java-notes");
-        post.setContent("正文");
+        post.setContent("```java\nclass Demo {}\n```");
         post.setStatus("published");
         when(postService.findPublishedPostBySlug("java-notes")).thenReturn(post);
         when(postService.findPostTags(4L)).thenReturn(List.of());
@@ -53,7 +53,7 @@ class PostControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("notes/detail"))
                 .andExpect(model().attribute("post", post))
-                .andExpect(model().attributeExists("tags"));
+                .andExpect(model().attributeExists("tags", "renderedContent"));
     }
 
     @Test

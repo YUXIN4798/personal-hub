@@ -24,15 +24,15 @@
             <tbody class="divide-y divide-[var(--ph-border-soft)]">
             <tr th:each="project : ${projects.content}" class="bg-[var(--ph-card-solid)]">
                 <td class="px-4 py-3">
-                    <p class="font-medium text-[var(--ph-text-strong)]" th:text="${project.title}">项目标题</p>
-                    <p class="mt-1 font-mono text-xs text-[var(--ph-text-muted)]" th:text="${project.slug}">slug</p>
+                    <p class="[overflow-wrap:anywhere] font-medium text-[var(--ph-text-strong)]" th:text="${project.title}">项目标题</p>
+                    <p class="mt-1 font-mono text-xs [overflow-wrap:anywhere] text-[var(--ph-text-muted)]" th:text="${project.slug}">slug</p>
                 </td>
                 <td class="px-4 py-3 text-[var(--ph-text-dim)]">
                     <span th:if="${project.categoryId != null and categories[project.categoryId] != null}"
                           th:text="${categories[project.categoryId].name}">作品集</span>
                     <span th:unless="${project.categoryId != null and categories[project.categoryId] != null}">-</span>
                 </td>
-                <td class="px-4 py-3 text-[var(--ph-text-dim)]" th:text="${projectTags[project.id] != null ? projectTags[project.id] : '-'}">Java、AI</td>
+                <td class="px-4 py-3 text-[var(--ph-text-dim)] [overflow-wrap:anywhere]" th:text="${projectTags[project.id] != null ? projectTags[project.id] : '-'}">Java、AI</td>
                 <td class="px-4 py-3">
                     <span th:if="${project.status == 'published'}" class="inline-flex items-center gap-2 border border-[var(--ph-accent)] px-2 py-1 text-xs text-[var(--ph-accent)]">
                         <span class="h-3 w-3 rounded-full bg-[var(--ph-accent)]" aria-hidden="true"></span>
@@ -45,7 +45,7 @@
                 </td>
                 <td class="px-4 py-3 text-[var(--ph-text-dim)]" th:text="${project.publishedAt != null ? #temporals.format(project.publishedAt, 'yyyy-MM-dd HH:mm') : '-'}">-</td>
                 <td class="px-4 py-3">
-                    <div class="flex justify-end gap-3">
+                    <div class="flex justify-end gap-3 [overflow-wrap:anywhere]">
                         <a th:href="@{/admin/projects/{id}/edit(id=${project.id})}" class="text-[var(--ph-accent)] hover:underline">编辑</a>
                         <form th:action="@{/admin/projects/{id}/delete(id=${project.id})}" method="post">
                             <button type="submit" class="text-[var(--ph-danger)] hover:underline">删除</button>

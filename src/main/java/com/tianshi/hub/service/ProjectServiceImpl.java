@@ -1,14 +1,24 @@
 package com.tianshi.hub.service;
 
 import com.tianshi.hub.entity.Project;
+import com.tianshi.hub.entity.ProjectTag;
+import com.tianshi.hub.entity.Tag;
 import com.tianshi.hub.exception.ResourceNotFoundException;
 import com.tianshi.hub.repository.ProjectRepository;
+import com.tianshi.hub.repository.ProjectTagRepository;
 import com.tianshi.hub.util.PaginationUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -19,9 +29,16 @@ public class ProjectServiceImpl implements ProjectService {
     private static final int MAX_PAGE_SIZE = 24;
 
     private final ProjectRepository projectRepository;
+    private final ProjectTagRepository projectTagRepository;
+
+    @Autowired
+    public ProjectServiceImpl(ProjectRepository projectRepository, ProjectTagRepository projectTagRepository) {
+        this.projectRepository = projectRepository;
+        this.projectTagRepository = projectTagRepository;
+    }
 
     public ProjectServiceImpl(ProjectRepository projectRepository) {
-        this.projectRepository = projectRepository;
+        this(projectRepository, null);
     }
 
     @Override
@@ -40,5 +57,23 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.findBySlug(slug)
                 .filter(project -> PUBLISHED_STATUS.equals(project.getStatus()))
                 .orElseThrow(() -> new ResourceNotFoundException("作品不存在"));
+    }
+
+    @Override
+    public List<Tag> findProjectTags(Long projectId) {
+        return projectTagRepository.findTagsByProjectId(projectId);
+    }
+
+    @Override
+    public Map<Long, List<Tag>> findProjectTags(List<Long> projectIds) {
+        if (projectIds == null || projectIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        return projectTagRepository.findByProject_IdInOrderByTag_NameAsc(projectIds).stream()
+                .collect(Collectors.groupingBy(
+                        projectTag -> projectTag.getProject().getId(),
+                        LinkedHashMap::new,
+                        Collectors.mapping(ProjectTag::getTag, Collectors.toList())
+                ));
     }
 }

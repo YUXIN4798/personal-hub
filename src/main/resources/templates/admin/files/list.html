@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/admin-layout :: layout('文件管理', ~{::content})}">
+<section th:fragment="content" class="space-y-5">
+    <div class="flex items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-semibold text-[var(--ph-text-strong)]">文件管理</h1>
+            <p class="mt-1 text-sm text-[var(--ph-text-muted)]">管理上传目录中的图片文件</p>
+        </div>
+        <form id="upload-form" th:action="@{/admin/upload}" method="post" enctype="multipart/form-data" class="flex items-center gap-3">
+            <input type="file" name="file" accept="image/*" class="max-w-xs border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2 text-sm">
+            <button type="submit" class="bg-[var(--ph-accent)] px-4 py-2 text-sm font-medium text-[var(--ph-accent-contrast)] transition hover:brightness-110">上传</button>
+        </form>
+    </div>
+    <div class="overflow-x-auto border border-[var(--ph-border)]">
+        <table class="min-w-full divide-y divide-[var(--ph-border-soft)] text-sm">
+            <thead class="bg-[var(--ph-bg-soft)] text-left text-xs uppercase tracking-[0.12em] text-[var(--ph-text-muted)]">
+            <tr>
+                <th class="px-4 py-3">文件名</th>
+                <th class="px-4 py-3">大小</th>
+                <th class="px-4 py-3">时间</th>
+                <th class="px-4 py-3">URL</th>
+                <th class="px-4 py-3 text-right">操作</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--ph-border-soft)]">
+            <tr th:each="file : ${files}" class="bg-[var(--ph-card-solid)]">
+                <td class="px-4 py-3">
+                    <p class="[overflow-wrap:anywhere] font-medium text-[var(--ph-text-strong)]" th:text="${file.name}">file.png</p>
+                </td>
+                <td class="px-4 py-3 text-[var(--ph-text-dim)]" th:text="${#numbers.formatDecimal(file.size / 1024.0, 1, 2)} + ' KB'">0 KB</td>
+                <td class="px-4 py-3 text-[var(--ph-text-dim)]" th:text="${#temporals.format(file.lastModifiedAt, 'yyyy-MM-dd HH:mm')}">2026-08-17 10:00</td>
+                <td class="px-4 py-3">
+                    <a th:href="${file.url}" target="_blank" rel="noopener noreferrer" class="[overflow-wrap:anywhere] text-[var(--ph-accent)] hover:underline" th:text="${file.url}">/uploads/file.png</a>
+                </td>
+                <td class="px-4 py-3">
+                    <div class="flex justify-end">
+                        <form th:action="@{/admin/files/{name}/delete(name=${file.name})}" method="post">
+                            <button type="submit" class="text-[var(--ph-danger)] hover:underline">删除</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <tr th:if="${files.empty}">
+                <td colspan="5" class="px-4 py-8 text-center text-[var(--ph-text-muted)]">暂无图片文件</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        (function () {
+            const form = document.getElementById('upload-form');
+            if (!form) return;
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form)
+                });
+                const payload = await response.json();
+                if (!response.ok) {
+                    alert(payload.error || '上传失败');
+                    return;
+                }
+                window.location.reload();
+            });
+        })();
+    </script>
+</section>
+</html>
