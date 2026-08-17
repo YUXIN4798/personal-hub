@@ -2,8 +2,10 @@ package com.tianshi.hub.service;
 
 import com.tianshi.hub.entity.Resource;
 import com.tianshi.hub.exception.ResourceNotFoundException;
+import com.tianshi.hub.config.AppProperties;
 import com.tianshi.hub.repository.CategoryRepository;
 import com.tianshi.hub.repository.ResourceRepository;
+import com.tianshi.hub.repository.ResourceTagRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.util.unit.DataSize;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -37,6 +40,9 @@ class ResourceServiceImplTest {
 
     @Mock
     private CategoryRepository categoryRepository;
+
+    @Mock
+    private ResourceTagRepository resourceTagRepository;
 
     @TempDir
     private Path tempDir;
@@ -108,6 +114,29 @@ class ResourceServiceImplTest {
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("资源文件暂不可下载");
         verify(resourceRepository, never()).incrementDownloadCount(7L);
+    }
+
+    @Test
+    void prepareDownload_上传目录文件_按服务解析并返回路径() throws Exception {
+        AppProperties properties = new AppProperties();
+        properties.setUploadDir(tempDir.toString());
+        properties.getUpload().setMaxSize(DataSize.ofMegabytes(5));
+        FileStorageService fileStorageService = new FileStorageService(properties);
+        Path file = tempDir.resolve("sample.png");
+        java.nio.file.Files.writeString(file, "content");
+        Resource resource = resource("public");
+        ReflectionTestUtils.setField(resource, "id", 8L);
+        ReflectionTestUtils.setField(resource, "filePath", "/uploads/sample.png");
+        when(resourceRepository.findById(8L)).thenReturn(Optional.of(resource));
+
+        ResourceServiceImpl service = new ResourceServiceImpl(
+                resourceRepository, categoryRepository, resourceTagRepository, fileStorageService
+        );
+
+        ResourceService.ResourceDownload download = service.prepareDownload(8L);
+
+        assertThat(download.path()).isEqualTo(file);
+        verify(resourceRepository).incrementDownloadCount(8L);
     }
 
     private Resource resource(String visibility) {

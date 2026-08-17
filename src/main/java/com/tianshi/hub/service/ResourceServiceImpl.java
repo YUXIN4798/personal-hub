@@ -16,7 +16,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -35,20 +34,31 @@ public class ResourceServiceImpl implements ResourceService {
     private final ResourceRepository resourceRepository;
     private final CategoryRepository categoryRepository;
     private final ResourceTagRepository resourceTagRepository;
+    private final FileStorageService fileStorageService;
 
     @Autowired
     public ResourceServiceImpl(
             ResourceRepository resourceRepository,
             CategoryRepository categoryRepository,
-            ResourceTagRepository resourceTagRepository
+            ResourceTagRepository resourceTagRepository,
+            FileStorageService fileStorageService
     ) {
         this.resourceRepository = resourceRepository;
         this.categoryRepository = categoryRepository;
         this.resourceTagRepository = resourceTagRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     public ResourceServiceImpl(ResourceRepository resourceRepository, CategoryRepository categoryRepository) {
-        this(resourceRepository, categoryRepository, null);
+        this(resourceRepository, categoryRepository, null, null);
+    }
+
+    public ResourceServiceImpl(
+            ResourceRepository resourceRepository,
+            CategoryRepository categoryRepository,
+            ResourceTagRepository resourceTagRepository
+    ) {
+        this(resourceRepository, categoryRepository, resourceTagRepository, null);
     }
 
     @Override
@@ -109,8 +119,9 @@ public class ResourceServiceImpl implements ResourceService {
     @Transactional
     public ResourceDownload prepareDownload(Long id) {
         Resource resource = findPublicResourceById(id);
-        Path path = Path.of(resource.getFilePath()).normalize();
-        if (!Files.isRegularFile(path) || !Files.isReadable(path)) {
+        String relativePath = resource.getFilePath() != null ? resource.getFilePath() : resource.getUrl();
+        Path path = fileStorageService != null ? fileStorageService.resolve(relativePath) : Path.of(relativePath).normalize();
+        if (!java.nio.file.Files.isRegularFile(path) || !java.nio.file.Files.isReadable(path)) {
             throw new ResourceNotFoundException("资源文件暂不可下载");
         }
         resourceRepository.incrementDownloadCount(id);

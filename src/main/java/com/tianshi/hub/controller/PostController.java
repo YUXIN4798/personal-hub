@@ -3,6 +3,8 @@ package com.tianshi.hub.controller;
 import com.tianshi.hub.entity.Category;
 import com.tianshi.hub.entity.Post;
 import com.tianshi.hub.service.PostService;
+import com.tianshi.hub.service.MarkdownService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +20,16 @@ import java.util.stream.Collectors;
 public class PostController {
 
     private final PostService postService;
+    private final MarkdownService markdownService;
 
     public PostController(PostService postService) {
+        this(postService, new MarkdownService());
+    }
+
+    @Autowired
+    public PostController(PostService postService, MarkdownService markdownService) {
         this.postService = postService;
+        this.markdownService = markdownService;
     }
 
     @GetMapping
@@ -44,6 +53,7 @@ public class PostController {
     public String detail(@PathVariable String slug, Model model) {
         Post post = postService.findPublishedPostBySlug(slug);
         model.addAttribute("post", post);
+        model.addAttribute("renderedContent", markdownService.render(post.getContent()));
         model.addAttribute("tags", postService.findPostTags(post.getId()));
         if (post.getCategoryId() != null) {
             model.addAttribute("category", postService.findPostCategory(post.getCategoryId()));

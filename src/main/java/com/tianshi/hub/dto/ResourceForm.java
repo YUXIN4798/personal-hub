@@ -2,6 +2,7 @@ package com.tianshi.hub.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,8 @@ public class ResourceForm {
     private Long categoryId;
 
     private List<Long> tagIds = new ArrayList<>();
+
+    private MultipartFile file;
 
     public String getTitle() {
         return title;
@@ -85,5 +88,12 @@ public class ResourceForm {
     public void setTagIds(List<Long> tagIds) {
         this.tagIds = tagIds == null ? new ArrayList<>() : tagIds;
     }
-}
 
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+}

@@ -1,6 +1,8 @@
 package com.tianshi.hub.controller;
 
 import com.tianshi.hub.entity.Resource;
+import com.tianshi.hub.entity.Category;
+import com.tianshi.hub.exception.GlobalExceptionHandler;
 import com.tianshi.hub.service.ResourceService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,8 +20,10 @@ import java.nio.file.Path;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @ExtendWith(MockitoExtension.class)
 class ResourceControllerTest {
@@ -43,5 +47,31 @@ class ResourceControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, containsString("filename=\"=?UTF-8?Q?")))
                 .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, containsString("filename*=UTF-8''Java%20")));
+    }
+
+    @Test
+    void detail_markdown描述_返回渲染后的HTML() throws Exception {
+        Resource resource = new Resource();
+        ReflectionTestUtils.setField(resource, "id", 11L);
+        resource.setTitle("Resource");
+        resource.setSlug("resource");
+        resource.setDescription("**资源**");
+        resource.setVisibility("public");
+        when(resourceService.findPublicResourceById(11L)).thenReturn(resource);
+        when(resourceService.findResourceTags(11L)).thenReturn(java.util.List.of());
+        when(resourceService.findCategoryById(1L)).thenReturn(new Category());
+        ReflectionTestUtils.setField(resource, "categoryId", 1L);
+
+        mockMvc().perform(get("/resources/11"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("resources/detail"))
+                .andExpect(model().attributeExists("renderedDescription"))
+                .andExpect(model().attribute("renderedDescription", containsString("<strong>资源</strong>")));
+    }
+
+    private MockMvc mockMvc() {
+        return MockMvcBuilders.standaloneSetup(new ResourceController(resourceService))
+                .setControllerAdvice(new GlobalExceptionHandler())
+                .build();
     }
 }

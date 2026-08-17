@@ -27,6 +27,7 @@
         <div>
             <label for="content" class="block text-sm text-[var(--ph-text-dim)]">正文</label>
             <textarea id="content" th:field="*{content}" rows="15" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2"></textarea>
+            <p class="mt-1 text-xs text-[var(--ph-text-muted)]">支持 Markdown：图片、代码块、链接。</p>
             <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="mt-1 text-sm text-[var(--ph-danger)]">错误</p>
         </div>
         <div class="grid gap-4 md:grid-cols-3">

@@ -1,6 +1,8 @@
 package com.tianshi.hub.controller;
 
 import com.tianshi.hub.service.ProjectService;
+import com.tianshi.hub.service.MarkdownService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +15,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final MarkdownService markdownService;
 
     public ProjectController(ProjectService projectService) {
+        this(projectService, new MarkdownService());
+    }
+
+    @Autowired
+    public ProjectController(ProjectService projectService, MarkdownService markdownService) {
         this.projectService = projectService;
+        this.markdownService = markdownService;
     }
 
     @GetMapping
@@ -36,6 +45,7 @@ public class ProjectController {
     public String detail(@PathVariable String slug, Model model) {
         var project = projectService.findPublishedProjectBySlug(slug);
         model.addAttribute("project", project);
+        model.addAttribute("renderedDescription", markdownService.render(project.getDescription()));
         model.addAttribute("tags", projectService.findProjectTags(project.getId()));
         model.addAttribute("pageTitle", "作品详情");
         return "projects/detail";

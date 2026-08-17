@@ -24,15 +24,15 @@
             <tbody class="divide-y divide-[var(--ph-border-soft)]">
             <tr th:each="resource : ${resources.content}" class="bg-[var(--ph-card-solid)]">
                 <td class="px-4 py-3">
-                    <p class="font-medium text-[var(--ph-text-strong)]" th:text="${resource.title}">资源标题</p>
-                    <p class="mt-1 font-mono text-xs text-[var(--ph-text-muted)]" th:text="${resource.slug}">slug</p>
+                    <p class="[overflow-wrap:anywhere] font-medium text-[var(--ph-text-strong)]" th:text="${resource.title}">资源标题</p>
+                    <p class="mt-1 font-mono text-xs [overflow-wrap:anywhere] text-[var(--ph-text-muted)]" th:text="${resource.slug}">slug</p>
                 </td>
                 <td class="px-4 py-3 text-[var(--ph-text-dim)]">
                     <span th:if="${resource.categoryId != null and categories[resource.categoryId] != null}"
                           th:text="${categories[resource.categoryId].name}">资源库</span>
                     <span th:unless="${resource.categoryId != null and categories[resource.categoryId] != null}">-</span>
                 </td>
-                <td class="px-4 py-3 text-[var(--ph-text-dim)]" th:text="${resourceTags[resource.id] != null ? resourceTags[resource.id] : '-'}">Java、AI</td>
+                <td class="px-4 py-3 text-[var(--ph-text-dim)] [overflow-wrap:anywhere]" th:text="${resourceTags[resource.id] != null ? resourceTags[resource.id] : '-'}">Java、AI</td>
                 <td class="px-4 py-3 text-[var(--ph-text-dim)]" th:text="${resource.type}">link</td>
                 <td class="px-4 py-3">
                     <span th:if="${resource.visibility == 'public'}" class="inline-flex items-center gap-2 border border-[var(--ph-accent)] px-2 py-1 text-xs text-[var(--ph-accent)]">
@@ -45,7 +45,7 @@
                     </span>
                 </td>
                 <td class="px-4 py-3">
-                    <div class="flex justify-end gap-3">
+                    <div class="flex justify-end gap-3 [overflow-wrap:anywhere]">
                         <a th:href="@{/resources/{id}(id=${resource.id})}" target="_blank" rel="noopener noreferrer" class="text-[var(--ph-text-dim)] hover:underline">前台</a>
                         <a th:href="@{/admin/resources/{id}/edit(id=${resource.id})}" class="text-[var(--ph-accent)] hover:underline">编辑</a>
                         <form th:action="@{/admin/resources/{id}/delete(id=${resource.id})}" method="post">
@@ -67,4 +67,3 @@
     </nav>
 </section>
 </html>
-
