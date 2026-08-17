@@ -24,8 +24,8 @@ public class ProjectForm {
     @Size(max = 500, message = "封面 URL 不能超过 500 个字符")
     private String coverUrl;
 
-    @Size(max = 500, message = "GitHub URL 不能超过 500 个字符")
-    private String githubUrl;
+    @Size(max = 500, message = "源码 URL 不能超过 500 个字符")
+    private String sourceUrl;
 
     @Size(max = 500, message = "演示 URL 不能超过 500 个字符")
     private String demoUrl;
@@ -72,12 +72,12 @@ public class ProjectForm {
         this.coverUrl = coverUrl;
     }
 
-    public String getGithubUrl() {
-        return githubUrl;
+    public String getSourceUrl() {
+        return sourceUrl;
     }
 
-    public void setGithubUrl(String githubUrl) {
-        this.githubUrl = githubUrl;
+    public void setSourceUrl(String sourceUrl) {
+        this.sourceUrl = sourceUrl;
     }
 
     public String getDemoUrl() {

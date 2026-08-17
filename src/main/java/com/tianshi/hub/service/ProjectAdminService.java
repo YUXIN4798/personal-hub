@@ -17,7 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectAdminService {
@@ -70,6 +73,19 @@ public class ProjectAdminService {
     }
 
     @Transactional(readOnly = true)
+    public Map<Long, String> findProjectTagNames(List<Long> projectIds) {
+        if (projectIds == null || projectIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        return projectTagRepository.findByProject_IdInOrderByTag_NameAsc(projectIds).stream()
+                .collect(Collectors.groupingBy(
+                        projectTag -> projectTag.getProject().getId(),
+                        LinkedHashMap::new,
+                        Collectors.mapping(projectTag -> projectTag.getTag().getName(), Collectors.joining("、"))
+                ));
+    }
+
+    @Transactional(readOnly = true)
     public boolean slugExists(String slug, Long excludedId) {
         if (excludedId == null) {
             return projectRepository.existsBySlug(slug);
@@ -107,7 +123,7 @@ public class ProjectAdminService {
         form.setSlug(project.getSlug());
         form.setDescription(project.getDescription());
         form.setCoverUrl(project.getCoverImageUrl());
-        form.setGithubUrl(project.getSourceUrl());
+        form.setSourceUrl(project.getSourceUrl());
         form.setDemoUrl(project.getDemoUrl());
         form.setStatus(project.getStatus());
         form.setPublishedAt(project.getPublishedAt());
@@ -122,7 +138,7 @@ public class ProjectAdminService {
         project.setSummary(trimToLength(form.getDescription(), 500));
         project.setDescription(trim(form.getDescription()));
         project.setCoverImageUrl(trim(form.getCoverUrl()));
-        project.setSourceUrl(trim(form.getGithubUrl()));
+        project.setSourceUrl(trim(form.getSourceUrl()));
         project.setDemoUrl(trim(form.getDemoUrl()));
         project.setStatus(normalizeStatus(form.getStatus()));
         project.setPublishedAt(form.getPublishedAt());

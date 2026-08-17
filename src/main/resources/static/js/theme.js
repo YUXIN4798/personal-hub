@@ -11,7 +11,9 @@
         const normalizedTheme = theme === 'light' ? 'light' : 'dark';
         root.dataset.theme = normalizedTheme;
         toggles.forEach((toggle) => {
-            toggle.setAttribute('aria-label', normalizedTheme === 'light' ? '切换到暗色主题' : '切换到亮色主题');
+            const label = normalizedTheme === 'light' ? '切换到暗色主题' : '切换到亮色主题';
+            toggle.setAttribute('aria-label', label);
+            toggle.setAttribute('title', label);
             const icon = toggle.querySelector('[data-theme-icon]');
             if (icon) {
                 icon.textContent = normalizedTheme === 'light' ? '☀️' : '🌙';

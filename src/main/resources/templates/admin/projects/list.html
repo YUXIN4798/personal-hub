@@ -15,6 +15,7 @@
             <tr>
                 <th class="px-4 py-3">标题</th>
                 <th class="px-4 py-3">分类</th>
+                <th class="px-4 py-3">标签</th>
                 <th class="px-4 py-3">状态</th>
                 <th class="px-4 py-3">发布时间</th>
                 <th class="px-4 py-3 text-right">操作</th>
@@ -31,8 +32,16 @@
                           th:text="${categories[project.categoryId].name}">作品集</span>
                     <span th:unless="${project.categoryId != null and categories[project.categoryId] != null}">-</span>
                 </td>
+                <td class="px-4 py-3 text-[var(--ph-text-dim)]" th:text="${projectTags[project.id] != null ? projectTags[project.id] : '-'}">Java、AI</td>
                 <td class="px-4 py-3">
-                    <span class="border border-[var(--ph-accent)] px-2 py-1 text-xs text-[var(--ph-accent)]" th:text="${project.status}">published</span>
+                    <span th:if="${project.status == 'published'}" class="inline-flex items-center gap-2 border border-[var(--ph-accent)] px-2 py-1 text-xs text-[var(--ph-accent)]">
+                        <span class="h-3 w-3 rounded-full bg-[var(--ph-accent)]" aria-hidden="true"></span>
+                        已发布
+                    </span>
+                    <span th:unless="${project.status == 'published'}" class="inline-flex items-center gap-2 border border-[var(--ph-border-strong)] px-2 py-1 text-xs text-[var(--ph-text-muted)]">
+                        <span class="h-3 w-3 rounded-full bg-[var(--ph-border-strong)]" aria-hidden="true"></span>
+                        草稿
+                    </span>
                 </td>
                 <td class="px-4 py-3 text-[var(--ph-text-dim)]" th:text="${project.publishedAt != null ? #temporals.format(project.publishedAt, 'yyyy-MM-dd HH:mm') : '-'}">-</td>
                 <td class="px-4 py-3">
@@ -45,7 +54,7 @@
                 </td>
             </tr>
             <tr th:if="${projects.empty}">
-                <td colspan="5" class="px-4 py-8 text-center text-[var(--ph-text-muted)]">暂无项目</td>
+                <td colspan="6" class="px-4 py-8 text-center text-[var(--ph-text-muted)]">暂无项目</td>
             </tr>
             </tbody>
         </table>

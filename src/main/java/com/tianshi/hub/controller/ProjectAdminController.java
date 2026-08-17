@@ -35,8 +35,11 @@ public class ProjectAdminController {
         Page<Project> projects = projectAdminService.findProjects(page);
         Map<Long, Category> categories = projectAdminService.findProjectCategories().stream()
                 .collect(Collectors.toMap(Category::getId, Function.identity()));
+        Map<Long, String> projectTags = projectAdminService.findProjectTagNames(
+                projects.getContent().stream().map(Project::getId).toList());
         model.addAttribute("projects", projects);
         model.addAttribute("categories", categories);
+        model.addAttribute("projectTags", projectTags);
         model.addAttribute("pageTitle", "项目管理");
         return "admin/projects/list";
     }

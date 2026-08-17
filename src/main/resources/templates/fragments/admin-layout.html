@@ -22,7 +22,8 @@
     <header class="flex items-center justify-between border-b border-[var(--ph-border)] py-4">
         <a th:href="@{/admin/projects}" class="font-mono text-sm uppercase tracking-[0.14em] text-[var(--ph-accent)]">Personal Hub 管理台</a>
         <div class="flex items-center gap-3">
-            <button type="button" class="theme-toggle inline-grid h-9 w-9 place-items-center border text-base" data-theme-toggle aria-label="切换到亮色主题">
+            <a th:href="@{/}" target="_blank" rel="noopener noreferrer" class="border border-[var(--ph-border)] px-3 py-2 text-sm text-[var(--ph-text-dim)] transition hover:border-[var(--ph-accent)] hover:bg-[var(--ph-accent-soft)] hover:text-[var(--ph-accent)]">查看前台</a>
+            <button type="button" class="theme-toggle inline-grid h-9 w-9 place-items-center border" data-theme-toggle aria-label="切换到亮色主题" title="切换到亮色主题">
                 <span data-theme-icon aria-hidden="true">🌙</span>
             </button>
             <form th:action="@{/admin/logout}" method="post">
