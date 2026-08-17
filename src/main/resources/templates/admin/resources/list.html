@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/admin-layout :: layout('资源管理', ~{::content})}">
+<section th:fragment="content" class="space-y-5">
+    <div class="flex items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-semibold text-[var(--ph-text-strong)]">资源管理</h1>
+            <p class="mt-1 text-sm text-[var(--ph-text-muted)]">管理资源库展示内容</p>
+        </div>
+        <a th:href="@{/admin/resources/new}" class="bg-[var(--ph-accent)] px-4 py-2 text-sm font-medium text-[var(--ph-accent-contrast)] transition hover:brightness-110">新建资源</a>
+    </div>
+    <div class="overflow-x-auto border border-[var(--ph-border)]">
+        <table class="min-w-full divide-y divide-[var(--ph-border-soft)] text-sm">
+            <thead class="bg-[var(--ph-bg-soft)] text-left text-xs uppercase tracking-[0.12em] text-[var(--ph-text-muted)]">
+            <tr>
+                <th class="px-4 py-3">标题</th>
+                <th class="px-4 py-3">分类</th>
+                <th class="px-4 py-3">标签</th>
+                <th class="px-4 py-3">类型</th>
+                <th class="px-4 py-3">可见性</th>
+                <th class="px-4 py-3 text-right">操作</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--ph-border-soft)]">
+            <tr th:each="resource : ${resources.content}" class="bg-[var(--ph-card-solid)]">
+                <td class="px-4 py-3">
+                    <p class="font-medium text-[var(--ph-text-strong)]" th:text="${resource.title}">资源标题</p>
+                    <p class="mt-1 font-mono text-xs text-[var(--ph-text-muted)]" th:text="${resource.slug}">slug</p>
+                </td>
+                <td class="px-4 py-3 text-[var(--ph-text-dim)]">
+                    <span th:if="${resource.categoryId != null and categories[resource.categoryId] != null}"
+                          th:text="${categories[resource.categoryId].name}">资源库</span>
+                    <span th:unless="${resource.categoryId != null and categories[resource.categoryId] != null}">-</span>
+                </td>
+                <td class="px-4 py-3 text-[var(--ph-text-dim)]" th:text="${resourceTags[resource.id] != null ? resourceTags[resource.id] : '-'}">Java、AI</td>
+                <td class="px-4 py-3 text-[var(--ph-text-dim)]" th:text="${resource.type}">link</td>
+                <td class="px-4 py-3">
+                    <span th:if="${resource.visibility == 'public'}" class="inline-flex items-center gap-2 border border-[var(--ph-accent)] px-2 py-1 text-xs text-[var(--ph-accent)]">
+                        <span class="h-3 w-3 rounded-full bg-[var(--ph-accent)]" aria-hidden="true"></span>
+                        public
+                    </span>
+                    <span th:unless="${resource.visibility == 'public'}" class="inline-flex items-center gap-2 border border-[var(--ph-border-strong)] px-2 py-1 text-xs text-[var(--ph-text-muted)]">
+                        <span class="h-3 w-3 rounded-full bg-[var(--ph-border-strong)]" aria-hidden="true"></span>
+                        <span th:text="${resource.visibility}">private</span>
+                    </span>
+                </td>
+                <td class="px-4 py-3">
+                    <div class="flex justify-end gap-3">
+                        <a th:href="@{/resources/{id}(id=${resource.id})}" target="_blank" rel="noopener noreferrer" class="text-[var(--ph-text-dim)] hover:underline">前台</a>
+                        <a th:href="@{/admin/resources/{id}/edit(id=${resource.id})}" class="text-[var(--ph-accent)] hover:underline">编辑</a>
+                        <form th:action="@{/admin/resources/{id}/delete(id=${resource.id})}" method="post">
+                            <button type="submit" class="text-[var(--ph-danger)] hover:underline">删除</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <tr th:if="${resources.empty}">
+                <td colspan="6" class="px-4 py-8 text-center text-[var(--ph-text-muted)]">暂无资源</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <nav th:if="${resources.totalPages > 1}" class="flex items-center justify-end gap-3 text-sm">
+        <a th:if="${resources.hasPrevious()}" th:href="@{/admin/resources(page=${resources.number - 1})}" class="text-[var(--ph-accent)]">上一页</a>
+        <span class="text-[var(--ph-text-muted)]" th:text="${resources.number + 1} + ' / ' + ${resources.totalPages}">1 / 1</span>
+        <a th:if="${resources.hasNext()}" th:href="@{/admin/resources(page=${resources.number + 1})}" class="text-[var(--ph-accent)]">下一页</a>
+    </nav>
+</section>
+</html>
+

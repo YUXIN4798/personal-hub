@@ -1,6 +1,7 @@
 package com.tianshi.hub.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -21,17 +22,28 @@ public class ProjectForm {
     @Size(max = 2000, message = "描述不能超过 2000 个字符")
     private String description;
 
+    @Size(max = 500, message = "摘要不能超过 500 个字符")
+    private String summary;
+
+    @Size(max = 500, message = "技术栈不能超过 500 个字符")
+    private String techStack;
+
     @Size(max = 500, message = "封面 URL 不能超过 500 个字符")
     private String coverUrl;
 
-    @Size(max = 500, message = "GitHub URL 不能超过 500 个字符")
-    private String githubUrl;
+    @Size(max = 500, message = "源码 URL 不能超过 500 个字符")
+    private String sourceUrl;
 
     @Size(max = 500, message = "演示 URL 不能超过 500 个字符")
     private String demoUrl;
 
     @NotBlank(message = "状态不能为空")
     private String status = "draft";
+
+    private boolean featured;
+
+    @Min(value = 0, message = "排序号不能小于 0")
+    private Integer sortOrder = 0;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime publishedAt;
@@ -64,6 +76,22 @@ public class ProjectForm {
         this.description = description;
     }
 
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public String getTechStack() {
+        return techStack;
+    }
+
+    public void setTechStack(String techStack) {
+        this.techStack = techStack;
+    }
+
     public String getCoverUrl() {
         return coverUrl;
     }
@@ -72,12 +100,12 @@ public class ProjectForm {
         this.coverUrl = coverUrl;
     }
 
-    public String getGithubUrl() {
-        return githubUrl;
+    public String getSourceUrl() {
+        return sourceUrl;
     }
 
-    public void setGithubUrl(String githubUrl) {
-        this.githubUrl = githubUrl;
+    public void setSourceUrl(String sourceUrl) {
+        this.sourceUrl = sourceUrl;
     }
 
     public String getDemoUrl() {
@@ -94,6 +122,22 @@ public class ProjectForm {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public boolean isFeatured() {
+        return featured;
+    }
+
+    public void setFeatured(boolean featured) {
+        this.featured = featured;
+    }
+
+    public Integer getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(Integer sortOrder) {
+        this.sortOrder = sortOrder;
     }
 
     public LocalDateTime getPublishedAt() {

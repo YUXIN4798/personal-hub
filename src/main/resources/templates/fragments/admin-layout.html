@@ -19,10 +19,18 @@
 </head>
 <body class="min-h-screen bg-[var(--ph-bg)] text-[var(--ph-text)] antialiased">
 <div class="mx-auto flex min-h-screen max-w-6xl flex-col px-5">
-    <header class="flex items-center justify-between border-b border-[var(--ph-border)] py-4">
-        <a th:href="@{/admin/projects}" class="font-mono text-sm uppercase tracking-[0.14em] text-[var(--ph-accent)]">Personal Hub 管理台</a>
+    <header class="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--ph-border)] py-4">
+        <div class="flex flex-wrap items-center gap-5">
+            <a th:href="@{/admin/projects}" class="font-mono text-sm uppercase tracking-[0.14em] text-[var(--ph-accent)]">Personal Hub 管理台</a>
+            <nav class="flex items-center gap-3 text-sm" aria-label="后台导航">
+                <a th:href="@{/admin/projects}" class="text-[var(--ph-text-dim)] transition hover:text-[var(--ph-accent)]">项目管理</a>
+                <a th:href="@{/admin/resources}" class="text-[var(--ph-text-dim)] transition hover:text-[var(--ph-accent)]">资源管理</a>
+                <a th:href="@{/admin/posts}" class="text-[var(--ph-text-dim)] transition hover:text-[var(--ph-accent)]">笔记管理</a>
+            </nav>
+        </div>
         <div class="flex items-center gap-3">
-            <button type="button" class="theme-toggle inline-grid h-9 w-9 place-items-center border text-base" data-theme-toggle aria-label="切换到亮色主题">
+            <a th:href="@{/}" target="_blank" rel="noopener noreferrer" class="border border-[var(--ph-border)] px-3 py-2 text-sm text-[var(--ph-text-dim)] transition hover:border-[var(--ph-accent)] hover:bg-[var(--ph-accent-soft)] hover:text-[var(--ph-accent)]">查看前台</a>
+            <button type="button" class="theme-toggle inline-grid h-9 w-9 place-items-center border" data-theme-toggle aria-label="切换到亮色主题" title="切换到亮色主题">
                 <span data-theme-icon aria-hidden="true">🌙</span>
             </button>
             <form th:action="@{/admin/logout}" method="post">

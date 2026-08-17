@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/admin-layout :: layout('笔记管理', ~{::content})}">
+<section th:fragment="content" class="space-y-5">
+    <div class="flex items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-semibold text-[var(--ph-text-strong)]">笔记管理</h1>
+            <p class="mt-1 text-sm text-[var(--ph-text-muted)]">管理前台笔记与草稿</p>
+        </div>
+        <a th:href="@{/admin/posts/new}" class="bg-[var(--ph-accent)] px-4 py-2 text-sm font-medium text-[var(--ph-accent-contrast)] transition hover:brightness-110">新建笔记</a>
+    </div>
+    <div class="overflow-x-auto border border-[var(--ph-border)]">
+        <table class="min-w-full divide-y divide-[var(--ph-border-soft)] text-sm">
+            <thead class="bg-[var(--ph-bg-soft)] text-left text-xs uppercase tracking-[0.12em] text-[var(--ph-text-muted)]">
+            <tr>
+                <th class="px-4 py-3">标题</th>
+                <th class="px-4 py-3">分类</th>
+                <th class="px-4 py-3">标签</th>
+                <th class="px-4 py-3">状态</th>
+                <th class="px-4 py-3">发布时间</th>
+                <th class="px-4 py-3 text-right">操作</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--ph-border-soft)]">
+            <tr th:each="post : ${posts.content}" class="bg-[var(--ph-card-solid)]">
+                <td class="px-4 py-3">
+                    <p class="font-medium text-[var(--ph-text-strong)]" th:text="${post.title}">笔记标题</p>
+                    <p class="mt-1 font-mono text-xs text-[var(--ph-text-muted)]" th:text="${post.slug}">slug</p>
+                </td>
+                <td class="px-4 py-3 text-[var(--ph-text-dim)]">
+                    <span th:if="${post.categoryId != null and categories[post.categoryId] != null}" th:text="${categories[post.categoryId].name}">笔记</span>
+                    <span th:unless="${post.categoryId != null and categories[post.categoryId] != null}">-</span>
+                </td>
+                <td class="px-4 py-3 text-[var(--ph-text-dim)]" th:text="${postTags[post.id] != null ? postTags[post.id] : '-'}">Java、MySQL</td>
+                <td class="px-4 py-3">
+                    <span th:if="${post.status == 'published'}" class="inline-flex items-center gap-2 border border-[var(--ph-accent)] px-2 py-1 text-xs text-[var(--ph-accent)]">已发布</span>
+                    <span th:unless="${post.status == 'published'}" class="inline-flex items-center gap-2 border border-[var(--ph-border-strong)] px-2 py-1 text-xs text-[var(--ph-text-muted)]">草稿</span>
+                </td>
+                <td class="px-4 py-3 text-[var(--ph-text-dim)]" th:text="${post.publishedAt != null ? #temporals.format(post.publishedAt, 'yyyy-MM-dd HH:mm') : '-'}">-</td>
+                <td class="px-4 py-3">
+                    <div class="flex justify-end gap-3">
+                        <a th:if="${post.status == 'published'}" th:href="@{/notes/{slug}(slug=${post.slug})}" target="_blank" rel="noopener noreferrer" class="text-[var(--ph-accent)] hover:underline">查看</a>
+                        <a th:href="@{/admin/posts/{id}/edit(id=${post.id})}" class="text-[var(--ph-accent)] hover:underline">编辑</a>
+                        <form th:action="@{/admin/posts/{id}/delete(id=${post.id})}" method="post">
+                            <button type="submit" class="text-[var(--ph-danger)] hover:underline">删除</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <tr th:if="${posts.empty}">
+                <td colspan="6" class="px-4 py-8 text-center text-[var(--ph-text-muted)]">暂无笔记</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <nav th:if="${posts.totalPages > 1}" class="flex items-center justify-end gap-3 text-sm">
+        <a th:if="${posts.hasPrevious()}" th:href="@{/admin/posts(page=${posts.number - 1})}" class="text-[var(--ph-accent)]">上一页</a>
+        <span class="text-[var(--ph-text-muted)]" th:text="${posts.number + 1} + ' / ' + ${posts.totalPages}">1 / 1</span>
+        <a th:if="${posts.hasNext()}" th:href="@{/admin/posts(page=${posts.number + 1})}" class="text-[var(--ph-accent)]">下一页</a>
+    </nav>
+</section>
+</html>

@@ -57,7 +57,11 @@ class ProjectAdminControllerTest {
         mockMvc.perform(post("/admin/projects/new")
                         .param("title", "New Project")
                         .param("slug", "new-project")
+                        .param("summary", "项目摘要")
                         .param("description", "项目描述")
+                        .param("techStack", "Java, MySQL")
+                        .param("featured", "true")
+                        .param("sortOrder", "7")
                         .param("status", "published")
                         .param("tagIds", "1", "2"))
                 .andExpect(status().is3xxRedirection())
@@ -65,6 +69,10 @@ class ProjectAdminControllerTest {
 
         ArgumentCaptor<ProjectForm> captor = ArgumentCaptor.forClass(ProjectForm.class);
         verify(projectAdminService).create(captor.capture());
+        assertThat(captor.getValue().getSummary()).isEqualTo("项目摘要");
+        assertThat(captor.getValue().getTechStack()).isEqualTo("Java, MySQL");
+        assertThat(captor.getValue().isFeatured()).isTrue();
+        assertThat(captor.getValue().getSortOrder()).isEqualTo(7);
         assertThat(captor.getValue().getTagIds()).containsExactly(1L, 2L);
     }
 

@@ -14,6 +14,10 @@ public interface ResourceRepository extends JpaRepository<Resource, Long> {
 
     Page<Resource> findByVisibilityAndCategoryId(String visibility, Long categoryId, Pageable pageable);
 
+    boolean existsBySlug(String slug);
+
+    boolean existsBySlugAndIdNot(String slug, Long id);
+
     @Modifying
     @Query("UPDATE Resource r SET r.downloadCount = r.downloadCount + 1 WHERE r.id = :id")
     int incrementDownloadCount(@Param("id") Long id);

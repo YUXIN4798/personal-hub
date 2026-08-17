@@ -24,18 +24,42 @@
             <textarea id="description" th:field="*{description}" rows="5" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2"></textarea>
             <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="mt-1 text-sm text-[var(--ph-danger)]">错误</p>
         </div>
+        <div class="grid gap-4 md:grid-cols-2">
+            <div>
+                <label for="summary" class="block text-sm text-[var(--ph-text-dim)]">摘要</label>
+                <input id="summary" type="text" th:field="*{summary}" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2">
+                <p th:if="${#fields.hasErrors('summary')}" th:errors="*{summary}" class="mt-1 text-sm text-[var(--ph-danger)]">错误</p>
+            </div>
+            <div>
+                <label for="techStack" class="block text-sm text-[var(--ph-text-dim)]">技术栈</label>
+                <input id="techStack" type="text" th:field="*{techStack}" placeholder="逗号分隔，如 Java, MySQL" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2">
+                <p th:if="${#fields.hasErrors('techStack')}" th:errors="*{techStack}" class="mt-1 text-sm text-[var(--ph-danger)]">错误</p>
+            </div>
+        </div>
         <div class="grid gap-4 md:grid-cols-3">
             <div>
                 <label for="coverUrl" class="block text-sm text-[var(--ph-text-dim)]">封面 URL</label>
                 <input id="coverUrl" type="url" th:field="*{coverUrl}" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2">
             </div>
             <div>
-                <label for="githubUrl" class="block text-sm text-[var(--ph-text-dim)]">GitHub URL</label>
-                <input id="githubUrl" type="url" th:field="*{githubUrl}" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2">
+                <label for="sourceUrl" class="block text-sm text-[var(--ph-text-dim)]">源码 URL</label>
+                <input id="sourceUrl" type="url" th:field="*{sourceUrl}" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2">
             </div>
             <div>
                 <label for="demoUrl" class="block text-sm text-[var(--ph-text-dim)]">演示 URL</label>
                 <input id="demoUrl" type="url" th:field="*{demoUrl}" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2">
+            </div>
+        </div>
+        <div class="grid gap-4 md:grid-cols-2">
+            <label class="flex items-center gap-2 border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-3 text-sm text-[var(--ph-text-dim)]">
+                <input type="checkbox" th:field="*{featured}" class="accent-[var(--ph-accent)]">
+                <span>前台显示精选标记</span>
+            </label>
+            <div>
+                <label for="sortOrder" class="block text-sm text-[var(--ph-text-dim)]">排序</label>
+                <input id="sortOrder" type="number" min="0" th:field="*{sortOrder}" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2">
+                <p class="mt-1 text-xs text-[var(--ph-text-muted)]">前台排序号，小的在前</p>
+                <p th:if="${#fields.hasErrors('sortOrder')}" th:errors="*{sortOrder}" class="mt-1 text-sm text-[var(--ph-danger)]">错误</p>
             </div>
         </div>
         <div class="grid gap-4 md:grid-cols-3">
