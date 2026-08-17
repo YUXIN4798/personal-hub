@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: layout('笔记详情', ~{::content})}">
-<article th:fragment="content" class="mx-auto max-w-4xl space-y-10">
+<article th:fragment="content" class="mx-auto min-h-[55vh] max-w-4xl space-y-10">
     <a th:href="@{/notes}" class="link-slide text-sm text-[var(--ph-text-dim)]">← 返回笔记</a>
     <header class="border-b border-[var(--ph-border)] pb-8">
         <p class="section-index text-[0.68rem] text-[var(--ph-accent)]" th:text="${category != null ? category.name : 'Notes'}">Notes</p>
         <h1 class="display mt-4 text-4xl leading-tight text-[var(--ph-text)] md:text-5xl" th:text="${post.title}">笔记标题</h1>
         <div class="mt-5 flex flex-wrap gap-4 font-mono text-xs text-[var(--ph-text-muted)]">
             <span th:text="${post.publishedAt != null ? #temporals.format(post.publishedAt, 'yyyy-MM-dd HH:mm') : '-'}">2026-08-17</span>
-            <span th:each="tag : ${tags}" th:text="${tag.name}">Java</span>
+            <span th:each="tag : ${tags}" class="rounded border border-[var(--ph-border-strong)] px-2 py-1" th:text="${tag.name}">Java</span>
         </div>
         <p th:if="${!#strings.isEmpty(post.summary)}" class="mt-5 text-base leading-8 text-[var(--ph-text-dim)]" th:text="${post.summary}">笔记摘要</p>
     </header>
-    <div class="border-l border-[var(--ph-accent)] pl-5 text-base leading-8 text-[var(--ph-text-dim)]" style="white-space: pre-line" th:text="${post.content}">笔记正文</div>
+    <div th:if="${!#strings.isEmpty(post.content)}" class="min-h-[12rem] border-l border-[var(--ph-accent)] pl-5 text-base leading-8 text-[var(--ph-text-dim)]" style="white-space: pre-line" th:text="${post.content}">笔记正文</div>
 </article>
 </html>

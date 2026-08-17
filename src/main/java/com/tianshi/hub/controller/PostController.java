@@ -30,7 +30,10 @@ public class PostController {
             Model model
     ) {
         List<Category> categories = postService.findPostCategories();
-        model.addAttribute("posts", postService.findPublishedPosts(page, size));
+        var posts = postService.findPublishedPosts(page, size);
+        model.addAttribute("posts", posts);
+        model.addAttribute("postTags", postService.findPostTags(
+                posts.getContent().stream().map(post -> post.getId()).toList()));
         model.addAttribute("categoryNames", categories.stream()
                 .collect(Collectors.toMap(Category::getId, Category::getName, (left, right) -> left)));
         model.addAttribute("pageTitle", "笔记");

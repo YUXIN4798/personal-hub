@@ -10,15 +10,19 @@
     <div class="grid gap-4 md:grid-cols-2">
         <a th:each="project : ${projects.content}"
            th:href="@{/projects/{slug}(slug=${project.slug})}"
-           class="motion-card reveal group border p-6 md:p-8">
+           class="motion-card reveal group min-h-[16rem] border p-6 md:p-8">
             <div class="flex items-start justify-between gap-4">
                 <p class="meta-label text-[0.62rem] text-[var(--ph-text-muted)]"
                    th:text="${project.sortOrder > 0 ? #numbers.formatInteger(project.sortOrder, 2) + ' / Project' : 'Project'}">01 / Project</p>
                 <span th:if="${project.featured}" class="text-[0.68rem] text-[var(--ph-accent)]">精选</span>
             </div>
-            <h2 class="display mt-12 text-2xl text-[var(--ph-text)] md:text-3xl" th:text="${project.title}">项目名称</h2>
+            <h2 class="display mt-6 text-2xl text-[var(--ph-text)] md:text-3xl" th:text="${project.title}">项目名称</h2>
             <p th:if="${!#strings.isEmpty(project.summary)}" class="mt-4 text-sm leading-7 text-[var(--ph-text-dim)]" th:text="${project.summary}">项目摘要</p>
             <p th:if="${!#strings.isEmpty(project.techStack)}" class="mt-6 font-mono text-xs leading-6 text-[var(--ph-text-muted)]" th:text="${project.techStack}">Java, MySQL</p>
+            <div class="mt-6 flex flex-wrap items-center gap-3 font-mono text-xs text-[var(--ph-text-muted)]">
+                <span th:text="${project.publishedAt != null ? #temporals.format(project.publishedAt, 'yyyy-MM-dd') : (project.createdAt != null ? #temporals.format(project.createdAt, 'yyyy-MM-dd') : '-')}">2026-08-17</span>
+                <span th:each="tag : ${projectTags[project.id]}" class="rounded border border-[var(--ph-border-strong)] px-2 py-1 text-[0.68rem]" th:text="${tag.name}">Java</span>
+            </div>
         </a>
     </div>
     <p th:if="${projects.empty}" class="border border-[var(--ph-border)] p-6 text-sm text-[var(--ph-text-dim)]">暂无项目，敬请期待。</p>

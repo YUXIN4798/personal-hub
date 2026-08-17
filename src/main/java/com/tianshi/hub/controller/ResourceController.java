@@ -39,7 +39,10 @@ public class ResourceController {
             Model model
     ) {
         List<Category> categories = resourceService.findResourceCategories();
-        model.addAttribute("resources", resourceService.findPublicResources(page, size, category));
+        var resources = resourceService.findPublicResources(page, size, category);
+        model.addAttribute("resources", resources);
+        model.addAttribute("resourceTags", resourceService.findResourceTags(
+                resources.getContent().stream().map(resource -> resource.getId()).toList()));
         model.addAttribute("categories", categories);
         model.addAttribute("categoryNames", categories.stream()
                 .collect(Collectors.toMap(Category::getId, Category::getName)));
@@ -55,6 +58,7 @@ public class ResourceController {
         if (resource.getCategoryId() != null) {
             model.addAttribute("category", resourceService.findCategoryById(resource.getCategoryId()));
         }
+        model.addAttribute("tags", resourceService.findResourceTags(resource.getId()));
         model.addAttribute("pageTitle", "资源详情");
         return "resources/detail";
     }

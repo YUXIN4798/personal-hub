@@ -24,14 +24,19 @@ public class ProjectController {
             @RequestParam(defaultValue = "6") int size,
             Model model
     ) {
-        model.addAttribute("projects", projectService.findPublishedProjects(page, size));
+        var projects = projectService.findPublishedProjects(page, size);
+        model.addAttribute("projects", projects);
+        model.addAttribute("projectTags", projectService.findProjectTags(
+                projects.getContent().stream().map(project -> project.getId()).toList()));
         model.addAttribute("pageTitle", "作品集");
         return "projects/list";
     }
 
     @GetMapping("/{slug}")
     public String detail(@PathVariable String slug, Model model) {
-        model.addAttribute("project", projectService.findPublishedProjectBySlug(slug));
+        var project = projectService.findPublishedProjectBySlug(slug);
+        model.addAttribute("project", project);
+        model.addAttribute("tags", projectService.findProjectTags(project.getId()));
         model.addAttribute("pageTitle", "作品详情");
         return "projects/detail";
     }

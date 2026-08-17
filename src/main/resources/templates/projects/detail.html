@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: layout('作品详情', ~{::content})}">
-<article th:fragment="content" class="mx-auto max-w-4xl space-y-10">
+<article th:fragment="content" class="mx-auto min-h-[55vh] max-w-4xl space-y-10">
     <a th:href="@{/projects}" class="link-slide text-sm text-[var(--ph-text-dim)]">← 返回作品集</a>
     <header class="border-b border-[var(--ph-border)] pb-8">
         <p class="section-index text-[0.68rem] text-[var(--ph-accent)]"
@@ -9,6 +9,10 @@
         <h1 class="display mt-4 text-4xl leading-tight text-[var(--ph-text)] md:text-5xl" th:text="${project.title}">项目名称</h1>
         <p th:if="${!#strings.isEmpty(project.summary)}" class="mt-5 text-base leading-8 text-[var(--ph-text-dim)]" th:text="${project.summary}">项目摘要</p>
         <p th:if="${!#strings.isEmpty(project.techStack)}" class="mt-6 font-mono text-xs leading-6 text-[var(--ph-text-muted)]" th:text="${project.techStack}">Java, MySQL</p>
+        <div class="mt-5 flex flex-wrap items-center gap-3 font-mono text-xs text-[var(--ph-text-muted)]">
+            <span th:text="${project.publishedAt != null ? #temporals.format(project.publishedAt, 'yyyy-MM-dd') : (project.createdAt != null ? #temporals.format(project.createdAt, 'yyyy-MM-dd') : '-')}">2026-08-17</span>
+            <span th:each="tag : ${tags}" class="rounded border border-[var(--ph-border-strong)] px-2 py-1 text-[0.68rem]" th:text="${tag.name}">Java</span>
+        </div>
         <div th:if="${!#strings.isEmpty(project.sourceUrl) || !#strings.isEmpty(project.demoUrl)}" class="mt-6 flex flex-wrap gap-3 text-sm">
             <a th:if="${!#strings.isEmpty(project.sourceUrl)}" th:href="${project.sourceUrl}" target="_blank" rel="noopener noreferrer"
                class="border border-[var(--ph-accent)] px-4 py-2 text-[var(--ph-accent)] transition hover:bg-[var(--ph-accent-soft)]">GitHub</a>
@@ -16,7 +20,7 @@
                class="border border-[var(--ph-border)] px-4 py-2 text-[var(--ph-text-dim)] transition hover:border-[var(--ph-accent)] hover:text-[var(--ph-accent)]">在线演示</a>
         </div>
     </header>
-    <div class="border-l border-[var(--ph-accent)] pl-5 text-base leading-8 text-[var(--ph-text-dim)]" th:text="${project.description}">
+    <div th:if="${!#strings.isEmpty(project.description)}" class="min-h-[12rem] border-l border-[var(--ph-accent)] pl-5 text-base leading-8 text-[var(--ph-text-dim)]" th:text="${project.description}">
         项目详细介绍
     </div>
 </article>

@@ -15,6 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -56,6 +60,19 @@ public class PostServiceImpl implements PostService {
 
     public List<Tag> findPostTags(Long postId) {
         return postTagRepository.findTagsByPostId(postId);
+    }
+
+    @Override
+    public Map<Long, List<Tag>> findPostTags(List<Long> postIds) {
+        if (postIds == null || postIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        return postTagRepository.findByPost_IdInOrderByTag_NameAsc(postIds).stream()
+                .collect(Collectors.groupingBy(
+                        postTag -> postTag.getPost().getId(),
+                        LinkedHashMap::new,
+                        Collectors.mapping(postTag -> postTag.getTag(), Collectors.toList())
+                ));
     }
 
     @Override
