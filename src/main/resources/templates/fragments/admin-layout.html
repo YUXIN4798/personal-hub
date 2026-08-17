@@ -4,19 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${pageTitle} + ' | Personal Hub 管理台'">Personal Hub 管理台</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        :root {
-            color-scheme: dark;
-            --ink: #080d10;
-            --paper: #dce8e8;
-            --muted: #8aa1a3;
-            --line: rgba(169, 201, 201, 0.17);
-            --teal: #56e3cd;
-        }
-        body { background: var(--ink); }
-        :focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body class="min-h-screen bg-[#080d10] text-[#dce8e8] antialiased">
 <div class="mx-auto flex min-h-screen max-w-6xl flex-col px-5">

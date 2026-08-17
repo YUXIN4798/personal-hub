@@ -4,16 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>400 - 请求有误</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        :root { color-scheme: dark; --ink: #0b0f12; --teal: #56e3cd; --paper: #dce8e8; --muted: #8aa1a3; }
-        body { background: #0b0f12; }
-        .display { font-family: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif; }
-        .eyebrow { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; letter-spacing: 0.16em; text-transform: uppercase; }
-        .link-slide { position: relative; text-decoration: none; }
-        .link-slide::after { content: ""; position: absolute; right: 0; bottom: -0.2rem; left: 0; height: 1px; background: var(--teal); transform: scaleX(0); transform-origin: right; transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1); }
-        .link-slide:hover::after, .link-slide:focus-visible::after { transform: scaleX(1); transform-origin: left; }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body class="min-h-screen text-[#dce8e8]">
 <main class="mx-auto grid min-h-screen max-w-5xl place-items-center px-6">
