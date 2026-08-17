@@ -2,19 +2,19 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: layout('资源库', ~{::content})}">
 <section th:fragment="content" class="space-y-10">
-    <header class="border-b border-[#a9c9c9]/20 pb-6">
-        <p class="section-index text-[0.68rem] text-[#56e3cd]">03 / Resources</p>
-        <h1 class="display mt-3 text-4xl text-[#e5eeee] md:text-6xl">资源库</h1>
-        <p class="mt-4 max-w-2xl text-sm leading-7 text-[#a9bfc0]">沉淀可复用的文档、笔记、配置清单和课件资料。</p>
+    <header class="border-b border-[var(--ph-border)] pb-6">
+        <p class="section-index text-[0.68rem] text-[var(--ph-accent)]">03 / Resources</p>
+        <h1 class="display mt-3 text-4xl text-[var(--ph-text)] md:text-6xl">资源库</h1>
+        <p class="mt-4 max-w-2xl text-sm leading-7 text-[var(--ph-text-dim)]">沉淀可复用的文档、笔记、配置清单和课件资料。</p>
     </header>
 
     <nav class="flex flex-wrap gap-3 text-sm" aria-label="资源分类">
         <a th:href="@{/resources}"
-           th:classappend="${selectedCategory == null} ? ' border-[#56e3cd] text-[#56e3cd]' : ' border-[#385054] text-[#a9bfc0]'"
+           th:classappend="${selectedCategory == null} ? ' border-[var(--ph-accent)] text-[var(--ph-accent)]' : ' border-[var(--ph-border-strong)] text-[var(--ph-text-dim)]'"
            class="cta-button border px-4 py-2">全部</a>
         <a th:each="categoryItem : ${categories}"
            th:href="@{/resources(category=${categoryItem.id})}"
-           th:classappend="${selectedCategory == categoryItem.id} ? ' border-[#56e3cd] text-[#56e3cd]' : ' border-[#385054] text-[#a9bfc0]'"
+           th:classappend="${selectedCategory == categoryItem.id} ? ' border-[var(--ph-accent)] text-[var(--ph-accent)]' : ' border-[var(--ph-border-strong)] text-[var(--ph-text-dim)]'"
            class="cta-button border px-4 py-2"
            th:text="${categoryItem.name}">分类</a>
     </nav>
@@ -24,31 +24,31 @@
            th:href="@{/resources/{id}(id=${resource.id})}"
            class="motion-card reveal group border p-6 md:p-8">
             <div class="flex flex-wrap items-start justify-between gap-3">
-                <p class="meta-label text-[0.62rem] text-[#829b9d]" th:text="${resource.version} + ' / Resource'">v1.0 / Resource</p>
-                <span class="font-mono text-xs text-[#56e3cd]"
+                <p class="meta-label text-[0.62rem] text-[var(--ph-text-muted)]" th:text="${resource.version} + ' / Resource'">v1.0 / Resource</p>
+                <span class="font-mono text-xs text-[var(--ph-accent)]"
                       th:text="${#numbers.formatDecimal(resource.fileSize / 1024.0 / 1024.0, 1, 2)} + ' MB'">0 MB</span>
             </div>
-            <h2 class="display mt-10 text-2xl text-[#e5eeee] md:text-3xl" th:text="${resource.title}">资源名称</h2>
-            <p class="mt-4 text-sm leading-7 text-[#a9bfc0]" th:text="${resource.summary}">资源说明</p>
-            <div class="mt-6 flex flex-wrap items-center gap-4 font-mono text-xs text-[#6f898b]">
+            <h2 class="display mt-10 text-2xl text-[var(--ph-text)] md:text-3xl" th:text="${resource.title}">资源名称</h2>
+            <p class="mt-4 text-sm leading-7 text-[var(--ph-text-dim)]" th:text="${resource.summary}">资源说明</p>
+            <div class="mt-6 flex flex-wrap items-center gap-4 font-mono text-xs text-[var(--ph-text-muted)]">
                 <span th:text="${categoryNames[resource.categoryId] ?: '未分类'}">未分类</span>
                 <span th:text="'下载 ' + ${resource.downloadCount}">下载 0</span>
             </div>
         </a>
     </div>
 
-    <p th:if="${resources.empty}" class="border border-[#a9c9c9]/20 p-6 text-sm text-[#a9bfc0]">当前分类暂无资源。</p>
+    <p th:if="${resources.empty}" class="border border-[var(--ph-border)] p-6 text-sm text-[var(--ph-text-dim)]">当前分类暂无资源。</p>
 
-    <nav th:if="${resources.totalPages > 1}" class="flex items-center justify-between border-t border-[#a9c9c9]/20 pt-5 text-sm">
+    <nav th:if="${resources.totalPages > 1}" class="flex items-center justify-between border-t border-[var(--ph-border)] pt-5 text-sm">
         <a th:if="${resources.hasPrevious()}"
            th:href="@{/resources(page=${resources.number - 1}, size=${resources.size}, category=${selectedCategory})}"
-           class="link-slide text-[#a9bfc0]">← 上一页</a>
+           class="link-slide text-[var(--ph-text-dim)]">← 上一页</a>
         <span th:unless="${resources.hasPrevious()}"></span>
-        <span class="font-mono text-xs text-[#6f898b]"
+        <span class="font-mono text-xs text-[var(--ph-text-muted)]"
               th:text="${resources.number + 1} + ' / ' + ${resources.totalPages}">1 / 1</span>
         <a th:if="${resources.hasNext()}"
            th:href="@{/resources(page=${resources.number + 1}, size=${resources.size}, category=${selectedCategory})}"
-           class="link-slide text-[#a9bfc0]">下一页 →</a>
+           class="link-slide text-[var(--ph-text-dim)]">下一页 →</a>
         <span th:unless="${resources.hasNext()}"></span>
     </nav>
 </section>
