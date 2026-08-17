@@ -121,11 +121,15 @@ public class ProjectAdminService {
         ProjectForm form = new ProjectForm();
         form.setTitle(project.getTitle());
         form.setSlug(project.getSlug());
+        form.setSummary(project.getSummary());
         form.setDescription(project.getDescription());
+        form.setTechStack(project.getTechStack());
         form.setCoverUrl(project.getCoverImageUrl());
         form.setSourceUrl(project.getSourceUrl());
         form.setDemoUrl(project.getDemoUrl());
         form.setStatus(project.getStatus());
+        form.setFeatured(project.isFeatured());
+        form.setSortOrder(project.getSortOrder());
         form.setPublishedAt(project.getPublishedAt());
         form.setCategoryId(project.getCategoryId());
         form.setTagIds(findProjectTags(project.getId()).stream().map(Tag::getId).toList());
@@ -135,15 +139,17 @@ public class ProjectAdminService {
     private void applyForm(Project project, ProjectForm form) {
         project.setTitle(trim(form.getTitle()));
         project.setSlug(trim(form.getSlug()));
-        project.setSummary(trimToLength(form.getDescription(), 500));
+        project.setSummary(trim(form.getSummary()));
         project.setDescription(trim(form.getDescription()));
+        project.setTechStack(trim(form.getTechStack()));
         project.setCoverImageUrl(trim(form.getCoverUrl()));
         project.setSourceUrl(trim(form.getSourceUrl()));
         project.setDemoUrl(trim(form.getDemoUrl()));
         project.setStatus(normalizeStatus(form.getStatus()));
+        project.setFeatured(form.isFeatured());
+        project.setSortOrder(normalizeSortOrder(form.getSortOrder()));
         project.setPublishedAt(form.getPublishedAt());
         project.setCategoryId(form.getCategoryId());
-        project.setFeatured(false);
     }
 
     private void syncTags(Project project, List<Long> tagIds) {
@@ -162,11 +168,7 @@ public class ProjectAdminService {
         return value == null || value.isBlank() ? null : value.trim();
     }
 
-    private String trimToLength(String value, int maxLength) {
-        String trimmed = trim(value);
-        if (trimmed == null || trimmed.length() <= maxLength) {
-            return trimmed;
-        }
-        return trimmed.substring(0, maxLength);
+    private int normalizeSortOrder(Integer sortOrder) {
+        return sortOrder == null || sortOrder < 0 ? 0 : sortOrder;
     }
 }
