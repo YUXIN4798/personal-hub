@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台登录 | Personal Hub</title>
+    <script>
+        (function () {
+            try {
+                var storedTheme = window.localStorage.getItem('theme');
+                var systemTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+                document.documentElement.dataset.theme = storedTheme || systemTheme;
+            } catch (error) {
+                document.documentElement.dataset.theme = 'dark';
+            }
+        })();
+    </script>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body class="min-h-screen bg-[var(--ph-bg)] text-[var(--ph-text)] antialiased">
+<main class="mx-auto flex min-h-screen max-w-md items-center px-6">
+    <section class="w-full border border-[var(--ph-border)] bg-[var(--ph-card)] p-6">
+        <p class="font-mono text-xs uppercase tracking-[0.18em] text-[var(--ph-accent)]">Admin</p>
+        <h1 class="mt-3 text-2xl font-semibold text-[var(--ph-text-strong)]">Personal Hub 管理台</h1>
+        <form th:action="@{/admin/login}" method="post" class="mt-6 space-y-4">
+            <div>
+                <label for="username" class="block text-sm text-[var(--ph-text-dim)]">用户名</label>
+                <input id="username" name="username" type="text" autocomplete="username" required
+                       class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-card-solid)] px-3 py-2 text-[var(--ph-text-strong)]">
+            </div>
+            <div>
+                <label for="password" class="block text-sm text-[var(--ph-text-dim)]">密码</label>
+                <input id="password" name="password" type="password" autocomplete="current-password" required
+                       class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-card-solid)] px-3 py-2 text-[var(--ph-text-strong)]">
+            </div>
+            <p th:if="${loginError}" th:text="${loginError}" class="text-sm text-[var(--ph-danger)]">用户名或密码错误</p>
+            <button type="submit" class="w-full bg-[var(--ph-accent)] px-4 py-2 font-medium text-[var(--ph-accent-contrast)] transition hover:brightness-110">登录</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>

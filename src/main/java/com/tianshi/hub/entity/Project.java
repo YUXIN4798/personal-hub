@@ -76,60 +76,120 @@ public class Project {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getSlug() {
         return slug;
     }
 
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
     public String getSummary() {
         return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getTechStack() {
         return techStack;
+    }
+
+    public void setTechStack(String techStack) {
+        this.techStack = techStack;
     }
 
     public String getContent() {
         return content;
     }
 
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     public String getCoverImageUrl() {
         return coverImageUrl;
+    }
+
+    public void setCoverImageUrl(String coverImageUrl) {
+        this.coverImageUrl = coverImageUrl;
     }
 
     public String getDemoUrl() {
         return demoUrl;
     }
 
+    public void setDemoUrl(String demoUrl) {
+        this.demoUrl = demoUrl;
+    }
+
     public String getSourceUrl() {
         return sourceUrl;
+    }
+
+    public void setSourceUrl(String sourceUrl) {
+        this.sourceUrl = sourceUrl;
     }
 
     public String getStatus() {
         return status;
     }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public boolean isFeatured() {
         return featured;
+    }
+
+    public void setFeatured(boolean featured) {
+        this.featured = featured;
     }
 
     public int getSortOrder() {
         return sortOrder;
     }
 
+    public void setSortOrder(int sortOrder) {
+        this.sortOrder = sortOrder;
+    }
+
     public Long getCategoryId() {
         return categoryId;
     }
 
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
     public LocalDateTime getPublishedAt() {
         return publishedAt;
+    }
+
+    public void setPublishedAt(LocalDateTime publishedAt) {
+        this.publishedAt = publishedAt;
     }
 
     public LocalDateTime getCreatedAt() {

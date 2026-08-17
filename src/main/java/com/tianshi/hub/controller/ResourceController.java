@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/resources")
@@ -40,6 +41,8 @@ public class ResourceController {
         List<Category> categories = resourceService.findResourceCategories();
         model.addAttribute("resources", resourceService.findPublicResources(page, size, category));
         model.addAttribute("categories", categories);
+        model.addAttribute("categoryNames", categories.stream()
+                .collect(Collectors.toMap(Category::getId, Category::getName)));
         model.addAttribute("selectedCategory", category);
         model.addAttribute("pageTitle", "资源库");
         return "resources/list";

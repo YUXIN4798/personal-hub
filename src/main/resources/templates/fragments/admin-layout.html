@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(pageTitle, content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} + ' | Personal Hub 管理台'">Personal Hub 管理台</title>
+    <script>
+        (function () {
+            try {
+                var storedTheme = window.localStorage.getItem('theme');
+                var systemTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+                document.documentElement.dataset.theme = storedTheme || systemTheme;
+            } catch (error) {
+                document.documentElement.dataset.theme = 'dark';
+            }
+        })();
+    </script>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body class="min-h-screen bg-[var(--ph-bg)] text-[var(--ph-text)] antialiased">
+<div class="mx-auto flex min-h-screen max-w-6xl flex-col px-5">
+    <header class="flex items-center justify-between border-b border-[var(--ph-border)] py-4">
+        <a th:href="@{/admin/projects}" class="font-mono text-sm uppercase tracking-[0.14em] text-[var(--ph-accent)]">Personal Hub 管理台</a>
+        <div class="flex items-center gap-3">
+            <button type="button" class="theme-toggle inline-grid h-9 w-9 place-items-center border text-base" data-theme-toggle aria-label="切换到亮色主题">
+                <span data-theme-icon aria-hidden="true">🌙</span>
+            </button>
+            <form th:action="@{/admin/logout}" method="post">
+                <button type="submit" class="border border-[var(--ph-border)] px-3 py-2 text-sm text-[var(--ph-text-dim)] transition hover:border-[var(--ph-accent)] hover:text-[var(--ph-accent)]">退出登录</button>
+            </form>
+        </div>
+    </header>
+    <main class="flex-1 py-6" th:replace="${content}"></main>
+</div>
+<script th:src="@{/js/theme.js}" defer></script>
+</body>
+</html>

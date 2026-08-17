@@ -5,6 +5,7 @@ import com.tianshi.hub.entity.Resource;
 import com.tianshi.hub.exception.ResourceNotFoundException;
 import com.tianshi.hub.repository.CategoryRepository;
 import com.tianshi.hub.repository.ResourceRepository;
+import com.tianshi.hub.util.PaginationUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -34,12 +35,11 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     @Transactional(readOnly = true)
     public Page<Resource> findPublicResources(int page, int size, Long categoryId) {
-        int safePage = Math.max(page, 0);
-        int safeSize = size > 0 ? Math.min(size, MAX_PAGE_SIZE) : DEFAULT_PAGE_SIZE;
+        PaginationUtil.PageBounds bounds = PaginationUtil.clamp(page, size, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE);
         PageRequest pageRequest = PageRequest.of(
-                safePage,
-                safeSize,
-                Sort.by(Sort.Direction.DESC, "createdAt")
+                bounds.page(),
+                bounds.size(),
+                Sort.by(Sort.Direction.DESC, "createdAt").and(Sort.by(Sort.Direction.DESC, "id"))
         );
         if (categoryId == null) {
             return resourceRepository.findByVisibility(PUBLIC_VISIBILITY, pageRequest);
@@ -76,7 +76,7 @@ public class ResourceServiceImpl implements ResourceService {
         if (!Files.isRegularFile(path) || !Files.isReadable(path)) {
             throw new ResourceNotFoundException("资源文件暂不可下载");
         }
-        resource.incrementDownloadCount();
+        resourceRepository.incrementDownloadCount(id);
         return new ResourceDownload(resource, path);
     }
 }

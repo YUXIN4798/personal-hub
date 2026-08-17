@@ -2,33 +2,34 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: layout('作品集', ~{::content})}">
 <section th:fragment="content" class="space-y-10">
-    <header class="border-b border-[#a9c9c9]/20 pb-6">
-        <p class="section-index text-[0.68rem] text-[#56e3cd]">02 / Portfolio</p>
-        <h1 class="display mt-3 text-4xl text-[#e5eeee] md:text-6xl">作品集</h1>
-        <p class="mt-4 max-w-2xl text-sm leading-7 text-[#a9bfc0]">记录从 Java Web 基础到后端工程实践的阶段性作品。</p>
+    <header class="border-b border-[var(--ph-border)] pb-6">
+        <p class="section-index text-[0.68rem] text-[var(--ph-accent)]">02 / Portfolio</p>
+        <h1 class="display mt-3 text-4xl text-[var(--ph-text)] md:text-6xl">作品集</h1>
+        <p class="mt-4 max-w-2xl text-sm leading-7 text-[var(--ph-text-dim)]">记录从 Java Web 基础到后端工程实践的阶段性作品。</p>
     </header>
     <div class="grid gap-4 md:grid-cols-2">
         <a th:each="project : ${projects.content}"
            th:href="@{/projects/{slug}(slug=${project.slug})}"
            class="motion-card reveal group border p-6 md:p-8">
             <div class="flex items-start justify-between gap-4">
-                <p class="meta-label text-[0.62rem] text-[#829b9d]"
+                <p class="meta-label text-[0.62rem] text-[var(--ph-text-muted)]"
                    th:text="${#numbers.formatInteger(project.sortOrder, 2)} + ' / Project'">01 / Project</p>
-                <span th:if="${project.featured}" class="text-[0.68rem] text-[#56e3cd]">精选</span>
+                <span th:if="${project.featured}" class="text-[0.68rem] text-[var(--ph-accent)]">精选</span>
             </div>
-            <h2 class="display mt-12 text-2xl text-[#e5eeee] md:text-3xl" th:text="${project.title}">项目名称</h2>
-            <p class="mt-4 text-sm leading-7 text-[#a9bfc0]" th:text="${project.summary}">项目摘要</p>
-            <p class="mt-6 font-mono text-xs leading-6 text-[#6f898b]" th:text="${project.techStack}">Java, MySQL</p>
+            <h2 class="display mt-12 text-2xl text-[var(--ph-text)] md:text-3xl" th:text="${project.title}">项目名称</h2>
+            <p class="mt-4 text-sm leading-7 text-[var(--ph-text-dim)]" th:text="${project.summary}">项目摘要</p>
+            <p class="mt-6 font-mono text-xs leading-6 text-[var(--ph-text-muted)]" th:text="${project.techStack}">Java, MySQL</p>
         </a>
     </div>
-    <nav th:if="${projects.totalPages > 1}" class="flex items-center justify-between border-t border-[#a9c9c9]/20 pt-5 text-sm">
+    <p th:if="${projects.empty}" class="border border-[var(--ph-border)] p-6 text-sm text-[var(--ph-text-dim)]">暂无项目，敬请期待。</p>
+    <nav th:if="${projects.totalPages > 1}" class="flex items-center justify-between border-t border-[var(--ph-border)] pt-5 text-sm">
         <a th:if="${projects.hasPrevious()}" th:href="@{/projects(page=${projects.number - 1}, size=${projects.size})}"
-           class="link-slide text-[#a9bfc0]">← 上一页</a>
+           class="link-slide text-[var(--ph-text-dim)]">← 上一页</a>
         <span th:unless="${projects.hasPrevious()}"></span>
-        <span class="font-mono text-xs text-[#6f898b]"
+        <span class="font-mono text-xs text-[var(--ph-text-muted)]"
               th:text="${projects.number + 1} + ' / ' + projects.totalPages">1 / 1</span>
         <a th:if="${projects.hasNext()}" th:href="@{/projects(page=${projects.number + 1}, size=${projects.size})}"
-           class="link-slide text-[#a9bfc0]">下一页 →</a>
+           class="link-slide text-[var(--ph-text-dim)]">下一页 →</a>
         <span th:unless="${projects.hasNext()}"></span>
     </nav>
 </section>

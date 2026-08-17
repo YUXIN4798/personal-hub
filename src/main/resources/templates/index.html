@@ -5,54 +5,54 @@
     <section class="relative grid min-h-[31rem] items-center gap-10 overflow-hidden py-10 lg:grid-cols-[1.15fr_0.85fr] lg:py-20">
         <span class="ghost-mark" aria-hidden="true">MX</span>
         <div class="relative z-10 max-w-4xl">
-            <p class="hero-entrance eyebrow mb-8 text-[0.68rem] text-[#56e3cd]" style="animation: heroRise 520ms 60ms both;">Personal Hub / 01</p>
-            <h1 class="hero-entrance display hero-title max-w-4xl text-[#e5eeee]" style="animation: heroRise 620ms 120ms both;">把想法<br><span class="text-[#56e3cd]">做成系统。</span></h1>
+            <p class="hero-entrance eyebrow mb-8 text-[0.68rem] text-[var(--ph-accent)]" style="animation: heroRise 520ms 60ms both;">Personal Hub / 01</p>
+            <h1 class="hero-entrance display hero-title max-w-4xl text-[var(--ph-text)]" style="animation: heroRise 620ms 120ms both;">把想法<br><span class="text-[var(--ph-accent)]">做成系统。</span></h1>
             <div class="hero-rule hero-entrance my-9 h-px w-32" style="animation: heroRise 520ms 220ms both;"></div>
-            <p class="hero-entrance max-w-xl text-base leading-8 text-[#b5c8c9] md:text-lg" style="animation: heroRise 520ms 280ms both;">
+            <p class="hero-entrance max-w-xl text-base leading-8 text-[var(--ph-text-dim)] md:text-lg" style="animation: heroRise 520ms 280ms both;">
                 曹铭轩 · Java 后端方向 · AI 应用实践者<br>
                 在真实项目里磨代码，在每次迭代里练判断。
             </p>
             <div class="hero-entrance mt-9 flex flex-wrap gap-4" style="animation: heroRise 520ms 360ms both;">
-                <a href="/projects" class="cta-button inline-flex items-center gap-3 border border-[#56e3cd] bg-[#56e3cd] px-5 py-3 text-sm font-medium text-[#071b1a]">
+                <a th:href="@{/projects}" class="cta-button inline-flex items-center gap-3 border border-[var(--ph-accent)] bg-[var(--ph-accent)] px-5 py-3 text-sm font-medium text-[var(--ph-accent-contrast)]">
                     查看作品集 <span aria-hidden="true">↘</span>
                 </a>
-                <a th:href="@{/about}" class="cta-button inline-flex items-center gap-3 border border-[#385054] px-5 py-3 text-sm font-medium text-[#dce8e8] hover:border-[#56e3cd] hover:text-[#56e3cd]">
+                <a th:href="@{/about}" class="cta-button inline-flex items-center gap-3 border border-[var(--ph-border-strong)] px-5 py-3 text-sm font-medium text-[var(--ph-text)] hover:border-[var(--ph-accent)] hover:text-[var(--ph-accent)]">
                     认识我 <span aria-hidden="true">↗</span>
                 </a>
             </div>
         </div>
-        <div class="coordinate relative hidden h-64 border border-[#385054]/70 lg:block">
-            <div class="absolute left-5 top-5 font-mono text-[0.65rem] tracking-[0.2em] text-[#6f898b]">LAT 43° / LON 125°</div>
-            <div class="absolute bottom-5 right-5 text-right font-mono text-[0.65rem] leading-6 text-[#6f898b]">
-                BUILDING IN PUBLIC<br><span class="text-[#56e3cd]">STATUS: IN PROGRESS</span>
+        <div class="coordinate relative hidden h-64 border border-[var(--ph-border-strong)] lg:block">
+            <div class="absolute left-5 top-5 font-mono text-[0.65rem] tracking-[0.2em] text-[var(--ph-text-muted)]">LAT 43° / LON 125°</div>
+            <div class="absolute bottom-5 right-5 text-right font-mono text-[0.65rem] leading-6 text-[var(--ph-text-muted)]">
+                BUILDING IN PUBLIC<br><span class="text-[var(--ph-accent)]">STATUS: IN PROGRESS</span>
             </div>
-            <span class="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#56e3cd] shadow-[0_0_0_8px_rgba(86,227,205,0.12),0_0_30px_rgba(86,227,205,0.8)]"></span>
+            <span class="signal-dot absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full"></span>
         </div>
     </section>
 
     <section id="featured" class="space-y-8">
-        <div class="flex items-end justify-between border-b border-[#a9c9c9]/20 pb-4">
+        <div class="flex items-end justify-between border-b border-[var(--ph-border)] pb-4">
             <div>
-                <p class="section-index text-[0.68rem] text-[#56e3cd]">01 / Selected work</p>
-                <h2 class="display mt-3 text-3xl text-[#e5eeee] md:text-4xl">正在发生的事</h2>
+                <p class="section-index text-[0.68rem] text-[var(--ph-accent)]">01 / Selected work</p>
+                <h2 class="display mt-3 text-3xl text-[var(--ph-text)] md:text-4xl">正在发生的事</h2>
             </div>
-            <span class="hidden font-mono text-xs text-[#6f898b] md:block">2026 — NOW</span>
+            <span class="hidden font-mono text-xs text-[var(--ph-text-muted)] md:block">2026 — NOW</span>
         </div>
         <div class="grid gap-4 md:grid-cols-3">
-            <a href="/projects" class="motion-card reveal group border p-6 md:p-7">
-                <p class="meta-label text-[0.62rem] text-[#829b9d]">01 / Projects</p>
-                <h3 class="display mt-14 flex items-center justify-between text-2xl text-[#e5eeee]">Projects <span class="card-accent text-[#56e3cd]" aria-hidden="true">↗</span></h3>
-                <p class="mt-4 text-sm leading-7 text-[#a9bfc0]">围绕后端工程、工具链和 AI 场景落地的阶段成果。</p>
+            <a th:href="@{/projects}" class="motion-card reveal group border p-6 md:p-7">
+                <p class="meta-label text-[0.62rem] text-[var(--ph-text-muted)]">01 / Projects</p>
+                <h3 class="display mt-14 flex items-center justify-between text-2xl text-[var(--ph-text)]">Projects <span class="card-accent text-[var(--ph-accent)]" aria-hidden="true">↗</span></h3>
+                <p class="mt-4 text-sm leading-7 text-[var(--ph-text-dim)]">围绕后端工程、工具链和 AI 场景落地的阶段成果。</p>
             </a>
-            <a href="#" title="敬请期待" class="motion-card reveal group border p-6 md:mt-10 md:p-7" style="transition-delay: 80ms;">
-                <p class="meta-label text-[0.62rem] text-[#829b9d]">02 / Notes</p>
-                <h3 class="display mt-14 flex items-center justify-between text-2xl text-[#e5eeee]">Notes <span class="card-accent text-[#56e3cd]" aria-hidden="true">↗</span></h3>
-                <p class="mt-4 text-sm leading-7 text-[#a9bfc0]">记录知识拆解、问题复盘与阶段学习路径。</p>
-            </a>
-            <a href="/resources" class="motion-card reveal group border p-6 md:p-7" style="transition-delay: 160ms;">
-                <p class="meta-label text-[0.62rem] text-[#829b9d]">03 / Resources</p>
-                <h3 class="display mt-14 flex items-center justify-between text-2xl text-[#e5eeee]">Resources <span class="card-accent text-[#56e3cd]" aria-hidden="true">↗</span></h3>
-                <p class="mt-4 text-sm leading-7 text-[#a9bfc0]">沉淀可复用的文档、工具和开发实践清单。</p>
+            <div title="敬请期待" class="motion-card reveal group border p-6 md:mt-10 md:p-7" style="transition-delay: 80ms;">
+                <p class="meta-label text-[0.62rem] text-[var(--ph-text-muted)]">02 / Notes</p>
+                <h3 class="display mt-14 flex items-center justify-between text-2xl text-[var(--ph-text)]">Notes <span class="card-accent text-[var(--ph-accent)]" aria-hidden="true">↗</span></h3>
+                <p class="mt-4 text-sm leading-7 text-[var(--ph-text-dim)]">记录知识拆解、问题复盘与阶段学习路径。</p>
+            </div>
+            <a th:href="@{/resources}" class="motion-card reveal group border p-6 md:p-7" style="transition-delay: 160ms;">
+                <p class="meta-label text-[0.62rem] text-[var(--ph-text-muted)]">03 / Resources</p>
+                <h3 class="display mt-14 flex items-center justify-between text-2xl text-[var(--ph-text)]">Resources <span class="card-accent text-[var(--ph-accent)]" aria-hidden="true">↗</span></h3>
+                <p class="mt-4 text-sm leading-7 text-[var(--ph-text-dim)]">沉淀可复用的文档、工具和开发实践清单。</p>
             </a>
         </div>
     </section>

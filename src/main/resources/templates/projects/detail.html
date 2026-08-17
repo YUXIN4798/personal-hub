@@ -2,15 +2,21 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: layout('作品详情', ~{::content})}">
 <article th:fragment="content" class="mx-auto max-w-4xl space-y-10">
-    <a th:href="@{/projects}" class="link-slide text-sm text-[#a9bfc0]">← 返回作品集</a>
-    <header class="border-b border-[#a9c9c9]/20 pb-8">
-        <p class="section-index text-[0.68rem] text-[#56e3cd]"
+    <a th:href="@{/projects}" class="link-slide text-sm text-[var(--ph-text-dim)]">← 返回作品集</a>
+    <header class="border-b border-[var(--ph-border)] pb-8">
+        <p class="section-index text-[0.68rem] text-[var(--ph-accent)]"
            th:text="${project.featured ? '精选项目' : 'Project'}">Project</p>
-        <h1 class="display mt-4 text-4xl leading-tight text-[#e5eeee] md:text-5xl" th:text="${project.title}">项目名称</h1>
-        <p class="mt-5 text-base leading-8 text-[#a9bfc0]" th:text="${project.summary}">项目摘要</p>
-        <p class="mt-6 font-mono text-xs leading-6 text-[#6f898b]" th:text="${project.techStack}">Java, MySQL</p>
+        <h1 class="display mt-4 text-4xl leading-tight text-[var(--ph-text)] md:text-5xl" th:text="${project.title}">项目名称</h1>
+        <p class="mt-5 text-base leading-8 text-[var(--ph-text-dim)]" th:text="${project.summary}">项目摘要</p>
+        <p class="mt-6 font-mono text-xs leading-6 text-[var(--ph-text-muted)]" th:text="${project.techStack}">Java, MySQL</p>
+        <div th:if="${project.sourceUrl != null || project.demoUrl != null}" class="mt-6 flex flex-wrap gap-3 text-sm">
+            <a th:if="${project.sourceUrl != null}" th:href="${project.sourceUrl}" target="_blank" rel="noopener noreferrer"
+               class="border border-[var(--ph-accent)] px-4 py-2 text-[var(--ph-accent)] transition hover:bg-[var(--ph-accent-soft)]">GitHub</a>
+            <a th:if="${project.demoUrl != null}" th:href="${project.demoUrl}" target="_blank" rel="noopener noreferrer"
+               class="border border-[var(--ph-border)] px-4 py-2 text-[var(--ph-text-dim)] transition hover:border-[var(--ph-accent)] hover:text-[var(--ph-accent)]">在线演示</a>
+        </div>
     </header>
-    <div class="border-l border-[#56e3cd]/60 pl-5 text-base leading-8 text-[#c2d2d2]" th:text="${project.description}">
+    <div class="border-l border-[var(--ph-accent)] pl-5 text-base leading-8 text-[var(--ph-text-dim)]" th:text="${project.description}">
         项目详细介绍
     </div>
 </article>

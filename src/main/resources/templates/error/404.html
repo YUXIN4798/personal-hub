@@ -1,16 +1,30 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 - 页面未找到</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        (function () {
+            try {
+                var storedTheme = window.localStorage.getItem('theme');
+                var systemTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+                document.documentElement.dataset.theme = storedTheme || systemTheme;
+            } catch (error) {
+                document.documentElement.dataset.theme = 'dark';
+            }
+        })();
+    </script>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
-<body class="grid min-h-screen place-items-center bg-slate-950 text-slate-100">
-<div class="text-center">
-    <h1 class="text-6xl font-bold">404</h1>
-    <p class="mt-4 text-slate-300" th:text="${message ?: '页面不存在或已被移除。'}">页面不存在或已被移除。</p>
-    <a class="mt-6 inline-block rounded bg-emerald-500 px-4 py-2 text-sm font-medium text-slate-950" href="/">返回首页</a>
-</div>
+<body class="min-h-screen text-[var(--ph-text)]">
+<main class="mx-auto grid min-h-screen max-w-5xl place-items-center px-6">
+    <section class="w-full border-l border-[var(--ph-accent)] py-10 pl-6 md:pl-10">
+        <p class="eyebrow text-[0.68rem] text-[var(--ph-accent)]">404 / Not Found</p>
+        <h1 class="display mt-5 text-6xl leading-none text-[var(--ph-text)] md:text-8xl">页面未找到</h1>
+        <p class="mt-6 max-w-xl text-sm leading-7 text-[var(--ph-text-dim)]" th:text="${message ?: '页面不存在或已被移除。'}">页面不存在或已被移除。</p>
+        <a th:href="@{/}" class="link-slide mt-8 inline-block text-sm font-medium text-[var(--ph-accent)]">返回首页</a>
+    </section>
+</main>
 </body>
 </html>
