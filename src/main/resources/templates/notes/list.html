@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout('笔记', ~{::content})}">
+<section th:fragment="content" class="space-y-10">
+    <header class="border-b border-[var(--ph-border)] pb-6">
+        <p class="section-index text-[0.68rem] text-[var(--ph-accent)]">02 / Notes</p>
+        <h1 class="display mt-3 text-4xl text-[var(--ph-text)] md:text-6xl">笔记</h1>
+        <p class="mt-4 max-w-2xl text-sm leading-7 text-[var(--ph-text-dim)]">记录 Java 后端学习、数据库实践与问题复盘。</p>
+    </header>
+    <div class="grid gap-4 md:grid-cols-2">
+        <a th:each="post : ${posts.content}" th:href="@{/notes/{slug}(slug=${post.slug})}" class="motion-card reveal group border p-6 md:p-8">
+            <div class="flex items-start justify-between gap-4">
+                <p class="meta-label text-[0.62rem] text-[var(--ph-text-muted)]" th:text="${post.publishedAt != null ? #temporals.format(post.publishedAt, 'yyyy-MM-dd') : 'Note'}">2026-08-17</p>
+                <span th:if="${post.categoryId != null and categoryNames[post.categoryId] != null}" class="text-xs text-[var(--ph-accent)]" th:text="${categoryNames[post.categoryId]}">后端</span>
+            </div>
+            <h2 class="display mt-12 text-2xl text-[var(--ph-text)] md:text-3xl" th:text="${post.title}">笔记标题</h2>
+            <p th:if="${!#strings.isEmpty(post.summary)}" class="mt-4 text-sm leading-7 text-[var(--ph-text-dim)]" th:text="${post.summary}">笔记摘要</p>
+        </a>
+    </div>
+    <p th:if="${posts.empty}" class="border border-[var(--ph-border)] p-6 text-sm text-[var(--ph-text-dim)]">暂无笔记，敬请期待。</p>
+    <nav th:if="${posts.totalPages > 1}" class="flex items-center justify-between border-t border-[var(--ph-border)] pt-5 text-sm">
+        <a th:if="${posts.hasPrevious()}" th:href="@{/notes(page=${posts.number - 1}, size=${posts.size})}" class="link-slide text-[var(--ph-text-dim)]">← 上一页</a>
+        <span th:unless="${posts.hasPrevious()}"></span>
+        <span class="font-mono text-xs text-[var(--ph-text-muted)]" th:text="${posts.number + 1} + ' / ' + ${posts.totalPages}">1 / 1</span>
+        <a th:if="${posts.hasNext()}" th:href="@{/notes(page=${posts.number + 1}, size=${posts.size})}" class="link-slide text-[var(--ph-text-dim)]">下一页 →</a>
+        <span th:unless="${posts.hasNext()}"></span>
+    </nav>
+</section>
+</html>
