@@ -92,6 +92,14 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional(readOnly = true)
+    public Resource findPublicResourceBySlug(String slug) {
+        return resourceRepository.findBySlug(slug)
+                .filter(resource -> PUBLIC_VISIBILITY.equals(resource.getVisibility()))
+                .orElseThrow(() -> new ResourceNotFoundException("资源不存在"));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Category findCategoryById(Long id) {
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("分类不存在"));

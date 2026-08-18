@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/admin-layout :: layout('首页设置', ~{::content})}">
+<section th:fragment="content" class="space-y-6">
+    <div class="flex items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-semibold text-[var(--ph-text-strong)]">首页设置</h1>
+            <p class="mt-1 text-sm text-[var(--ph-text-muted)]">配置首页标题、简介和三块内容数量</p>
+        </div>
+    </div>
+
+    <form th:action="@{/admin/site-config}" method="post" class="space-y-6 border border-[var(--ph-border)] bg-[var(--ph-card-solid)] p-6">
+        <input th:if="${_csrf != null}" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <div class="grid gap-4">
+            <div>
+                <label for="heroTitle" class="block text-sm text-[var(--ph-text-dim)]">Hero 标题</label>
+                <textarea id="heroTitle" rows="3" th:field="*{heroTitle}" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2"></textarea>
+            </div>
+            <div>
+                <label for="heroSubtitle" class="block text-sm text-[var(--ph-text-dim)]">Hero 副标题</label>
+                <textarea id="heroSubtitle" rows="4" th:field="*{heroSubtitle}" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2"></textarea>
+            </div>
+            <div class="grid gap-4 md:grid-cols-3">
+                <div>
+                    <label for="projectsCount" class="block text-sm text-[var(--ph-text-dim)]">项目数量</label>
+                    <input id="projectsCount" type="number" min="0" th:field="*{projectsCount}" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2">
+                </div>
+                <div>
+                    <label for="notesCount" class="block text-sm text-[var(--ph-text-dim)]">笔记数量</label>
+                    <input id="notesCount" type="number" min="0" th:field="*{notesCount}" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2">
+                </div>
+                <div>
+                    <label for="resourcesCount" class="block text-sm text-[var(--ph-text-dim)]">资源数量</label>
+                    <input id="resourcesCount" type="number" min="0" th:field="*{resourcesCount}" class="mt-2 w-full border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2">
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <button type="submit" class="bg-[var(--ph-accent)] px-4 py-2 text-sm font-medium text-[var(--ph-accent-contrast)] transition hover:brightness-110">保存</button>
+            <a th:href="@{/}" target="_blank" rel="noopener noreferrer" class="text-sm text-[var(--ph-accent)]">查看前台</a>
+        </div>
+    </form>
+</section>
+</html>
