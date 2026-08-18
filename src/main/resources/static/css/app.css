@@ -138,14 +138,14 @@ body::before {
 }
 .ghost-mark {
     position: absolute;
-    top: -0.2em;
-    right: -0.08em;
+    top: 0;
+    right: 0;
     z-index: -1;
     color: var(--ph-ghost);
     font-family: var(--display);
     font-size: clamp(12rem, 32vw, 31rem);
     line-height: 0.8;
-    letter-spacing: -0.08em;
+    letter-spacing: 0;
     user-select: none;
 }
 .hero-rule {
