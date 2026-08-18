@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -176,6 +177,28 @@ class ResourceAdminServiceTest {
         assertThat(saved.getOriginalName()).isEqualTo("notes.pdf");
         assertThat(saved.getFileSize()).isEqualTo(3);
         assertThat(saved.getChecksum()).isEqualTo("039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81");
+    }
+
+    @Test
+    void create_上传文件后数据库保存失败_清理已落盘文件() throws Exception {
+        FileStorageService fileStorageService = fileStorageService();
+        when(resourceRepository.save(any(Resource.class))).thenThrow(new IllegalStateException("db down"));
+        ResourceAdminService service = new ResourceAdminService(
+                resourceRepository, categoryRepository, tagRepository, resourceTagRepository, fileStorageService
+        );
+        ResourceForm form = new ResourceForm();
+        form.setTitle("Courseware");
+        form.setSlug("courseware");
+        form.setType("link");
+        form.setFile(new MockMultipartFile("file", "notes.pdf", "application/pdf", new byte[] {1, 2, 3}));
+
+        assertThatThrownBy(() -> service.create(form))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("db down");
+
+        try (java.util.stream.Stream<Path> files = java.nio.file.Files.list(tempDir)) {
+            assertThat(files).isEmpty();
+        }
     }
 
     @Test

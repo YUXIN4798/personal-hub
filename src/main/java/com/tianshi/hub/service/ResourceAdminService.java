@@ -134,21 +134,33 @@ public class ResourceAdminService {
         resource.setDownloadCount(0);
         resource.setFileSize(0);
         resource.setVisibility(DEFAULT_VISIBILITY);
-        applyForm(resource, form);
-        Resource saved = resourceRepository.save(resource);
-        syncTags(saved, form.getTagIds());
-        return saved;
+        String storedPath = null;
+        try {
+            storedPath = applyForm(resource, form);
+            Resource saved = resourceRepository.save(resource);
+            syncTags(saved, form.getTagIds());
+            return saved;
+        } catch (RuntimeException exception) {
+            deleteFileQuietly(storedPath);
+            throw exception;
+        }
     }
 
     @Transactional
     public Resource update(Long id, ResourceForm form) {
         Resource resource = findResource(id);
         String oldFilePath = resource.getFilePath();
-        applyForm(resource, form);
-        Resource saved = resourceRepository.save(resource);
-        syncTags(saved, form.getTagIds());
-        deleteAfterCommitIfReplaced(oldFilePath, saved.getFilePath());
-        return saved;
+        String storedPath = null;
+        try {
+            storedPath = applyForm(resource, form);
+            Resource saved = resourceRepository.save(resource);
+            syncTags(saved, form.getTagIds());
+            deleteAfterCommitIfReplaced(oldFilePath, saved.getFilePath());
+            return saved;
+        } catch (RuntimeException exception) {
+            deleteFileQuietly(storedPath);
+            throw exception;
+        }
     }
 
     @Transactional
@@ -173,7 +185,8 @@ public class ResourceAdminService {
         return form;
     }
 
-    private void applyForm(Resource resource, ResourceForm form) {
+    private String applyForm(Resource resource, ResourceForm form) {
+        String storedPath = null;
         resource.setTitle(trim(form.getTitle()));
         resource.setSlug(trim(form.getSlug()));
         resource.setSummary(trim(form.getSummary()));
@@ -183,13 +196,18 @@ public class ResourceAdminService {
         resource.setCategoryId(form.getCategoryId());
         MultipartFile file = form.getFile();
         if (fileStorageService != null && file != null && !file.isEmpty()) {
-            String storedPath = fileStorageService.store(file, RESOURCE_UPLOAD_EXTENSIONS);
-            resource.setFilePath(storedPath);
-            resource.setOriginalName(extractFilename(file.getOriginalFilename()));
-            resource.setFileSize(file.getSize());
-            resource.setChecksum(calculateStoredFileSha256(storedPath));
-            resource.setUrl(storedPath);
-            resource.setType("file");
+            storedPath = fileStorageService.store(file, RESOURCE_UPLOAD_EXTENSIONS);
+            try {
+                resource.setFilePath(storedPath);
+                resource.setOriginalName(extractFilename(file.getOriginalFilename()));
+                resource.setFileSize(file.getSize());
+                resource.setChecksum(calculateStoredFileSha256(storedPath));
+                resource.setUrl(storedPath);
+                resource.setType("file");
+            } catch (RuntimeException exception) {
+                deleteFileQuietly(storedPath);
+                throw exception;
+            }
         } else if ("file".equals(resource.getType())) {
             String filePath = trim(form.getUrl());
             if (filePath != null) {
@@ -206,6 +224,7 @@ public class ResourceAdminService {
         if (resource.getVersion() == null) {
             resource.setVersion(DEFAULT_VERSION);
         }
+        return storedPath;
     }
 
     private String extractFilename(String originalFilename) {
@@ -270,6 +289,9 @@ public class ResourceAdminService {
     }
 
     private void deleteFileQuietly(String filePath) {
+        if (fileStorageService == null || filePath == null || filePath.isBlank()) {
+            return;
+        }
         try {
             fileStorageService.delete(filePath);
         } catch (RuntimeException exception) {
