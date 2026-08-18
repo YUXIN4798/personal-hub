@@ -15,6 +15,9 @@ public interface ResourceTagRepository extends JpaRepository<ResourceTag, Resour
 
     long countByTag_Id(Long tagId);
 
+    @Query("select rt.tag.id as id, count(rt) as total from ResourceTag rt where rt.tag.id in :tagIds group by rt.tag.id")
+    List<UsageCount> countByTagIdIn(@Param("tagIds") List<Long> tagIds);
+
     @Query("select rt.tag from ResourceTag rt where rt.resource.id = :resourceId order by rt.tag.name asc")
     List<Tag> findTagsByResourceId(@Param("resourceId") Long resourceId);
 

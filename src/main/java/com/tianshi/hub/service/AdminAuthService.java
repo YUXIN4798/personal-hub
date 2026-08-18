@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminAuthService {
 
     private static final String ADMIN_ROLE = "ADMIN";
+    private static final String DUMMY_PASSWORD_HASH =
+            "$2a$10$7EqJtq98hPqEX7fNZaFWoOhi96dvzXuBB88Y0GuXjaMnJsU07C7bS";
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -26,8 +28,10 @@ public class AdminAuthService {
         }
         return userRepository.findByUsername(username)
                 .filter(user -> ADMIN_ROLE.equals(user.getRole()))
-                .map(User::getPasswordHash)
-                .filter(hash -> passwordEncoder.matches(password, hash))
-                .isPresent();
+                .map(user -> passwordEncoder.matches(password, user.getPasswordHash()))
+                .orElseGet(() -> {
+                    passwordEncoder.matches(password, DUMMY_PASSWORD_HASH);
+                    return false;
+                });
     }
 }

@@ -3,6 +3,7 @@ package com.tianshi.hub.controller;
 import com.tianshi.hub.entity.Post;
 import com.tianshi.hub.exception.GlobalExceptionHandler;
 import com.tianshi.hub.exception.ResourceNotFoundException;
+import com.tianshi.hub.service.MarkdownService;
 import com.tianshi.hub.service.PostService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -67,7 +68,7 @@ class PostControllerTest {
     }
 
     private MockMvc mockMvc() {
-        return MockMvcBuilders.standaloneSetup(new PostController(postService))
+        return MockMvcBuilders.standaloneSetup(new PostController(postService, new MarkdownService()))
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
     }

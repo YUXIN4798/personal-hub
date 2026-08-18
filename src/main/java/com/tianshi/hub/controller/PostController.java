@@ -4,7 +4,6 @@ import com.tianshi.hub.entity.Category;
 import com.tianshi.hub.entity.Post;
 import com.tianshi.hub.service.PostService;
 import com.tianshi.hub.service.MarkdownService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,11 +21,6 @@ public class PostController {
     private final PostService postService;
     private final MarkdownService markdownService;
 
-    public PostController(PostService postService) {
-        this(postService, new MarkdownService());
-    }
-
-    @Autowired
     public PostController(PostService postService, MarkdownService markdownService) {
         this.postService = postService;
         this.markdownService = markdownService;

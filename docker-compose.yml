@@ -6,8 +6,8 @@ services:
     environment:
       MYSQL_DATABASE: personal_hub
       MYSQL_USER: hub
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-hub123456}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root123456}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?MYSQL_PASSWORD is required}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required}
     ports:
       - "127.0.0.1:3306:3306"
     volumes:

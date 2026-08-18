@@ -15,6 +15,9 @@ public interface PostTagRepository extends JpaRepository<PostTag, PostTagId> {
 
     long countByTag_Id(Long tagId);
 
+    @Query("select pt.tag.id as id, count(pt) as total from PostTag pt where pt.tag.id in :tagIds group by pt.tag.id")
+    List<UsageCount> countByTagIdIn(@Param("tagIds") List<Long> tagIds);
+
     @Query("select pt.tag from PostTag pt where pt.post.id = :postId order by pt.tag.name asc")
     List<Tag> findTagsByPostId(@Param("postId") Long postId);
 

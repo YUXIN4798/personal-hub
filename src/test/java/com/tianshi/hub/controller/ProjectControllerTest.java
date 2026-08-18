@@ -2,6 +2,7 @@ package com.tianshi.hub.controller;
 
 import com.tianshi.hub.entity.Project;
 import com.tianshi.hub.exception.GlobalExceptionHandler;
+import com.tianshi.hub.service.MarkdownService;
 import com.tianshi.hub.service.ProjectService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +41,7 @@ class ProjectControllerTest {
     }
 
     private MockMvc mockMvc() {
-        return MockMvcBuilders.standaloneSetup(new ProjectController(projectService))
+        return MockMvcBuilders.standaloneSetup(new ProjectController(projectService, new MarkdownService()))
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
     }
