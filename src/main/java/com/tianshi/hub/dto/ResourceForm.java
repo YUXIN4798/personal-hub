@@ -21,6 +21,9 @@ public class ResourceForm {
     @Size(max = 500, message = "摘要不能超过 500 个字符")
     private String summary;
 
+    @Size(max = 2000, message = "描述不能超过 2000 个字符")
+    private String description;
+
     @NotBlank(message = "URL 不能为空")
     @Size(max = 500, message = "URL 不能超过 500 个字符")
     @Pattern(regexp = "(?i)^(https?://|/(?!/)).+", message = "URL 只能使用 http://、https:// 或站内 / 开头路径")
@@ -57,6 +60,14 @@ public class ResourceForm {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getUrl() {

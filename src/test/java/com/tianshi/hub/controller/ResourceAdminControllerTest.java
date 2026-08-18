@@ -58,6 +58,7 @@ class ResourceAdminControllerTest {
                         .param("title", "New Resource")
                         .param("slug", "new-resource")
                         .param("summary", "资源摘要")
+                        .param("description", "资源描述")
                         .param("url", "https://example.com/resource")
                         .param("type", "link")
                         .param("categoryId", "3")
@@ -68,6 +69,7 @@ class ResourceAdminControllerTest {
         ArgumentCaptor<ResourceForm> captor = ArgumentCaptor.forClass(ResourceForm.class);
         verify(resourceAdminService).create(captor.capture());
         assertThat(captor.getValue().getSummary()).isEqualTo("资源摘要");
+        assertThat(captor.getValue().getDescription()).isEqualTo("资源描述");
         assertThat(captor.getValue().getUrl()).isEqualTo("https://example.com/resource");
         assertThat(captor.getValue().getType()).isEqualTo("link");
         assertThat(captor.getValue().getCategoryId()).isEqualTo(3L);

@@ -19,5 +19,12 @@ public interface ProjectTagRepository extends JpaRepository<ProjectTag, ProjectT
     @Query("select pt.tag from ProjectTag pt where pt.project.id in :projectIds order by pt.tag.name asc")
     List<Tag> findTagsByProjectIds(@Param("projectIds") List<Long> projectIds);
 
-    List<ProjectTag> findByProject_IdInOrderByTag_NameAsc(List<Long> projectIds);
+    @Query("""
+            select pt from ProjectTag pt
+            join fetch pt.project
+            join fetch pt.tag
+            where pt.project.id in :projectIds
+            order by pt.tag.name asc
+            """)
+    List<ProjectTag> findByProject_IdInOrderByTag_NameAsc(@Param("projectIds") List<Long> projectIds);
 }

@@ -16,6 +16,12 @@ public interface ResourceTagRepository extends JpaRepository<ResourceTag, Resour
     @Query("select rt.tag from ResourceTag rt where rt.resource.id = :resourceId order by rt.tag.name asc")
     List<Tag> findTagsByResourceId(@Param("resourceId") Long resourceId);
 
-    List<ResourceTag> findByResource_IdInOrderByTag_NameAsc(List<Long> resourceIds);
+    @Query("""
+            select rt from ResourceTag rt
+            join fetch rt.resource
+            join fetch rt.tag
+            where rt.resource.id in :resourceIds
+            order by rt.tag.name asc
+            """)
+    List<ResourceTag> findByResource_IdInOrderByTag_NameAsc(@Param("resourceIds") List<Long> resourceIds);
 }
-

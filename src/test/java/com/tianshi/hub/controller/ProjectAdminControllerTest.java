@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
@@ -95,6 +96,22 @@ class ProjectAdminControllerTest {
     }
 
     @Test
+    void create_唯一键竞态冲突_回显slug错误() throws Exception {
+        when(projectAdminService.slugExists("race", null)).thenReturn(false);
+        when(projectAdminService.create(any(ProjectForm.class))).thenThrow(new DataIntegrityViolationException("uk_projects_slug"));
+        when(projectAdminService.findProjectCategories()).thenReturn(List.of());
+        when(projectAdminService.findAllTags()).thenReturn(List.of());
+
+        mockMvc().perform(post("/admin/projects/new")
+                        .param("title", "Race")
+                        .param("slug", "race")
+                        .param("status", "draft"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/projects/form"))
+                .andExpect(model().attributeHasFieldErrors("projectForm", "slug"));
+    }
+
+    @Test
     void edit_有效表单_更新后重定向列表() throws Exception {
         when(projectAdminService.slugExists("edited", 9L)).thenReturn(false);
         MockMvc mockMvc = mockMvc();
@@ -107,6 +124,22 @@ class ProjectAdminControllerTest {
                 .andExpect(redirectedUrl("/admin/projects"));
 
         verify(projectAdminService).update(eq(9L), any(ProjectForm.class));
+    }
+
+    @Test
+    void edit_唯一键竞态冲突_回显slug错误() throws Exception {
+        when(projectAdminService.slugExists("race", 9L)).thenReturn(false);
+        when(projectAdminService.update(eq(9L), any(ProjectForm.class))).thenThrow(new DataIntegrityViolationException("uk_projects_slug"));
+        when(projectAdminService.findProjectCategories()).thenReturn(List.of());
+        when(projectAdminService.findAllTags()).thenReturn(List.of());
+
+        mockMvc().perform(post("/admin/projects/9/edit")
+                        .param("title", "Race")
+                        .param("slug", "race")
+                        .param("status", "draft"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/projects/form"))
+                .andExpect(model().attributeHasFieldErrors("projectForm", "slug"));
     }
 
     @Test

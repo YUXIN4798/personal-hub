@@ -17,6 +17,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -64,6 +65,27 @@ class ProjectAdminServiceTest {
         assertThat(saved.getTechStack()).isEqualTo("Java, Spring Boot, MySQL");
         assertThat(saved.isFeatured()).isTrue();
         assertThat(saved.getSortOrder()).isEqualTo(3);
+    }
+
+    @Test
+    void create_重复tagId_保存前去重() {
+        when(projectRepository.save(any(Project.class))).thenAnswer(invocation -> {
+            Project project = invocation.getArgument(0);
+            ReflectionTestUtils.setField(project, "id", 8L);
+            return project;
+        });
+        when(tagRepository.findAllById(List.of(1L, 2L))).thenReturn(List.of());
+        ProjectAdminService service = service();
+        ProjectForm form = new ProjectForm();
+        form.setTitle("Personal Hub");
+        form.setSlug("personal-hub");
+        form.setStatus("published");
+        form.setTagIds(List.of(1L, 1L, 2L, 2L));
+
+        service.create(form);
+
+        verify(tagRepository).findAllById(List.of(1L, 2L));
+        verify(projectTagRepository, never()).save(any());
     }
 
     @Test
