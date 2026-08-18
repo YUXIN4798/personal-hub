@@ -9,7 +9,7 @@
         </div>
     </div>
 
-    <form th:action="@{/admin/site-config}" method="post" class="space-y-6 border border-[var(--ph-border)] bg-[var(--ph-card-solid)] p-6">
+    <form th:action="@{/admin/site-config}" th:object="${siteConfigForm}" method="post" class="space-y-6 border border-[var(--ph-border)] bg-[var(--ph-card-solid)] p-6">
         <input th:if="${_csrf != null}" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
         <div class="grid gap-4">
             <div>

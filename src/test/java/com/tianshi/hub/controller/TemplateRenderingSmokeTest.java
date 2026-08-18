@@ -1,6 +1,8 @@
 package com.tianshi.hub.controller;
 
 import com.tianshi.hub.config.AdminSession;
+import com.tianshi.hub.service.SiteConfigKeys;
+import com.tianshi.hub.service.SiteConfigService;
 import com.tianshi.hub.service.CategoryAdminService;
 import com.tianshi.hub.service.PostService;
 import com.tianshi.hub.service.ResourceService;
@@ -50,6 +52,14 @@ class TemplateRenderingSmokeTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("<!DOCTYPE html>")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("正在发生的事")));
+    }
+
+    @Test
+    void aboutPage_完整Web上下文_渲染Thymeleaf模板() throws Exception {
+        mockMvc.perform(get("/about"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("<!DOCTYPE html>")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("关于我")));
     }
 
     @Test
