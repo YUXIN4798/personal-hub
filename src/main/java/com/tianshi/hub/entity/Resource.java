@@ -199,8 +199,4 @@ public class Resource {
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
-
-    public void incrementDownloadCount() {
-        this.downloadCount++;
-    }
 }

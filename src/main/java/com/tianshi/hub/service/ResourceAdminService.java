@@ -10,16 +10,27 @@ import com.tianshi.hub.repository.CategoryRepository;
 import com.tianshi.hub.repository.ResourceRepository;
 import com.tianshi.hub.repository.ResourceTagRepository;
 import com.tianshi.hub.repository.TagRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.Set;
 import java.util.Collections;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +40,7 @@ import java.util.stream.Collectors;
 @Service
 public class ResourceAdminService {
 
+    private static final Logger log = LoggerFactory.getLogger(ResourceAdminService.class);
     private static final int PAGE_SIZE = 10;
     private static final String RESOURCE_CATEGORY_TYPE = "resource";
     private static final String DEFAULT_VISIBILITY = "public";
@@ -131,15 +143,20 @@ public class ResourceAdminService {
     @Transactional
     public Resource update(Long id, ResourceForm form) {
         Resource resource = findResource(id);
+        String oldFilePath = resource.getFilePath();
         applyForm(resource, form);
         Resource saved = resourceRepository.save(resource);
         syncTags(saved, form.getTagIds());
+        deleteAfterCommitIfReplaced(oldFilePath, saved.getFilePath());
         return saved;
     }
 
     @Transactional
     public void delete(Long id) {
-        resourceRepository.delete(findResource(id));
+        Resource resource = findResource(id);
+        String filePath = resource.getFilePath();
+        resourceRepository.delete(resource);
+        deleteAfterCommit(filePath);
     }
 
     @Transactional(readOnly = true)
@@ -170,22 +187,18 @@ public class ResourceAdminService {
             resource.setFilePath(storedPath);
             resource.setOriginalName(extractFilename(file.getOriginalFilename()));
             resource.setFileSize(file.getSize());
+            resource.setChecksum(calculateStoredFileSha256(storedPath));
             resource.setUrl(storedPath);
             resource.setType("file");
         } else if ("file".equals(resource.getType())) {
             String filePath = trim(form.getUrl());
             if (filePath != null) {
                 resource.setFilePath(filePath);
-                if (resource.getFileSize() == 0) {
-                    resource.setFileSize(0);
-                }
+                applyExistingFileMetadata(resource, filePath);
             }
             if (resource.getOriginalName() == null) {
                 resource.setOriginalName(resource.getTitle());
             }
-        } else {
-            resource.setFilePath(resource.getFilePath());
-            resource.setOriginalName(resource.getOriginalName());
         }
         if (resource.getVisibility() == null) {
             resource.setVisibility(DEFAULT_VISIBILITY);
@@ -200,6 +213,68 @@ public class ResourceAdminService {
             return null;
         }
         return java.nio.file.Path.of(originalFilename).getFileName().toString();
+    }
+
+    private void applyExistingFileMetadata(Resource resource, String filePath) {
+        if (fileStorageService == null) {
+            return;
+        }
+        try {
+            java.nio.file.Path resolvedPath = fileStorageService.resolve(filePath);
+            if (!Files.isRegularFile(resolvedPath) || !Files.isReadable(resolvedPath)) {
+                return;
+            }
+            resource.setFileSize(Files.size(resolvedPath));
+            resource.setChecksum(calculateStoredFileSha256(filePath));
+        } catch (RuntimeException | IOException exception) {
+            log.warn("资源文件元数据读取失败: {}", filePath, exception);
+        }
+    }
+
+    private String calculateStoredFileSha256(String storedPath) {
+        try (InputStream inputStream = Files.newInputStream(fileStorageService.resolve(storedPath));
+             DigestInputStream digestInputStream = new DigestInputStream(inputStream, MessageDigest.getInstance("SHA-256"))) {
+            digestInputStream.transferTo(OutputStream.nullOutputStream());
+            byte[] digest = digestInputStream.getMessageDigest().digest();
+            StringBuilder hex = new StringBuilder(digest.length * 2);
+            for (byte value : digest) {
+                hex.append(String.format("%02x", value));
+            }
+            return hex.toString();
+        } catch (IOException | NoSuchAlgorithmException exception) {
+            throw new IllegalStateException("计算文件 checksum 失败", exception);
+        }
+    }
+
+    private void deleteAfterCommitIfReplaced(String oldFilePath, String newFilePath) {
+        if (oldFilePath == null || oldFilePath.equals(newFilePath)) {
+            return;
+        }
+        deleteAfterCommit(oldFilePath);
+    }
+
+    private void deleteAfterCommit(String filePath) {
+        if (fileStorageService == null || filePath == null || filePath.isBlank()) {
+            return;
+        }
+        if (TransactionSynchronizationManager.isSynchronizationActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    deleteFileQuietly(filePath);
+                }
+            });
+            return;
+        }
+        deleteFileQuietly(filePath);
+    }
+
+    private void deleteFileQuietly(String filePath) {
+        try {
+            fileStorageService.delete(filePath);
+        } catch (RuntimeException exception) {
+            log.warn("资源文件清理失败: {}", filePath, exception);
+        }
     }
 
     private void syncTags(Resource resource, List<Long> tagIds) {
