@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -154,7 +155,10 @@ public class ProjectAdminService {
 
     private void syncTags(Project project, List<Long> tagIds) {
         projectTagRepository.deleteByProject_Id(project.getId());
-        List<Long> safeTagIds = tagIds == null ? Collections.emptyList() : tagIds;
+        List<Long> safeTagIds = tagIds == null ? Collections.emptyList() : tagIds.stream()
+                .filter(Objects::nonNull)
+                .distinct()
+                .toList();
         tagRepository.findAllById(safeTagIds).stream()
                 .map(tag -> new ProjectTag(project, tag))
                 .forEach(projectTagRepository::save);

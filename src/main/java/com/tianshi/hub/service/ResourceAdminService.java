@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -147,6 +148,7 @@ public class ResourceAdminService {
         form.setTitle(resource.getTitle());
         form.setSlug(resource.getSlug());
         form.setSummary(resource.getSummary());
+        form.setDescription(resource.getDescription());
         form.setUrl(resource.getUrl());
         form.setType(resource.getType());
         form.setCategoryId(resource.getCategoryId());
@@ -158,6 +160,7 @@ public class ResourceAdminService {
         resource.setTitle(trim(form.getTitle()));
         resource.setSlug(trim(form.getSlug()));
         resource.setSummary(trim(form.getSummary()));
+        resource.setDescription(trim(form.getDescription()));
         resource.setUrl(trim(form.getUrl()));
         resource.setType(normalizeType(form.getType()));
         resource.setCategoryId(form.getCategoryId());
@@ -201,7 +204,10 @@ public class ResourceAdminService {
 
     private void syncTags(Resource resource, List<Long> tagIds) {
         resourceTagRepository.deleteByResource_Id(resource.getId());
-        List<Long> safeTagIds = tagIds == null ? Collections.emptyList() : tagIds;
+        List<Long> safeTagIds = tagIds == null ? Collections.emptyList() : tagIds.stream()
+                .filter(Objects::nonNull)
+                .distinct()
+                .toList();
         tagRepository.findAllById(safeTagIds).stream()
                 .map(tag -> new ResourceTag(resource, tag))
                 .forEach(resourceTagRepository::save);

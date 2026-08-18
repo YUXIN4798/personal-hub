@@ -5,6 +5,7 @@ import com.tianshi.hub.entity.Category;
 import com.tianshi.hub.entity.Project;
 import com.tianshi.hub.service.ProjectAdminService;
 import jakarta.validation.Valid;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,7 +63,13 @@ public class ProjectAdminController {
             addFormAttributes(model, "新建项目", "/admin/projects/new");
             return "admin/projects/form";
         }
-        projectAdminService.create(projectForm);
+        try {
+            projectAdminService.create(projectForm);
+        } catch (DataIntegrityViolationException exception) {
+            bindingResult.rejectValue("slug", "duplicate", "Slug 已存在，请更换");
+            addFormAttributes(model, "新建项目", "/admin/projects/new");
+            return "admin/projects/form";
+        }
         return "redirect:/admin/projects";
     }
 
@@ -86,7 +93,13 @@ public class ProjectAdminController {
             addFormAttributes(model, "编辑项目", "/admin/projects/" + id + "/edit");
             return "admin/projects/form";
         }
-        projectAdminService.update(id, projectForm);
+        try {
+            projectAdminService.update(id, projectForm);
+        } catch (DataIntegrityViolationException exception) {
+            bindingResult.rejectValue("slug", "duplicate", "Slug 已存在，请更换");
+            addFormAttributes(model, "编辑项目", "/admin/projects/" + id + "/edit");
+            return "admin/projects/form";
+        }
         return "redirect:/admin/projects";
     }
 

@@ -21,6 +21,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -55,6 +56,7 @@ class ResourceAdminServiceTest {
         form.setTitle("Spring Boot Notes");
         form.setSlug("spring-boot-notes");
         form.setSummary("资源摘要");
+        form.setDescription("资源描述");
         form.setUrl("https://example.com/notes");
         form.setType("link");
         form.setCategoryId(3L);
@@ -67,6 +69,7 @@ class ResourceAdminServiceTest {
         assertThat(saved.getTitle()).isEqualTo("Spring Boot Notes");
         assertThat(saved.getSlug()).isEqualTo("spring-boot-notes");
         assertThat(saved.getSummary()).isEqualTo("资源摘要");
+        assertThat(saved.getDescription()).isEqualTo("资源描述");
         assertThat(saved.getUrl()).isEqualTo("https://example.com/notes");
         assertThat(saved.getType()).isEqualTo("link");
         assertThat(saved.getCategoryId()).isEqualTo(3L);
@@ -105,6 +108,7 @@ class ResourceAdminServiceTest {
         resource.setTitle("Spring Boot Notes");
         resource.setSlug("spring-boot-notes");
         resource.setSummary("资源摘要");
+        resource.setDescription("资源描述");
         resource.setUrl("https://example.com/notes");
         resource.setType("link");
         resource.setCategoryId(3L);
@@ -116,9 +120,32 @@ class ResourceAdminServiceTest {
         assertThat(form.getTitle()).isEqualTo("Spring Boot Notes");
         assertThat(form.getSlug()).isEqualTo("spring-boot-notes");
         assertThat(form.getSummary()).isEqualTo("资源摘要");
+        assertThat(form.getDescription()).isEqualTo("资源描述");
         assertThat(form.getUrl()).isEqualTo("https://example.com/notes");
         assertThat(form.getType()).isEqualTo("link");
         assertThat(form.getCategoryId()).isEqualTo(3L);
+    }
+
+    @Test
+    void create_重复tagId_保存前去重() {
+        when(resourceRepository.save(any(Resource.class))).thenAnswer(invocation -> {
+            Resource resource = invocation.getArgument(0);
+            resource.setId(8L);
+            return resource;
+        });
+        when(tagRepository.findAllById(List.of(1L, 2L))).thenReturn(List.of());
+        ResourceAdminService service = service();
+        ResourceForm form = new ResourceForm();
+        form.setTitle("Spring Boot Notes");
+        form.setSlug("spring-boot-notes");
+        form.setUrl("https://example.com/notes");
+        form.setType("link");
+        form.setTagIds(List.of(1L, 1L, 2L, 2L));
+
+        service.create(form);
+
+        verify(tagRepository).findAllById(List.of(1L, 2L));
+        verify(resourceTagRepository, never()).save(any());
     }
 
     @Test

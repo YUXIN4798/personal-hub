@@ -17,6 +17,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -57,6 +58,27 @@ class PostAdminServiceTest {
         assertThat(captor.getValue().getContent()).isEqualTo("正文");
         assertThat(captor.getValue().getStatus()).isEqualTo("published");
         assertThat(captor.getValue().getCategoryId()).isEqualTo(2L);
+    }
+
+    @Test
+    void create_重复tagId_保存前去重() {
+        when(postRepository.save(any(Post.class))).thenAnswer(invocation -> {
+            Post post = invocation.getArgument(0);
+            ReflectionTestUtils.setField(post, "id", 8L);
+            return post;
+        });
+        when(tagRepository.findAllById(List.of(1L, 2L))).thenReturn(List.of());
+        PostForm form = new PostForm();
+        form.setTitle("Java Notes");
+        form.setSlug("java-notes");
+        form.setContent("正文");
+        form.setStatus("published");
+        form.setTagIds(List.of(1L, 1L, 2L, 2L));
+
+        new PostAdminService(postRepository, categoryRepository, tagRepository, postTagRepository).create(form);
+
+        verify(tagRepository).findAllById(List.of(1L, 2L));
+        verify(postTagRepository, never()).save(any());
     }
 
     @Test

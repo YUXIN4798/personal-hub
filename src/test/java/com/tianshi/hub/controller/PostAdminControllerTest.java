@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
@@ -90,6 +91,23 @@ class PostAdminControllerTest {
     }
 
     @Test
+    void create_唯一键竞态冲突_回显slug错误() throws Exception {
+        when(postAdminService.slugExists("race", null)).thenReturn(false);
+        when(postAdminService.create(any(PostForm.class))).thenThrow(new DataIntegrityViolationException("uk_posts_slug"));
+        when(postAdminService.findPostCategories()).thenReturn(List.of());
+        when(postAdminService.findAllTags()).thenReturn(List.of());
+
+        mockMvc().perform(post("/admin/posts/new")
+                        .param("title", "Race")
+                        .param("slug", "race")
+                        .param("content", "正文")
+                        .param("status", "draft"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/posts/form"))
+                .andExpect(model().attributeHasFieldErrors("postForm", "slug"));
+    }
+
+    @Test
     void edit_有效表单_更新后重定向列表() throws Exception {
         when(postAdminService.slugExists("edited", 9L)).thenReturn(false);
 
@@ -102,6 +120,23 @@ class PostAdminControllerTest {
                 .andExpect(redirectedUrl("/admin/posts"));
 
         verify(postAdminService).update(eq(9L), any(PostForm.class));
+    }
+
+    @Test
+    void edit_唯一键竞态冲突_回显slug错误() throws Exception {
+        when(postAdminService.slugExists("race", 9L)).thenReturn(false);
+        when(postAdminService.update(eq(9L), any(PostForm.class))).thenThrow(new DataIntegrityViolationException("uk_posts_slug"));
+        when(postAdminService.findPostCategories()).thenReturn(List.of());
+        when(postAdminService.findAllTags()).thenReturn(List.of());
+
+        mockMvc().perform(post("/admin/posts/9/edit")
+                        .param("title", "Race")
+                        .param("slug", "race")
+                        .param("content", "正文")
+                        .param("status", "draft"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/posts/form"))
+                .andExpect(model().attributeHasFieldErrors("postForm", "slug"));
     }
 
     @Test

@@ -5,6 +5,7 @@ import com.tianshi.hub.entity.Category;
 import com.tianshi.hub.entity.Post;
 import com.tianshi.hub.service.PostAdminService;
 import jakarta.validation.Valid;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,7 +63,13 @@ public class PostAdminController {
             addFormAttributes(model, "新建笔记", "/admin/posts/new");
             return "admin/posts/form";
         }
-        postAdminService.create(postForm);
+        try {
+            postAdminService.create(postForm);
+        } catch (DataIntegrityViolationException exception) {
+            bindingResult.rejectValue("slug", "duplicate", "Slug 已存在，请更换");
+            addFormAttributes(model, "新建笔记", "/admin/posts/new");
+            return "admin/posts/form";
+        }
         return "redirect:/admin/posts";
     }
 
@@ -86,7 +93,13 @@ public class PostAdminController {
             addFormAttributes(model, "编辑笔记", "/admin/posts/" + id + "/edit");
             return "admin/posts/form";
         }
-        postAdminService.update(id, postForm);
+        try {
+            postAdminService.update(id, postForm);
+        } catch (DataIntegrityViolationException exception) {
+            bindingResult.rejectValue("slug", "duplicate", "Slug 已存在，请更换");
+            addFormAttributes(model, "编辑笔记", "/admin/posts/" + id + "/edit");
+            return "admin/posts/form";
+        }
         return "redirect:/admin/posts";
     }
 
