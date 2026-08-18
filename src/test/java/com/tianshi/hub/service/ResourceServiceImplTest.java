@@ -103,6 +103,16 @@ class ResourceServiceImplTest {
     }
 
     @Test
+    void findPublicResourceBySlug_private资源_抛出不存在() {
+        when(resourceRepository.findBySlug("hidden")).thenReturn(Optional.of(resource("private")));
+        ResourceServiceImpl service = new ResourceServiceImpl(resourceRepository, categoryRepository);
+
+        assertThatThrownBy(() -> service.findPublicResourceBySlug("hidden"))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("资源不存在");
+    }
+
+    @Test
     void prepareDownload_文件不存在_抛出404且不增加计数() {
         Resource resource = resource("public");
         ReflectionTestUtils.setField(resource, "id", 7L);

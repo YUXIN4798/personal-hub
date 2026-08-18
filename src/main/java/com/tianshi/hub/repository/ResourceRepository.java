@@ -8,11 +8,15 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface ResourceRepository extends JpaRepository<Resource, Long> {
 
     Page<Resource> findByVisibility(String visibility, Pageable pageable);
 
     Page<Resource> findByVisibilityAndCategoryId(String visibility, Long categoryId, Pageable pageable);
+
+    Optional<Resource> findBySlug(String slug);
 
     boolean existsBySlug(String slug);
 

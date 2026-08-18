@@ -61,13 +61,13 @@ class ResourceControllerTest {
         resource.setDescription("**资源**");
         resource.setType("file");
         resource.setVisibility("public");
-        when(resourceService.findPublicResourceById(11L)).thenReturn(resource);
+        when(resourceService.findPublicResourceBySlug("resource")).thenReturn(resource);
         when(resourceService.isDownloadAvailable(resource)).thenReturn(true);
         when(resourceService.findResourceTags(11L)).thenReturn(java.util.List.of());
         when(resourceService.findCategoryById(1L)).thenReturn(new Category());
         ReflectionTestUtils.setField(resource, "categoryId", 1L);
 
-        mockMvc().perform(get("/resources/11"))
+        mockMvc().perform(get("/resources/resource"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("resources/detail"))
                 .andExpect(model().attributeExists("renderedDescription"))

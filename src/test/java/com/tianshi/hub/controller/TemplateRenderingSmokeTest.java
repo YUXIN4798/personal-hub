@@ -45,6 +45,14 @@ class TemplateRenderingSmokeTest {
     private TagAdminService tagAdminService;
 
     @Test
+    void homePage_完整Web上下文_渲染首页模板() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("<!DOCTYPE html>")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("正在发生的事")));
+    }
+
+    @Test
     void resourcesList_完整Web上下文_渲染Thymeleaf模板() throws Exception {
         when(resourceService.findResourceCategories()).thenReturn(List.of());
         when(resourceService.findPublicResources(anyInt(), anyInt(), any())).thenReturn(new PageImpl<>(List.of()));

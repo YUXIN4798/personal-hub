@@ -17,6 +17,8 @@ public interface ResourceService {
 
     Resource findPublicResourceById(Long id);
 
+    Resource findPublicResourceBySlug(String slug);
+
     Category findCategoryById(Long id);
 
     List<Tag> findResourceTags(Long resourceId);

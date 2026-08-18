@@ -56,9 +56,9 @@ public class ResourceController {
         return "resources/list";
     }
 
-    @GetMapping("/{id}")
-    public String detail(@PathVariable Long id, Model model) {
-        Resource resource = resourceService.findPublicResourceById(id);
+    @GetMapping("/{slug}")
+    public String detail(@PathVariable String slug, Model model) {
+        Resource resource = resourceService.findPublicResourceBySlug(slug);
         model.addAttribute("resource", resource);
         model.addAttribute("renderedDescription", markdownService.render(resource.getDescription()));
         model.addAttribute("downloadAvailable", resourceService.isDownloadAvailable(resource));

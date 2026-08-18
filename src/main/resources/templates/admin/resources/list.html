@@ -46,7 +46,7 @@
                 </td>
                 <td class="px-4 py-3">
                     <div class="flex justify-end gap-3 [overflow-wrap:anywhere]">
-                        <a th:href="@{/resources/{id}(id=${resource.id})}" target="_blank" rel="noopener noreferrer" class="text-[var(--ph-text-dim)] hover:underline">前台</a>
+                        <a th:href="@{/resources/{slug}(slug=${resource.slug})}" target="_blank" rel="noopener noreferrer" class="text-[var(--ph-text-dim)] hover:underline">前台</a>
                         <a th:href="@{/admin/resources/{id}/edit(id=${resource.id})}" class="text-[var(--ph-accent)] hover:underline">编辑</a>
                         <form th:action="@{/admin/resources/{id}/delete(id=${resource.id})}" method="post">
                             <input th:if="${_csrf != null}" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
