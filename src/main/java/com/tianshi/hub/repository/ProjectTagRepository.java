@@ -15,6 +15,9 @@ public interface ProjectTagRepository extends JpaRepository<ProjectTag, ProjectT
 
     long countByTag_Id(Long tagId);
 
+    @Query("select pt.tag.id as id, count(pt) as total from ProjectTag pt where pt.tag.id in :tagIds group by pt.tag.id")
+    List<UsageCount> countByTagIdIn(@Param("tagIds") List<Long> tagIds);
+
     @Query("select pt.tag from ProjectTag pt where pt.project.id = :projectId order by pt.tag.name asc")
     List<Tag> findTagsByProjectId(@Param("projectId") Long projectId);
 

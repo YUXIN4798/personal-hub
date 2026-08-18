@@ -4,7 +4,10 @@ import com.tianshi.hub.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
@@ -13,5 +16,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     boolean existsBySlug(String slug);
     boolean existsBySlugAndIdNot(String slug, Long id);
     long countByCategoryId(Long categoryId);
+    @Query("select p.categoryId as id, count(p) as total from Post p where p.categoryId in :categoryIds group by p.categoryId")
+    List<UsageCount> countByCategoryIdIn(@Param("categoryIds") List<Long> categoryIds);
     Page<Post> findByStatus(String status, Pageable pageable);
 }

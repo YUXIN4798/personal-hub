@@ -7,6 +7,7 @@ import com.tianshi.hub.repository.CategoryRepository;
 import com.tianshi.hub.repository.PostRepository;
 import com.tianshi.hub.repository.ProjectRepository;
 import com.tianshi.hub.repository.ResourceRepository;
+import com.tianshi.hub.repository.UsageCount;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,10 +44,12 @@ public class CategoryAdminService {
 
     @Transactional(readOnly = true)
     public List<CategoryRow> findRows() {
-        return categoryRepository.findAll(Sort.by("type").ascending().and(Sort.by("sortOrder").ascending())
-                        .and(Sort.by("id").ascending()))
+        List<Category> categories = categoryRepository.findAll(Sort.by("type").ascending().and(Sort.by("sortOrder").ascending())
+                        .and(Sort.by("id").ascending()));
+        Map<Long, CategoryUsage> usages = usages(categories.stream().map(Category::getId).toList());
+        return categories
                 .stream()
-                .map(category -> new CategoryRow(category, usage(category.getId())))
+                .map(category -> new CategoryRow(category, usages.getOrDefault(category.getId(), CategoryUsage.empty())))
                 .toList();
     }
 
@@ -135,11 +138,32 @@ public class CategoryAdminService {
     }
 
     private CategoryUsage usage(Long categoryId) {
-        return new CategoryUsage(
-                projectRepository.countByCategoryId(categoryId),
-                resourceRepository.countByCategoryId(categoryId),
-                postRepository.countByCategoryId(categoryId)
-        );
+        return usages(List.of(categoryId)).getOrDefault(categoryId, CategoryUsage.empty());
+    }
+
+    private Map<Long, CategoryUsage> usages(List<Long> categoryIds) {
+        if (categoryIds == null || categoryIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        Map<Long, Long> projectCounts = toCountMap(projectRepository.countByCategoryIdIn(categoryIds));
+        Map<Long, Long> resourceCounts = toCountMap(resourceRepository.countByCategoryIdIn(categoryIds));
+        Map<Long, Long> postCounts = toCountMap(postRepository.countByCategoryIdIn(categoryIds));
+        return categoryIds.stream()
+                .collect(java.util.stream.Collectors.toMap(
+                        id -> id,
+                        id -> new CategoryUsage(
+                                projectCounts.getOrDefault(id, 0L),
+                                resourceCounts.getOrDefault(id, 0L),
+                                postCounts.getOrDefault(id, 0L)
+                        ),
+                        (left, right) -> left,
+                        LinkedHashMap::new
+                ));
+    }
+
+    private Map<Long, Long> toCountMap(List<UsageCount> counts) {
+        return counts.stream()
+                .collect(java.util.stream.Collectors.toMap(UsageCount::getId, UsageCount::getTotal));
     }
 
     private String normalizeType(String type) {
@@ -158,6 +182,10 @@ public class CategoryAdminService {
     }
 
     public record CategoryUsage(long projects, long resources, long posts) {
+        private static CategoryUsage empty() {
+            return new CategoryUsage(0, 0, 0);
+        }
+
         public long total() {
             return projects + resources + posts;
         }

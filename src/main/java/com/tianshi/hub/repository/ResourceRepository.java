@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ResourceRepository extends JpaRepository<Resource, Long> {
@@ -23,6 +24,9 @@ public interface ResourceRepository extends JpaRepository<Resource, Long> {
     boolean existsBySlugAndIdNot(String slug, Long id);
 
     long countByCategoryId(Long categoryId);
+
+    @Query("select r.categoryId as id, count(r) as total from Resource r where r.categoryId in :categoryIds group by r.categoryId")
+    List<UsageCount> countByCategoryIdIn(@Param("categoryIds") List<Long> categoryIds);
 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Resource r SET r.downloadCount = r.downloadCount + 1 WHERE r.id = :id")

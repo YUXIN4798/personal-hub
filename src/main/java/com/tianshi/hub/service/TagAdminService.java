@@ -7,10 +7,15 @@ import com.tianshi.hub.repository.PostTagRepository;
 import com.tianshi.hub.repository.ProjectTagRepository;
 import com.tianshi.hub.repository.ResourceTagRepository;
 import com.tianshi.hub.repository.TagRepository;
+import com.tianshi.hub.repository.UsageCount;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class TagAdminService {
@@ -37,8 +42,10 @@ public class TagAdminService {
 
     @Transactional(readOnly = true)
     public List<TagRow> findRows() {
-        return tagRepository.findAllByOrderByNameAsc().stream()
-                .map(tag -> new TagRow(tag, usage(tag.getId())))
+        List<Tag> tags = tagRepository.findAllByOrderByNameAsc();
+        Map<Long, TagUsage> usages = usages(tags.stream().map(Tag::getId).toList());
+        return tags.stream()
+                .map(tag -> new TagRow(tag, usages.getOrDefault(tag.getId(), TagUsage.empty())))
                 .toList();
     }
 
@@ -108,11 +115,32 @@ public class TagAdminService {
     }
 
     private TagUsage usage(Long tagId) {
-        return new TagUsage(
-                projectTagRepository.countByTag_Id(tagId),
-                resourceTagRepository.countByTag_Id(tagId),
-                postTagRepository.countByTag_Id(tagId)
-        );
+        return usages(List.of(tagId)).getOrDefault(tagId, TagUsage.empty());
+    }
+
+    private Map<Long, TagUsage> usages(List<Long> tagIds) {
+        if (tagIds == null || tagIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        Map<Long, Long> projectCounts = toCountMap(projectTagRepository.countByTagIdIn(tagIds));
+        Map<Long, Long> resourceCounts = toCountMap(resourceTagRepository.countByTagIdIn(tagIds));
+        Map<Long, Long> postCounts = toCountMap(postTagRepository.countByTagIdIn(tagIds));
+        return tagIds.stream()
+                .collect(Collectors.toMap(
+                        id -> id,
+                        id -> new TagUsage(
+                                projectCounts.getOrDefault(id, 0L),
+                                resourceCounts.getOrDefault(id, 0L),
+                                postCounts.getOrDefault(id, 0L)
+                        ),
+                        (left, right) -> left,
+                        LinkedHashMap::new
+                ));
+    }
+
+    private Map<Long, Long> toCountMap(List<UsageCount> counts) {
+        return counts.stream()
+                .collect(Collectors.toMap(UsageCount::getId, UsageCount::getTotal));
     }
 
     private String trim(String value) {
@@ -123,6 +151,10 @@ public class TagAdminService {
     }
 
     public record TagUsage(long projects, long resources, long posts) {
+        private static TagUsage empty() {
+            return new TagUsage(0, 0, 0);
+        }
+
         public long total() {
             return projects + resources + posts;
         }
