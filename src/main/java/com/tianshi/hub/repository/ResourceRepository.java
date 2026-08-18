@@ -18,6 +18,8 @@ public interface ResourceRepository extends JpaRepository<Resource, Long> {
 
     boolean existsBySlugAndIdNot(String slug, Long id);
 
+    long countByCategoryId(Long categoryId);
+
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Resource r SET r.downloadCount = r.downloadCount + 1 WHERE r.id = :id")
     int incrementDownloadCount(@Param("id") Long id);

@@ -13,6 +13,8 @@ public interface PostTagRepository extends JpaRepository<PostTag, PostTagId> {
 
     void deleteByPost_Id(Long postId);
 
+    long countByTag_Id(Long tagId);
+
     @Query("select pt.tag from PostTag pt where pt.post.id = :postId order by pt.tag.name asc")
     List<Tag> findTagsByPostId(@Param("postId") Long postId);
 

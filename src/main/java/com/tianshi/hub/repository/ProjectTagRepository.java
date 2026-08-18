@@ -13,6 +13,8 @@ public interface ProjectTagRepository extends JpaRepository<ProjectTag, ProjectT
 
     void deleteByProject_Id(Long projectId);
 
+    long countByTag_Id(Long tagId);
+
     @Query("select pt.tag from ProjectTag pt where pt.project.id = :projectId order by pt.tag.name asc")
     List<Tag> findTagsByProjectId(@Param("projectId") Long projectId);
 

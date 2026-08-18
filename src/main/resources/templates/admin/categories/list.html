@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/admin-layout :: layout('分类管理', ~{::content})}">
+<section th:fragment="content" class="space-y-5">
+    <div class="flex items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-semibold text-[var(--ph-text-strong)]">分类管理</h1>
+            <p class="mt-1 text-sm text-[var(--ph-text-muted)]">管理项目、资源和笔记的后台分类</p>
+        </div>
+        <a th:href="@{/admin/categories/new}" class="bg-[var(--ph-accent)] px-4 py-2 text-sm font-medium text-[var(--ph-accent-contrast)] transition hover:brightness-110">新建分类</a>
+    </div>
+    <div th:if="${successMessage}" class="border border-[var(--ph-accent)] bg-[var(--ph-accent-soft)] px-4 py-3 text-sm text-[var(--ph-accent)]" th:text="${successMessage}">分类已删除</div>
+    <div th:if="${errorMessage}" class="border border-[var(--ph-danger)] px-4 py-3 text-sm text-[var(--ph-danger)]" th:text="${errorMessage}">无法删除</div>
+    <div th:each="typeEntry : ${typeLabels}" class="space-y-3">
+        <h2 class="text-base font-semibold text-[var(--ph-text-strong)]" th:text="${typeEntry.value} + '分类'">项目分类</h2>
+        <div class="overflow-x-auto border border-[var(--ph-border)]">
+            <table class="min-w-full divide-y divide-[var(--ph-border-soft)] text-sm">
+                <thead class="bg-[var(--ph-bg-soft)] text-left text-xs uppercase tracking-[0.12em] text-[var(--ph-text-muted)]">
+                <tr>
+                    <th class="px-4 py-3">名称</th>
+                    <th class="px-4 py-3">Slug</th>
+                    <th class="px-4 py-3">排序</th>
+                    <th class="px-4 py-3">引用计数</th>
+                    <th class="px-4 py-3 text-right">操作</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-[var(--ph-border-soft)]">
+                <tr th:each="row : ${categoryRows}" th:if="${row.category.type == typeEntry.key}" class="bg-[var(--ph-card-solid)]">
+                    <td class="px-4 py-3 font-medium text-[var(--ph-text-strong)]" th:text="${row.category.name}">分类</td>
+                    <td class="px-4 py-3 font-mono text-xs text-[var(--ph-text-muted)] [overflow-wrap:anywhere]" th:text="${row.category.slug}">slug</td>
+                    <td class="px-4 py-3 text-[var(--ph-text-dim)]" th:text="${row.category.sortOrder}">0</td>
+                    <td class="px-4 py-3 text-[var(--ph-text-dim)]">
+                        <span th:text="${row.usage.total()} + ' 个内容'">0 个内容</span>
+                        <span class="ml-2 text-xs text-[var(--ph-text-muted)]"
+                              th:text="'项目 ' + ${row.usage.projects()} + ' / 资源 ' + ${row.usage.resources()} + ' / 笔记 ' + ${row.usage.posts()}">项目 0 / 资源 0 / 笔记 0</span>
+                    </td>
+                    <td class="px-4 py-3">
+                        <div class="flex justify-end gap-3">
+                            <a th:href="@{/admin/categories/{id}/edit(id=${row.category.id})}" class="text-[var(--ph-accent)] hover:underline">编辑</a>
+                            <form th:action="@{/admin/categories/{id}/delete(id=${row.category.id})}" method="post">
+                                <input th:if="${_csrf != null}" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                <button type="submit" class="text-[var(--ph-danger)] hover:underline">删除</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <p th:if="${#lists.isEmpty(categoryRows)}" class="border border-[var(--ph-border)] p-6 text-center text-sm text-[var(--ph-text-muted)]">暂无分类</p>
+</section>
+</html>

@@ -13,6 +13,8 @@ public interface ResourceTagRepository extends JpaRepository<ResourceTag, Resour
 
     void deleteByResource_Id(Long resourceId);
 
+    long countByTag_Id(Long tagId);
+
     @Query("select rt.tag from ResourceTag rt where rt.resource.id = :resourceId order by rt.tag.name asc")
     List<Tag> findTagsByResourceId(@Param("resourceId") Long resourceId);
 

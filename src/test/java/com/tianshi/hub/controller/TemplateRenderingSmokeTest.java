@@ -1,7 +1,10 @@
 package com.tianshi.hub.controller;
 
+import com.tianshi.hub.config.AdminSession;
+import com.tianshi.hub.service.CategoryAdminService;
 import com.tianshi.hub.service.PostService;
 import com.tianshi.hub.service.ResourceService;
+import com.tianshi.hub.service.TagAdminService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -12,6 +15,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -33,6 +37,12 @@ class TemplateRenderingSmokeTest {
 
     @MockitoBean
     private PostService postService;
+
+    @MockitoBean
+    private CategoryAdminService categoryAdminService;
+
+    @MockitoBean
+    private TagAdminService tagAdminService;
 
     @Test
     void resourcesList_完整Web上下文_渲染Thymeleaf模板() throws Exception {
@@ -56,5 +66,28 @@ class TemplateRenderingSmokeTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("<!DOCTYPE html>")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("笔记")));
+    }
+
+    @Test
+    void adminCategories_完整Web上下文_渲染Thymeleaf模板() throws Exception {
+        when(categoryAdminService.findRows()).thenReturn(List.of());
+        when(categoryAdminService.typeLabels()).thenReturn(Map.of("project", "项目"));
+
+        mockMvc.perform(get("/admin/categories")
+                        .sessionAttr(AdminSession.ADMIN_AUTHENTICATED, true))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("<!DOCTYPE html>")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("分类管理")));
+    }
+
+    @Test
+    void adminTags_完整Web上下文_渲染Thymeleaf模板() throws Exception {
+        when(tagAdminService.findRows()).thenReturn(List.of());
+
+        mockMvc.perform(get("/admin/tags")
+                        .sessionAttr(AdminSession.ADMIN_AUTHENTICATED, true))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("<!DOCTYPE html>")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("标签管理")));
     }
 }
