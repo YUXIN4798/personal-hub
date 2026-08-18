@@ -15,5 +15,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     boolean existsBySlugAndIdNot(String slug, Long id);
 
+    long countByCategoryId(Long categoryId);
+
     Page<Project> findByStatus(String status, Pageable pageable);
 }
