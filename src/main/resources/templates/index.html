@@ -6,7 +6,8 @@
         <span class="ghost-mark" aria-hidden="true">MX</span>
         <div class="relative z-10 max-w-4xl">
             <p class="hero-entrance eyebrow mb-8 text-[0.68rem] text-[var(--ph-accent)]" style="animation: heroRise 520ms 60ms both;">Personal Hub / 01</p>
-            <h1 class="hero-entrance display hero-title max-w-4xl whitespace-pre-line text-[var(--ph-text)]" style="animation: heroRise 620ms 120ms both;" th:text="${homeContent.heroTitle}">把想法<br><span class="text-[var(--ph-accent)]">做成系统。</span></h1>
+            <h1 class="hero-entrance display hero-title max-w-4xl whitespace-pre-line text-[var(--ph-text)]" style="animation: heroRise 620ms 120ms both;"><span th:if="${!homeContent.heroTitleHasAccent()}" th:text="${homeContent.heroTitle}">把想法 做成系统。</span><span th:if="${homeContent.heroTitleHasAccent()}" th:text="${homeContent.heroTitlePrefix()}">把想法
+</span><span th:if="${homeContent.heroTitleHasAccent()}" class="text-[var(--ph-accent)]" th:text="${homeContent.heroTitleAccent()}">做成系统。</span></h1>
             <div class="hero-rule hero-entrance my-9 h-px w-32" style="animation: heroRise 520ms 220ms both;"></div>
             <p class="hero-entrance max-w-xl whitespace-pre-line [overflow-wrap:anywhere] text-base leading-8 text-[var(--ph-text-dim)] md:text-lg" style="animation: heroRise 520ms 280ms both;" th:text="${homeContent.heroSubtitle}">
                 曹铭轩 · Java 后端方向 · AI 应用实践者<br>
