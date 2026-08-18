@@ -8,6 +8,7 @@
             <p class="mt-1 text-sm text-[var(--ph-text-muted)]">管理上传目录中的图片文件</p>
         </div>
         <form id="upload-form" th:action="@{/admin/upload}" method="post" enctype="multipart/form-data" class="flex items-center gap-3">
+            <input th:if="${_csrf != null}" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
             <input type="file" name="file" accept="image/*" class="max-w-xs border border-[var(--ph-border)] bg-[var(--ph-bg-soft)] px-3 py-2 text-sm">
             <button type="submit" class="bg-[var(--ph-accent)] px-4 py-2 text-sm font-medium text-[var(--ph-accent-contrast)] transition hover:brightness-110">上传</button>
         </form>
@@ -36,6 +37,7 @@
                 <td class="px-4 py-3">
                     <div class="flex justify-end">
                         <form th:action="@{/admin/files/{name}/delete(name=${file.name})}" method="post">
+                            <input th:if="${_csrf != null}" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                             <button type="submit" class="text-[var(--ph-danger)] hover:underline">删除</button>
                         </form>
                     </div>

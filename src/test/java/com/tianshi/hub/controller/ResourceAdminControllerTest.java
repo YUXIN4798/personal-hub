@@ -94,6 +94,44 @@ class ResourceAdminControllerTest {
     }
 
     @Test
+    void create_javascript协议URL_回显表单错误且不创建() throws Exception {
+        when(resourceAdminService.slugExists("bad-link", null)).thenReturn(false);
+        when(resourceAdminService.findResourceCategories()).thenReturn(List.of());
+        when(resourceAdminService.findAllTags()).thenReturn(List.of());
+        MockMvc mockMvc = mockMvc();
+
+        mockMvc.perform(post("/admin/resources/new")
+                        .param("title", "Bad Link")
+                        .param("slug", "bad-link")
+                        .param("url", "javascript:alert(1)")
+                        .param("type", "link"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/resources/form"))
+                .andExpect(model().attributeHasFieldErrors("resourceForm", "url"));
+
+        verify(resourceAdminService, never()).create(any());
+    }
+
+    @Test
+    void create_协议相对URL_回显表单错误且不创建() throws Exception {
+        when(resourceAdminService.slugExists("protocol-relative", null)).thenReturn(false);
+        when(resourceAdminService.findResourceCategories()).thenReturn(List.of());
+        when(resourceAdminService.findAllTags()).thenReturn(List.of());
+        MockMvc mockMvc = mockMvc();
+
+        mockMvc.perform(post("/admin/resources/new")
+                        .param("title", "Protocol Relative")
+                        .param("slug", "protocol-relative")
+                        .param("url", "//evil.example/resource")
+                        .param("type", "link"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/resources/form"))
+                .andExpect(model().attributeHasFieldErrors("resourceForm", "url"));
+
+        verify(resourceAdminService, never()).create(any());
+    }
+
+    @Test
     void edit_有效表单_更新后重定向列表() throws Exception {
         when(resourceAdminService.slugExists("edited", 9L)).thenReturn(false);
         MockMvc mockMvc = mockMvc();
@@ -124,4 +162,3 @@ class ResourceAdminControllerTest {
         return MockMvcBuilders.standaloneSetup(new ResourceAdminController(resourceAdminService)).build();
     }
 }
-

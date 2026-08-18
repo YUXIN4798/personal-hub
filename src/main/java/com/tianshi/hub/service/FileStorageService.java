@@ -14,8 +14,10 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -24,6 +26,8 @@ import java.util.stream.Stream;
 public class FileStorageService {
 
     public static final Set<String> IMAGE_EXTENSIONS = Set.of("jpg", "jpeg", "png", "gif", "webp");
+    private static final int MAGIC_BYTES_READ_LIMIT = 12;
+    private static final Map<String, MagicBytesMatcher> IMAGE_MAGIC_BYTES = createImageMagicBytes();
 
     private final Path uploadRoot;
     private final long maxSizeBytes;
@@ -100,6 +104,24 @@ public class FileStorageService {
         if (!allowedExtensions.contains(extension)) {
             throw new FileStorageException("不支持的文件类型");
         }
+        validateImageMagicBytes(file, extension);
+    }
+
+    private void validateImageMagicBytes(MultipartFile file, String extension) {
+        MagicBytesMatcher matcher = IMAGE_MAGIC_BYTES.get(extension);
+        if (matcher == null) {
+            return;
+        }
+        byte[] header = new byte[MAGIC_BYTES_READ_LIMIT];
+        int bytesRead;
+        try (InputStream inputStream = file.getInputStream()) {
+            bytesRead = inputStream.read(header);
+        } catch (IOException exception) {
+            throw new FileStorageException("读取文件内容失败", exception);
+        }
+        if (bytesRead < 0 || !matcher.matches(header, bytesRead)) {
+            throw new FileStorageException("文件内容与扩展名不匹配");
+        }
     }
 
     private String extractExtension(String originalFilename) {
@@ -160,5 +182,44 @@ public class FileStorageService {
     }
 
     public record StoredFile(String name, long size, LocalDateTime lastModifiedAt, String url) {
+    }
+
+    private static Map<String, MagicBytesMatcher> createImageMagicBytes() {
+        Map<String, MagicBytesMatcher> matchers = new HashMap<>();
+        MagicBytesMatcher jpeg = (header, bytesRead) -> bytesRead >= 3
+                && unsigned(header[0]) == 0xFF
+                && unsigned(header[1]) == 0xD8
+                && unsigned(header[2]) == 0xFF;
+        matchers.put("jpg", jpeg);
+        matchers.put("jpeg", jpeg);
+        matchers.put("png", (header, bytesRead) -> bytesRead >= 4
+                && unsigned(header[0]) == 0x89
+                && unsigned(header[1]) == 0x50
+                && unsigned(header[2]) == 0x4E
+                && unsigned(header[3]) == 0x47);
+        matchers.put("gif", (header, bytesRead) -> bytesRead >= 4
+                && unsigned(header[0]) == 0x47
+                && unsigned(header[1]) == 0x49
+                && unsigned(header[2]) == 0x46
+                && unsigned(header[3]) == 0x38);
+        matchers.put("webp", (header, bytesRead) -> bytesRead >= 12
+                && unsigned(header[0]) == 0x52
+                && unsigned(header[1]) == 0x49
+                && unsigned(header[2]) == 0x46
+                && unsigned(header[3]) == 0x46
+                && unsigned(header[8]) == 0x57
+                && unsigned(header[9]) == 0x45
+                && unsigned(header[10]) == 0x42
+                && unsigned(header[11]) == 0x50);
+        return Map.copyOf(matchers);
+    }
+
+    private static int unsigned(byte value) {
+        return value & 0xFF;
+    }
+
+    @FunctionalInterface
+    private interface MagicBytesMatcher {
+        boolean matches(byte[] header, int bytesRead);
     }
 }
