@@ -96,6 +96,25 @@ class ProjectAdminControllerTest {
     }
 
     @Test
+    void create_url字段使用非法协议_拒绝提交() throws Exception {
+        when(projectAdminService.findProjectCategories()).thenReturn(List.of());
+        when(projectAdminService.findAllTags()).thenReturn(List.of());
+
+        mockMvc().perform(post("/admin/projects/new")
+                        .param("title", "Unsafe Project")
+                        .param("slug", "unsafe-project")
+                        .param("status", "draft")
+                        .param("coverUrl", "javascript:alert(1)")
+                        .param("sourceUrl", "ftp://example.com/repo")
+                        .param("demoUrl", "data:text/html,evil"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/projects/form"))
+                .andExpect(model().attributeHasFieldErrors("projectForm", "coverUrl", "sourceUrl", "demoUrl"));
+
+        verify(projectAdminService, never()).create(any());
+    }
+
+    @Test
     void create_唯一键竞态冲突_回显slug错误() throws Exception {
         when(projectAdminService.slugExists("race", null)).thenReturn(false);
         when(projectAdminService.create(any(ProjectForm.class))).thenThrow(new DataIntegrityViolationException("uk_projects_slug"));

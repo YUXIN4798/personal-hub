@@ -38,8 +38,9 @@ public class AdminPasswordRotationRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         String configuredPassword = environment.getProperty(ADMIN_PASSWORD_ENV);
         if (configuredPassword == null || configuredPassword.isBlank()) {
-            log.info("ADMIN_PASSWORD 未设置，跳过管理员密码自动轮换");
-            return;
+            String message = "必须设置 ADMIN_PASSWORD，应用已停止启动，避免使用仓库内历史管理员口令。";
+            log.error(message);
+            throw new IllegalStateException(message);
         }
 
         userRepository.findByUsername(ADMIN_USERNAME)
