@@ -2,6 +2,7 @@ package com.tianshi.hub.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -29,12 +30,15 @@ public class ProjectForm {
     private String techStack;
 
     @Size(max = 500, message = "封面 URL 不能超过 500 个字符")
+    @Pattern(regexp = "(?i)^$|^(https?://|/(?!/)).+", message = "封面 URL 只能使用 http://、https:// 或站内 / 开头路径")
     private String coverUrl;
 
     @Size(max = 500, message = "源码 URL 不能超过 500 个字符")
+    @Pattern(regexp = "(?i)^$|^(https?://|/(?!/)).+", message = "源码 URL 只能使用 http://、https:// 或站内 / 开头路径")
     private String sourceUrl;
 
     @Size(max = 500, message = "演示 URL 不能超过 500 个字符")
+    @Pattern(regexp = "(?i)^$|^(https?://|/(?!/)).+", message = "演示 URL 只能使用 http://、https:// 或站内 / 开头路径")
     private String demoUrl;
 
     @NotBlank(message = "状态不能为空")

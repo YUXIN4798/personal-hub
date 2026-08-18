@@ -14,7 +14,7 @@ class GlobalExceptionHandlerTest {
         GlobalExceptionHandler handler = new GlobalExceptionHandler();
         Model model = new ConcurrentModel();
 
-        String view = handler.handleMaxUploadSizeExceeded(model);
+        String view = handler.handleMaxUploadSizeExceeded(new MaxUploadSizeExceededException(1024), model);
 
         assertThat(view).isEqualTo("error/400");
         assertThat(model.getAttribute("message")).isEqualTo("文件过大，请上传不超过 5MB 的文件。");
@@ -29,5 +29,16 @@ class GlobalExceptionHandlerTest {
 
         assertThat(view).isEqualTo("error/400");
         assertThat(model.getAttribute("message")).isEqualTo("保存文件失败");
+    }
+
+    @Test
+    void handleException_返回友好500不泄露异常消息() {
+        GlobalExceptionHandler handler = new GlobalExceptionHandler();
+        Model model = new ConcurrentModel();
+
+        String view = handler.handleException(new RuntimeException("internal detail"), model);
+
+        assertThat(view).isEqualTo("error/500");
+        assertThat(model.getAttribute("message")).isEqualTo("系统暂时无法处理请求，请稍后再试。");
     }
 }

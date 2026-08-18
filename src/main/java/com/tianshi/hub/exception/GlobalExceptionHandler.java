@@ -1,5 +1,7 @@
 package com.tianshi.hub.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,8 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @ControllerAdvice(annotations = Controller.class)
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -37,14 +41,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleBindException(Model model) {
+    public String handleBindException(BindException exception, Model model) {
+        log.warn("表单绑定失败: {}", exception.getMessage());
         model.addAttribute("message", "表单内容有误，请检查后重新提交。");
         return "error/400";
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleMaxUploadSizeExceeded(Model model) {
+    public String handleMaxUploadSizeExceeded(MaxUploadSizeExceededException exception, Model model) {
+        log.warn("上传文件超过大小限制: {}", exception.getMessage());
         model.addAttribute("message", "文件过大，请上传不超过 5MB 的文件。");
         return "error/400";
     }
@@ -52,13 +58,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(FileStorageException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleFileStorageException(FileStorageException exception, Model model) {
+        log.warn("文件存储处理失败: {}", exception.getMessage());
         model.addAttribute("message", exception.getMessage());
         return "error/400";
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String handleException(Model model) {
+    public String handleException(Exception exception, Model model) {
+        log.error("未处理的系统异常", exception);
         model.addAttribute("message", "系统暂时无法处理请求，请稍后再试。");
         return "error/500";
     }

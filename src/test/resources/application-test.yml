@@ -13,3 +13,5 @@ spring:
 
 app:
   upload-dir: ${java.io.tmpdir}/personal-hub-test-uploads
+
+ADMIN_PASSWORD: test-admin-password

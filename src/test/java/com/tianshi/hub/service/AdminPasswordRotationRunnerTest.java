@@ -15,6 +15,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -32,11 +33,13 @@ class AdminPasswordRotationRunnerTest {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Test
-    void run_adminPassword不存在_跳过轮换() {
+    void run_adminPassword不存在_启动失败() {
         when(environment.getProperty("ADMIN_PASSWORD")).thenReturn(null);
         AdminPasswordRotationRunner runner = new AdminPasswordRotationRunner(userRepository, passwordEncoder, environment);
 
-        runner.run(new DefaultApplicationArguments());
+        assertThatThrownBy(() -> runner.run(new DefaultApplicationArguments()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("必须设置 ADMIN_PASSWORD");
 
         verify(userRepository, never()).findByUsername("admin");
     }
