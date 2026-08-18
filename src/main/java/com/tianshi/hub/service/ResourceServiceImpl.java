@@ -118,6 +118,24 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public boolean isDownloadAvailable(Resource resource) {
+        if (resource == null) {
+            return false;
+        }
+        String relativePath = resource.getFilePath() != null ? resource.getFilePath() : resource.getUrl();
+        if (relativePath == null || relativePath.isBlank()) {
+            return false;
+        }
+        try {
+            Path path = fileStorageService != null ? fileStorageService.resolve(relativePath) : Path.of(relativePath).normalize();
+            return java.nio.file.Files.isRegularFile(path) && java.nio.file.Files.isReadable(path);
+        } catch (RuntimeException exception) {
+            return false;
+        }
+    }
+
+    @Override
     @Transactional
     public ResourceDownload prepareDownload(Long id) {
         Resource resource = findPublicResourceById(id);

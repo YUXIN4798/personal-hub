@@ -11,7 +11,8 @@
         <div class="mt-6 flex flex-wrap gap-4 font-mono text-xs text-[var(--ph-text-muted)]">
             <span th:text="${resource.createdAt != null ? #temporals.format(resource.createdAt, 'yyyy-MM-dd') : '-'}">2026-08-17</span>
             <span th:text="${resource.version}">v1.0</span>
-            <span th:text="${#numbers.formatDecimal(resource.fileSize / 1024.0 / 1024.0, 1, 2)} + ' MB'">0 MB</span>
+            <span th:if="${resource.type == 'file'}" th:text="${#numbers.formatDecimal(resource.fileSize / 1024.0 / 1024.0, 1, 2)} + ' MB'">0 MB</span>
+            <span th:unless="${resource.type == 'file'}">—</span>
             <span th:if="${resource.type == 'file'}" th:text="'下载 ' + ${resource.downloadCount}">下载 0</span>
             <span th:if="${resource.type == 'link'}">外部资源</span>
             <span th:each="tag : ${tags}" class="rounded border border-[var(--ph-border-strong)] px-2 py-1 text-[0.68rem] [overflow-wrap:anywhere]" th:text="${tag.name}">Java</span>
@@ -21,13 +22,16 @@
     <div th:if="${!#strings.isEmpty(renderedDescription)}" th:utext="${renderedDescription}" class="markdown-content min-h-[12rem] border-l border-[var(--ph-accent)] pl-5 [overflow-wrap:anywhere]">
         资源详细介绍
     </div>
-    <a th:if="${resource.type == 'file'}"
+    <a th:if="${resource.type == 'file' and downloadAvailable}"
        th:href="@{/resources/{id}/download(id=${resource.id})}"
        class="cta-button inline-flex items-center gap-3 border border-[var(--ph-accent)] bg-[var(--ph-accent)] px-5 py-3 text-sm font-medium text-[var(--ph-accent-contrast)]">
         下载资源 <span aria-hidden="true">↓</span>
     </a>
-    <a th:if="${resource.type == 'link'}"
-       th:href="${resource.url}"
+    <span th:if="${resource.type == 'file' and !downloadAvailable}" class="inline-flex items-center gap-3 border border-[var(--ph-border-strong)] px-5 py-3 text-sm text-[var(--ph-text-muted)]">
+        资源文件暂不可下载
+    </span>
+    <a th:if="${resource.type == 'link' and !#strings.isEmpty(resource.url)}"
+       th:href="@{${resource.url}}"
        target="_blank" rel="noopener noreferrer"
        class="link-slide inline-flex text-sm font-medium text-[var(--ph-accent)]">
         访问链接

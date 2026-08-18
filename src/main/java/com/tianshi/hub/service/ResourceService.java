@@ -23,6 +23,8 @@ public interface ResourceService {
 
     Map<Long, List<Tag>> findResourceTags(List<Long> resourceIds);
 
+    boolean isDownloadAvailable(Resource resource);
+
     ResourceDownload prepareDownload(Long id);
 
     record ResourceDownload(Resource resource, Path path) {

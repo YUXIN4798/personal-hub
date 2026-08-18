@@ -61,6 +61,7 @@ public class ResourceController {
         Resource resource = resourceService.findPublicResourceById(id);
         model.addAttribute("resource", resource);
         model.addAttribute("renderedDescription", markdownService.render(resource.getDescription()));
+        model.addAttribute("downloadAvailable", resourceService.isDownloadAvailable(resource));
         if (resource.getCategoryId() != null) {
             model.addAttribute("category", resourceService.findCategoryById(resource.getCategoryId()));
         }

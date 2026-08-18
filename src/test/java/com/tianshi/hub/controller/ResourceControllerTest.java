@@ -59,8 +59,10 @@ class ResourceControllerTest {
         resource.setTitle("Resource");
         resource.setSlug("resource");
         resource.setDescription("**资源**");
+        resource.setType("file");
         resource.setVisibility("public");
         when(resourceService.findPublicResourceById(11L)).thenReturn(resource);
+        when(resourceService.isDownloadAvailable(resource)).thenReturn(true);
         when(resourceService.findResourceTags(11L)).thenReturn(java.util.List.of());
         when(resourceService.findCategoryById(1L)).thenReturn(new Category());
         ReflectionTestUtils.setField(resource, "categoryId", 1L);
@@ -69,6 +71,7 @@ class ResourceControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("resources/detail"))
                 .andExpect(model().attributeExists("renderedDescription"))
+                .andExpect(model().attribute("downloadAvailable", true))
                 .andExpect(model().attribute("renderedDescription", containsString("<strong>资源</strong>")));
     }
 

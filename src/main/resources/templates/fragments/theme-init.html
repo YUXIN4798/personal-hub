@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<script th:fragment="themeInit">
+    (function () {
+        document.documentElement.classList.add('js-enabled');
+        try {
+            var storedTheme = window.localStorage.getItem('theme');
+            var systemTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            document.documentElement.dataset.theme = storedTheme || systemTheme;
+        } catch (error) {
+            document.documentElement.dataset.theme = 'dark';
+        }
+    })();
+</script>
+</html>
