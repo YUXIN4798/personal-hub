@@ -1,0 +1,60 @@
+package com.tianshi.hub.controller;
+
+import com.tianshi.hub.service.PostService;
+import com.tianshi.hub.service.ResourceService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
+class TemplateRenderingSmokeTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockitoBean
+    private ResourceService resourceService;
+
+    @MockitoBean
+    private PostService postService;
+
+    @Test
+    void resourcesList_完整Web上下文_渲染Thymeleaf模板() throws Exception {
+        when(resourceService.findResourceCategories()).thenReturn(List.of());
+        when(resourceService.findPublicResources(anyInt(), anyInt(), any())).thenReturn(new PageImpl<>(List.of()));
+        when(resourceService.findResourceTags(List.of())).thenReturn(java.util.Collections.emptyMap());
+
+        mockMvc.perform(get("/resources"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("<!DOCTYPE html>")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("资源库")));
+    }
+
+    @Test
+    void notesList_完整Web上下文_渲染Thymeleaf模板() throws Exception {
+        when(postService.findPostCategories()).thenReturn(List.of());
+        when(postService.findPublishedPosts(anyInt(), anyInt())).thenReturn(new PageImpl<>(List.of()));
+        when(postService.findPostTags(List.of())).thenReturn(java.util.Collections.emptyMap());
+
+        mockMvc.perform(get("/notes"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("<!DOCTYPE html>")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("笔记")));
+    }
+}

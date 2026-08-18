@@ -98,11 +98,13 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Tag> findResourceTags(Long resourceId) {
         return resourceTagRepository.findTagsByResourceId(resourceId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Map<Long, List<Tag>> findResourceTags(List<Long> resourceIds) {
         if (resourceIds == null || resourceIds.isEmpty()) {
             return Collections.emptyMap();

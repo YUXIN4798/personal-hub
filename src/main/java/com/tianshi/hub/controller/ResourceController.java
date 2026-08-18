@@ -30,10 +30,6 @@ public class ResourceController {
     private final ResourceService resourceService;
     private final MarkdownService markdownService;
 
-    public ResourceController(ResourceService resourceService) {
-        this(resourceService, new MarkdownService());
-    }
-
     @Autowired
     public ResourceController(ResourceService resourceService, MarkdownService markdownService) {
         this.resourceService = resourceService;

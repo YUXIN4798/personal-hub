@@ -175,6 +175,60 @@ class ResourceAdminServiceTest {
         assertThat(saved.getUrl()).startsWith("/uploads/");
         assertThat(saved.getOriginalName()).isEqualTo("notes.pdf");
         assertThat(saved.getFileSize()).isEqualTo(3);
+        assertThat(saved.getChecksum()).isEqualTo("039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81");
+    }
+
+    @Test
+    void update_替换上传文件_保存后清理旧文件并刷新Checksum() throws Exception {
+        FileStorageService fileStorageService = fileStorageService();
+        Path oldFile = tempDir.resolve("old.pdf");
+        java.nio.file.Files.write(oldFile, new byte[] {9, 8, 7});
+        Resource resource = new Resource();
+        ReflectionTestUtils.setField(resource, "id", 15L);
+        resource.setTitle("Old");
+        resource.setSlug("old");
+        resource.setUrl("/uploads/old.pdf");
+        resource.setType("file");
+        resource.setFilePath("/uploads/old.pdf");
+        resource.setOriginalName("old.pdf");
+        resource.setFileSize(3);
+        when(resourceRepository.findById(15L)).thenReturn(java.util.Optional.of(resource));
+        when(resourceRepository.save(any(Resource.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(tagRepository.findAllById(List.of())).thenReturn(List.of());
+        ResourceAdminService service = new ResourceAdminService(
+                resourceRepository, categoryRepository, tagRepository, resourceTagRepository, fileStorageService
+        );
+        ResourceForm form = new ResourceForm();
+        form.setTitle("New");
+        form.setSlug("new");
+        form.setType("link");
+        form.setFile(new MockMultipartFile("file", "new.pdf", "application/pdf", new byte[] {1, 2, 3}));
+
+        Resource updated = service.update(15L, form);
+
+        assertThat(java.nio.file.Files.exists(oldFile)).isFalse();
+        assertThat(updated.getFilePath()).startsWith("/uploads/");
+        assertThat(updated.getFilePath()).isNotEqualTo("/uploads/old.pdf");
+        assertThat(updated.getChecksum()).isEqualTo("039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81");
+    }
+
+    @Test
+    void delete_资源存在关联文件_删除数据库后清理文件() throws Exception {
+        FileStorageService fileStorageService = fileStorageService();
+        Path file = tempDir.resolve("remove.pdf");
+        java.nio.file.Files.write(file, new byte[] {1});
+        Resource resource = new Resource();
+        ReflectionTestUtils.setField(resource, "id", 16L);
+        resource.setFilePath("/uploads/remove.pdf");
+        when(resourceRepository.findById(16L)).thenReturn(java.util.Optional.of(resource));
+        ResourceAdminService service = new ResourceAdminService(
+                resourceRepository, categoryRepository, tagRepository, resourceTagRepository, fileStorageService
+        );
+
+        service.delete(16L);
+
+        verify(resourceRepository).delete(resource);
+        assertThat(java.nio.file.Files.exists(file)).isFalse();
     }
 
     private ResourceAdminService service() {

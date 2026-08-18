@@ -37,9 +37,6 @@ public class Project {
     @Column(name = "tech_stack", length = 500)
     private String techStack;
 
-    @Column(columnDefinition = "LONGTEXT")
-    private String content;
-
     @Column(name = "cover_image_url", length = 500)
     private String coverImageUrl;
 
@@ -118,14 +115,6 @@ public class Project {
 
     public void setTechStack(String techStack) {
         this.techStack = techStack;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public String getCoverImageUrl() {

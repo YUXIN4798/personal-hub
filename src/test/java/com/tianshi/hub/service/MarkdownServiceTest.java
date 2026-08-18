@@ -35,4 +35,24 @@ class MarkdownServiceTest {
         assertThat(html).contains("&lt;script&gt;");
         assertThat(html).doesNotContain("<script>");
     }
+
+    @Test
+    void render_javascript视频链接_不输出VideoSrc() {
+        String html = markdownService.render("[bad](javascript:alert.webm)");
+
+        assertThat(html).doesNotContain("<video");
+        assertThat(html).doesNotContain("javascript:alert.webm");
+        assertThat(html).contains("<a href=\"#\">bad</a>");
+    }
+
+    @Test
+    void render_重复Markdown_返回一致HTML() {
+        String markdown = "[video](/uploads/demo.webm)";
+
+        String first = markdownService.render(markdown);
+        String second = markdownService.render(markdown);
+
+        assertThat(second).isEqualTo(first);
+        assertThat(second).contains("<video controls preload=\"metadata\"");
+    }
 }

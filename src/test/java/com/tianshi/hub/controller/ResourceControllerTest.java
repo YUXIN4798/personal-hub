@@ -3,6 +3,7 @@ package com.tianshi.hub.controller;
 import com.tianshi.hub.entity.Resource;
 import com.tianshi.hub.entity.Category;
 import com.tianshi.hub.exception.GlobalExceptionHandler;
+import com.tianshi.hub.service.MarkdownService;
 import com.tianshi.hub.service.ResourceService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +42,9 @@ class ResourceControllerTest {
         Resource resource = new Resource();
         ReflectionTestUtils.setField(resource, "originalName", "Java 面试八股文整理.pdf");
         when(resourceService.prepareDownload(7L)).thenReturn(new ResourceService.ResourceDownload(resource, file));
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(new ResourceController(resourceService)).build();
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(
+                new ResourceController(resourceService, new MarkdownService())
+        ).build();
 
         mockMvc.perform(get("/resources/7/download"))
                 .andExpect(status().isOk())
@@ -70,7 +73,7 @@ class ResourceControllerTest {
     }
 
     private MockMvc mockMvc() {
-        return MockMvcBuilders.standaloneSetup(new ResourceController(resourceService))
+        return MockMvcBuilders.standaloneSetup(new ResourceController(resourceService, new MarkdownService()))
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
     }
