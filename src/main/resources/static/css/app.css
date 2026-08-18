@@ -21,7 +21,7 @@
     --ph-danger: #ffb4a8;
     --ph-selection: rgba(86, 227, 205, 0.3);
     --ph-grid: rgba(86, 227, 205, 0.035);
-    --ph-glow: rgba(86, 227, 205, 0.11);
+    --ph-glow: rgba(86, 227, 205, 0.20);
     --ph-ghost: rgba(220, 232, 232, 0.035);
     --ph-rule-fade: rgba(86, 227, 205, 0);
     --ph-crosshair: rgba(86, 227, 205, 0.18);
@@ -50,7 +50,7 @@
     --ph-danger: #b45d54;
     --ph-selection: rgba(185, 130, 114, 0.22);
     --ph-grid: rgba(116, 132, 119, 0.045);
-    --ph-glow: rgba(226, 183, 160, 0.18);
+    --ph-glow: rgba(226, 183, 160, 0.30);
     --ph-ghost: rgba(38, 51, 45, 0.1);
     --ph-rule-fade: rgba(185, 130, 114, 0);
     --ph-crosshair: rgba(126, 148, 129, 0.11);
