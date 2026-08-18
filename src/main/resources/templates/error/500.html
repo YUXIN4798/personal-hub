@@ -22,7 +22,8 @@
     <section class="w-full border-l border-[var(--ph-accent)] py-10 pl-6 md:pl-10">
         <p class="eyebrow text-[0.68rem] text-[var(--ph-accent)]">500 / Server Error</p>
         <h1 class="display mt-5 text-6xl leading-none text-[var(--ph-text)] md:text-8xl">服务器暂时不可用</h1>
-        <p class="mt-6 max-w-xl text-sm leading-7 text-[var(--ph-text-dim)]">服务器处理请求时出现异常，请稍后再试。</p>
+        <p class="mt-6 max-w-xl text-sm leading-7 text-[var(--ph-text-dim)]"
+           th:text="${message ?: '服务器处理请求时出现异常，请稍后再试。'}">服务器处理请求时出现异常，请稍后再试。</p>
         <a th:href="@{/}" class="link-slide mt-8 inline-block text-sm font-medium text-[var(--ph-accent)]">返回首页</a>
     </section>
 </main>

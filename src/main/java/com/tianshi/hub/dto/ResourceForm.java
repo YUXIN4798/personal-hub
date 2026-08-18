@@ -1,6 +1,7 @@
 package com.tianshi.hub.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +23,7 @@ public class ResourceForm {
 
     @NotBlank(message = "URL 不能为空")
     @Size(max = 500, message = "URL 不能超过 500 个字符")
+    @Pattern(regexp = "(?i)^(https?://|/(?!/)).+", message = "URL 只能使用 http://、https:// 或站内 / 开头路径")
     private String url;
 
     @NotBlank(message = "类型不能为空")

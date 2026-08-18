@@ -21,7 +21,7 @@ class FileStorageServiceTest {
     @Test
     void store_图片文件_返回uploads路径并落盘() throws Exception {
         FileStorageService service = service();
-        MockMultipartFile file = new MockMultipartFile("file", "cover.png", "image/png", new byte[] {1, 2, 3});
+        MockMultipartFile file = new MockMultipartFile("file", "cover.png", "image/png", pngBytes());
 
         String path = service.store(file);
 
@@ -40,6 +40,16 @@ class FileStorageServiceTest {
     }
 
     @Test
+    void store_图片扩展名与内容不匹配_拒绝保存() {
+        FileStorageService service = service();
+        MockMultipartFile file = new MockMultipartFile("file", "cover.png", "image/png", new byte[] {1, 2, 3});
+
+        assertThatThrownBy(() -> service.store(file))
+                .isInstanceOf(FileStorageException.class)
+                .hasMessage("文件内容与扩展名不匹配");
+    }
+
+    @Test
     void resolve_目录穿越_拒绝解析() {
         FileStorageService service = service();
 
@@ -53,5 +63,9 @@ class FileStorageServiceTest {
         properties.setUploadDir(tempDir.toString());
         properties.getUpload().setMaxSize(DataSize.ofMegabytes(5));
         return new FileStorageService(properties);
+    }
+
+    private byte[] pngBytes() {
+        return new byte[] {(byte) 0x89, 0x50, 0x4E, 0x47, 0x00};
     }
 }

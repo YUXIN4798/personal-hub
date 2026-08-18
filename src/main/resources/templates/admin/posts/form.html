@@ -7,6 +7,7 @@
         <h1 class="mt-3 text-2xl font-semibold text-[var(--ph-text-strong)]" th:text="${pageTitle}">笔记表单</h1>
     </div>
     <form th:action="@{${formAction}}" th:object="${postForm}" method="post" class="space-y-5 border border-[var(--ph-border)] bg-[var(--ph-card-solid)] p-5">
+        <input th:if="${_csrf != null}" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
         <div class="grid gap-4 md:grid-cols-2">
             <div>
                 <label for="title" class="block text-sm text-[var(--ph-text-dim)]">标题</label>

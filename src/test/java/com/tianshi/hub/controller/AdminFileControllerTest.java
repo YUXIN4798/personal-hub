@@ -24,7 +24,8 @@ class AdminFileControllerTest {
     @Test
     void upload_图片文件_返回上传URL() throws Exception {
         MockMvc mockMvc = mockMvc();
-        MockMultipartFile file = new MockMultipartFile("file", "cover.png", "image/png", new byte[] {1, 2, 3});
+        MockMultipartFile file = new MockMultipartFile("file", "cover.png", "image/png",
+                new byte[] {(byte) 0x89, 0x50, 0x4E, 0x47, 0x00});
 
         mockMvc.perform(multipart("/admin/upload").file(file))
                 .andExpect(status().isOk())

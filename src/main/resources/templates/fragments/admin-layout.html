@@ -35,6 +35,7 @@
                 <span data-theme-icon aria-hidden="true">🌙</span>
             </button>
             <form th:action="@{/admin/logout}" method="post">
+                <input th:if="${_csrf != null}" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <button type="submit" class="border border-[var(--ph-border)] px-3 py-2 text-sm text-[var(--ph-text-dim)] transition hover:border-[var(--ph-accent)] hover:text-[var(--ph-accent)]">退出登录</button>
             </form>
         </div>

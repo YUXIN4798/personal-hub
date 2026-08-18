@@ -42,6 +42,7 @@
                         <a th:if="${post.status == 'published'}" th:href="@{/notes/{slug}(slug=${post.slug})}" target="_blank" rel="noopener noreferrer" class="text-[var(--ph-accent)] hover:underline">查看</a>
                         <a th:href="@{/admin/posts/{id}/edit(id=${post.id})}" class="text-[var(--ph-accent)] hover:underline">编辑</a>
                         <form th:action="@{/admin/posts/{id}/delete(id=${post.id})}" method="post">
+                            <input th:if="${_csrf != null}" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                             <button type="submit" class="text-[var(--ph-danger)] hover:underline">删除</button>
                         </form>
                     </div>
