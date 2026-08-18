@@ -55,7 +55,7 @@ public class LoginAttemptService {
         return (int) Math.max(1, Math.ceil(seconds / 60.0));
     }
 
-    // Lightweight in-memory protection: state is cleared on application restart and expired locks are pruned opportunistically.
+    // Lightweight in-memory protection: state is cleared on restart; multi-instance deployments need centralized storage.
     private void pruneExpiredLocks() {
         Instant now = now();
         Iterator<Map.Entry<String, AttemptState>> iterator = attempts.entrySet().iterator();

@@ -1,6 +1,7 @@
 package com.tianshi.hub.controller;
 
 import com.tianshi.hub.config.AdminSession;
+import com.tianshi.hub.config.AppProperties;
 import com.tianshi.hub.service.AdminAuthService;
 import com.tianshi.hub.service.LoginAttemptService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,10 +24,16 @@ public class AdminAuthController {
 
     private final AdminAuthService adminAuthService;
     private final LoginAttemptService loginAttemptService;
+    private final AppProperties appProperties;
 
-    public AdminAuthController(AdminAuthService adminAuthService, LoginAttemptService loginAttemptService) {
+    public AdminAuthController(
+            AdminAuthService adminAuthService,
+            LoginAttemptService loginAttemptService,
+            AppProperties appProperties
+    ) {
         this.adminAuthService = adminAuthService;
         this.loginAttemptService = loginAttemptService;
+        this.appProperties = appProperties;
     }
 
     @GetMapping("/login")
@@ -69,8 +76,21 @@ public class AdminAuthController {
     }
 
     private String attemptKey(HttpServletRequest request, String username) {
-        String remoteAddress = request.getRemoteAddr() == null ? "unknown" : request.getRemoteAddr();
+        String remoteAddress = clientIp(request);
         String normalizedUsername = username == null ? "" : username.trim().toLowerCase();
         return remoteAddress + ":" + normalizedUsername;
+    }
+
+    private String clientIp(HttpServletRequest request) {
+        String remoteAddress = request.getRemoteAddr() == null ? "unknown" : request.getRemoteAddr();
+        if (!appProperties.getSecurity().getTrustedProxies().contains(remoteAddress)) {
+            return remoteAddress;
+        }
+        String forwardedFor = request.getHeader("X-Forwarded-For");
+        if (forwardedFor == null || forwardedFor.isBlank()) {
+            return remoteAddress;
+        }
+        String firstClientIp = forwardedFor.split(",", 2)[0].trim();
+        return firstClientIp.isBlank() ? remoteAddress : firstClientIp;
     }
 }

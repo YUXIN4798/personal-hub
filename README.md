@@ -13,14 +13,25 @@ scripts/build-css.sh
 1. 启动 MySQL（Docker）
 
 ```bash
+set -a
+source .env
+set +a
 sg docker -c 'docker compose up -d'
 ```
 
 2. 启动应用
 
 ```bash
-ADMIN_PASSWORD=你的管理员密码 mvn spring-boot:run
+ADMIN_PASSWORD=你的管理员密码 MYSQL_PASSWORD="$MYSQL_PASSWORD" mvn spring-boot:run
 ```
+
+Spring Boot 不会自动读取本地 `.env`。本地开发时可先 `source .env`，或直接用
+`env ADMIN_PASSWORD=... MYSQL_PASSWORD=... mvn spring-boot:run` 传入环境变量。
+`MYSQL_PASSWORD` 没有默认值，缺失时应用会启动失败，避免生产误用弱口令。
+
+如果应用前面有反向代理，需要在 `app.security.trusted-proxies` 中显式配置代理 IP 后，
+登录限流才会读取 `X-Forwarded-For` 最左侧客户端 IP。默认直连场景使用 `remoteAddr`。
+当前登录限流为单机内存实现，应用重启会清空计数；多实例部署需替换为 Redis/MySQL 等集中存储。
 
 ## 修改管理员密码
 
