@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -55,6 +56,41 @@ class TemplateRenderingSmokeTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("<!DOCTYPE html>")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("正在发生的事")));
+    }
+
+    @Test
+    void homePage_两行Hero标题_最后一行渲染主题强调色() throws Exception {
+        when(siteConfigService.get(SiteConfigKeys.HERO_TITLE, SiteConfigKeys.DEFAULT_HERO_TITLE)).thenReturn("把想法\n做成系统。");
+        when(siteConfigService.get(SiteConfigKeys.HERO_SUBTITLE, SiteConfigKeys.DEFAULT_HERO_SUBTITLE)).thenReturn("副标题");
+        when(siteConfigService.getInt(SiteConfigKeys.PROJECTS_COUNT, SiteConfigKeys.DEFAULT_SECTION_COUNT)).thenReturn(0);
+        when(siteConfigService.getInt(SiteConfigKeys.NOTES_COUNT, SiteConfigKeys.DEFAULT_SECTION_COUNT)).thenReturn(0);
+        when(siteConfigService.getInt(SiteConfigKeys.RESOURCES_COUNT, SiteConfigKeys.DEFAULT_SECTION_COUNT)).thenReturn(0);
+
+        String body = mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertThat(body).contains("<span>把想法\n</span><span class=\"text-[var(--ph-accent)]\">做成系统。</span>");
+    }
+
+    @Test
+    void homePage_单行Hero标题_不渲染主题强调色() throws Exception {
+        when(siteConfigService.get(SiteConfigKeys.HERO_TITLE, SiteConfigKeys.DEFAULT_HERO_TITLE)).thenReturn("单行标题");
+        when(siteConfigService.get(SiteConfigKeys.HERO_SUBTITLE, SiteConfigKeys.DEFAULT_HERO_SUBTITLE)).thenReturn("副标题");
+        when(siteConfigService.getInt(SiteConfigKeys.PROJECTS_COUNT, SiteConfigKeys.DEFAULT_SECTION_COUNT)).thenReturn(0);
+        when(siteConfigService.getInt(SiteConfigKeys.NOTES_COUNT, SiteConfigKeys.DEFAULT_SECTION_COUNT)).thenReturn(0);
+        when(siteConfigService.getInt(SiteConfigKeys.RESOURCES_COUNT, SiteConfigKeys.DEFAULT_SECTION_COUNT)).thenReturn(0);
+
+        String body = mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertThat(body).contains("<span>单行标题</span>");
+        assertThat(body).doesNotContain("class=\"text-[var(--ph-accent)]\">单行标题</span>");
     }
 
     @Test
