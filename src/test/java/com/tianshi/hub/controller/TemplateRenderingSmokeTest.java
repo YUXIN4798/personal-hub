@@ -1,6 +1,8 @@
 package com.tianshi.hub.controller;
 
 import com.tianshi.hub.config.AdminSession;
+import com.tianshi.hub.service.SiteConfigKeys;
+import com.tianshi.hub.service.SiteConfigService;
 import com.tianshi.hub.service.CategoryAdminService;
 import com.tianshi.hub.service.PostService;
 import com.tianshi.hub.service.ResourceService;
@@ -44,12 +46,23 @@ class TemplateRenderingSmokeTest {
     @MockitoBean
     private TagAdminService tagAdminService;
 
+    @MockitoBean
+    private SiteConfigService siteConfigService;
+
     @Test
     void homePage_完整Web上下文_渲染首页模板() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("<!DOCTYPE html>")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("正在发生的事")));
+    }
+
+    @Test
+    void aboutPage_完整Web上下文_渲染Thymeleaf模板() throws Exception {
+        mockMvc.perform(get("/about"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("<!DOCTYPE html>")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("关于我")));
     }
 
     @Test
@@ -97,5 +110,21 @@ class TemplateRenderingSmokeTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("<!DOCTYPE html>")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("标签管理")));
+    }
+
+    @Test
+    void adminSiteConfig_完整Web上下文_渲染Thymeleaf模板() throws Exception {
+        when(siteConfigService.get(SiteConfigKeys.HERO_TITLE, SiteConfigKeys.DEFAULT_HERO_TITLE)).thenReturn("标题");
+        when(siteConfigService.get(SiteConfigKeys.HERO_SUBTITLE, SiteConfigKeys.DEFAULT_HERO_SUBTITLE)).thenReturn("副标题");
+        when(siteConfigService.getInt(SiteConfigKeys.PROJECTS_COUNT, SiteConfigKeys.DEFAULT_SECTION_COUNT)).thenReturn(3);
+        when(siteConfigService.getInt(SiteConfigKeys.NOTES_COUNT, SiteConfigKeys.DEFAULT_SECTION_COUNT)).thenReturn(2);
+        when(siteConfigService.getInt(SiteConfigKeys.RESOURCES_COUNT, SiteConfigKeys.DEFAULT_SECTION_COUNT)).thenReturn(1);
+
+        mockMvc.perform(get("/admin/site-config")
+                        .sessionAttr(AdminSession.ADMIN_AUTHENTICATED, true))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("<!DOCTYPE html>")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("首页设置")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Hero 标题")));
     }
 }

@@ -3,44 +3,127 @@
       th:replace="~{fragments/layout :: layout('关于我', ~{::content})}">
 <section th:fragment="content" class="space-y-20 md:space-y-28">
     <section class="reveal grid gap-10 border-b border-[var(--ph-border)] pb-14 lg:grid-cols-[0.45fr_1fr] lg:gap-20">
-        <div>
+        <div class="space-y-6">
             <p class="section-index text-[0.68rem] text-[var(--ph-accent)]">01 / About</p>
-            <p class="mt-5 font-mono text-xs leading-6 text-[var(--ph-text-muted)]">A student of systems,<br>an apprentice of craft.</p>
+            <div class="flex flex-wrap gap-2">
+                <span class="border border-[var(--ph-border)] bg-[var(--ph-card-solid)] px-3 py-1 font-mono text-[0.62rem] tracking-[0.18em] text-[var(--ph-text-muted)]">STUDENT</span>
+                <span class="border border-[var(--ph-border)] bg-[var(--ph-card-solid)] px-3 py-1 font-mono text-[0.62rem] tracking-[0.18em] text-[var(--ph-text-muted)]">JAVA BACKEND</span>
+                <span class="border border-[var(--ph-border)] bg-[var(--ph-card-solid)] px-3 py-1 font-mono text-[0.62rem] tracking-[0.18em] text-[var(--ph-text-muted)]">AI PRACTITIONER</span>
+            </div>
+            <p class="font-mono text-xs leading-6 text-[var(--ph-text-muted)]">A student of systems,<br>an apprentice of craft.</p>
         </div>
         <div class="max-w-3xl">
             <h1 class="display text-5xl leading-none text-[var(--ph-text)] md:text-7xl">关于我<span class="text-[var(--ph-accent)]">。</span></h1>
-            <p class="mt-8 text-base leading-8 text-[var(--ph-text-dim)] md:text-lg">
-                我是曹铭轩，天狮学院计算机应用技术专业学生，即将进入大三。主攻 Java 后端开发，正在把 AI 工具与工程实践结合到真实项目中。
+            <p class="mt-8 max-w-2xl text-base leading-7 text-[var(--ph-text-dim)] md:text-lg">
+                我是曹铭轩，天狮学院计算机应用技术专业学生，即将进入大三。主攻 Java 后端开发，也在把 AI 工具和工程实践放进真实项目里。
             </p>
-            <p class="mt-5 text-base leading-8 text-[var(--ph-text-dim)] md:text-lg">
-                我相信好的技术工作，最终应该让复杂的事情变得可靠、清楚，而且能够继续生长。
+            <p class="mt-5 max-w-2xl text-base leading-7 text-[var(--ph-text-dim)] md:text-lg">
+                我更在意能落地的技术工作：把复杂问题拆开、写清楚、做稳定，然后留出继续迭代的空间。
             </p>
-            <p class="mt-8 text-sm text-[var(--ph-text-dim)]">GitHub：<a href="https://github.com/YUXIN4798" class="link-slide text-[var(--ph-accent)]">YUXIN4798</a></p>
-            <p class="mt-2 text-sm text-[var(--ph-text-dim)]">邮箱：<a href="mailto:479819599@qq.com" class="link-slide text-[var(--ph-accent)]">479819599@qq.com</a></p>
+            <div class="mt-8 grid gap-3 sm:max-w-xl">
+                <a href="https://github.com/YUXIN4798" target="_blank" rel="noopener noreferrer" class="link-slide flex items-center justify-between gap-4 border border-[var(--ph-border)] bg-[var(--ph-card-solid)] px-4 py-3 text-sm text-[var(--ph-text-dim)] transition hover:border-[var(--ph-accent)] hover:text-[var(--ph-text)]">
+                    <span class="font-mono text-[0.62rem] tracking-[0.18em] text-[var(--ph-text-muted)]">GITHUB</span>
+                    <span class="min-w-0 flex-1 text-right text-[var(--ph-text-strong)]">YUXIN4798</span>
+                    <span aria-hidden="true" class="text-[var(--ph-accent)]">↗</span>
+                </a>
+                <a href="mailto:479819599@qq.com" class="link-slide flex items-center justify-between gap-4 border border-[var(--ph-border)] bg-[var(--ph-card-solid)] px-4 py-3 text-sm text-[var(--ph-text-dim)] transition hover:border-[var(--ph-accent)] hover:text-[var(--ph-text)]">
+                    <span class="font-mono text-[0.62rem] tracking-[0.18em] text-[var(--ph-text-muted)]">MAIL</span>
+                    <span class="min-w-0 flex-1 text-right text-[var(--ph-text-strong)]">479819599@qq.com</span>
+                    <span aria-hidden="true" class="text-[var(--ph-accent)]">↗</span>
+                </a>
+            </div>
         </div>
     </section>
 
     <section class="grid gap-12 lg:grid-cols-2">
-        <article class="reveal">
-            <p class="section-index text-[0.68rem] text-[var(--ph-accent)]">02 / Toolkit</p>
-            <h2 class="display mt-4 text-3xl text-[var(--ph-text)]">手里的工具</h2>
-            <ul class="mt-8 divide-y divide-[var(--ph-border-soft)] border-y border-[var(--ph-border)] text-sm text-[var(--ph-text-dim)]">
-                <li class="flex justify-between gap-6 py-4"><span class="text-[var(--ph-text)]">后端</span><span>Java / Spring Boot / MyBatis</span></li>
-                <li class="flex justify-between gap-6 py-4"><span class="text-[var(--ph-text)]">数据</span><span>MySQL / 数据建模</span></li>
-                <li class="flex justify-between gap-6 py-4"><span class="text-[var(--ph-text)]">AI 应用</span><span>Prompt / Agent 协作</span></li>
-                <li class="flex justify-between gap-6 py-4"><span class="text-[var(--ph-text)]">基础设施</span><span>Git / Docker / Linux</span></li>
-            </ul>
+        <article class="reveal border border-[var(--ph-border)] bg-[var(--ph-card)] p-6 md:p-7">
+            <p class="section-index text-[0.68rem] text-[var(--ph-accent)]">02 / Skills</p>
+            <h2 class="display mt-4 text-3xl text-[var(--ph-text)]">技能栈</h2>
+            <div class="mt-8 space-y-6">
+                <div class="space-y-3 border-t border-[var(--ph-border-soft)] pt-5 first:border-t-0 first:pt-0">
+                    <div class="flex items-center justify-between gap-4">
+                        <p class="font-mono text-[0.62rem] tracking-[0.18em] text-[var(--ph-text-muted)]">BACKEND</p>
+                        <span class="text-xs text-[var(--ph-text-muted)]">主力方向</span>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="border border-[var(--ph-border)] bg-[var(--ph-card-solid)] px-3 py-1 text-xs text-[var(--ph-text-dim)]">Java</span>
+                        <span class="border border-[var(--ph-border)] bg-[var(--ph-card-solid)] px-3 py-1 text-xs text-[var(--ph-text-dim)]">Spring Boot</span>
+                        <span class="border border-[var(--ph-border)] bg-[var(--ph-card-solid)] px-3 py-1 text-xs text-[var(--ph-text-dim)]">MyBatis</span>
+                        <span class="border border-[var(--ph-border)] bg-[var(--ph-card-solid)] px-3 py-1 text-xs text-[var(--ph-text-dim)]">MySQL</span>
+                    </div>
+                </div>
+                <div class="space-y-3 border-t border-[var(--ph-border-soft)] pt-5">
+                    <div class="flex items-center justify-between gap-4">
+                        <p class="font-mono text-[0.62rem] tracking-[0.18em] text-[var(--ph-text-muted)]">AI</p>
+                        <span class="text-xs text-[var(--ph-text-muted)]">实践中</span>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="border border-[var(--ph-border)] bg-[var(--ph-card-solid)] px-3 py-1 text-xs text-[var(--ph-text-dim)]">Prompt</span>
+                        <span class="border border-[var(--ph-border)] bg-[var(--ph-card-solid)] px-3 py-1 text-xs text-[var(--ph-text-dim)]">Agent 协作</span>
+                        <span class="border border-[var(--ph-border)] bg-[var(--ph-card-solid)] px-3 py-1 text-xs text-[var(--ph-text-dim)]">需求拆解</span>
+                    </div>
+                </div>
+                <div class="space-y-3 border-t border-[var(--ph-border-soft)] pt-5">
+                    <div class="flex items-center justify-between gap-4">
+                        <p class="font-mono text-[0.62rem] tracking-[0.18em] text-[var(--ph-text-muted)]">INFRA</p>
+                        <span class="text-xs text-[var(--ph-text-muted)]">常用工具</span>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="border border-[var(--ph-border)] bg-[var(--ph-card-solid)] px-3 py-1 text-xs text-[var(--ph-text-dim)]">Git</span>
+                        <span class="border border-[var(--ph-border)] bg-[var(--ph-card-solid)] px-3 py-1 text-xs text-[var(--ph-text-dim)]">Docker</span>
+                        <span class="border border-[var(--ph-border)] bg-[var(--ph-card-solid)] px-3 py-1 text-xs text-[var(--ph-text-dim)]">Linux</span>
+                    </div>
+                </div>
+                <div class="space-y-3 border-t border-[var(--ph-border-soft)] pt-5">
+                    <div class="flex items-center justify-between gap-4">
+                        <p class="font-mono text-[0.62rem] tracking-[0.18em] text-[var(--ph-text-muted)]">METHOD</p>
+                        <span class="text-xs text-[var(--ph-text-muted)]">学习方式</span>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="border border-[var(--ph-border)] bg-[var(--ph-card-solid)] px-3 py-1 text-xs text-[var(--ph-text-dim)]">文档</span>
+                        <span class="border border-[var(--ph-border)] bg-[var(--ph-card-solid)] px-3 py-1 text-xs text-[var(--ph-text-dim)]">动手实现</span>
+                        <span class="border border-[var(--ph-border)] bg-[var(--ph-card-solid)] px-3 py-1 text-xs text-[var(--ph-text-dim)]">复盘</span>
+                    </div>
+                </div>
+            </div>
         </article>
         <article class="reveal lg:pt-16" style="transition-delay: 100ms;">
             <p class="section-index text-[0.68rem] text-[var(--ph-accent)]">03 / Next</p>
             <h2 class="display mt-4 text-3xl text-[var(--ph-text)]">接下来</h2>
-            <div class="mt-8 border-l border-[var(--ph-accent)] pl-6 text-sm leading-7 text-[var(--ph-text-dim)]">
-                <p class="text-[var(--ph-text)]">进行中：Java 后端工程实践</p>
-                <p class="mt-1">围绕 Spring Boot 项目提升接口设计、数据建模与部署能力。</p>
-                <p class="mt-7 text-[var(--ph-text)]">目标节点：2026 年 9 月下旬</p>
-                <p class="mt-1">备考 Java 2 级 + 人工智能 1 级，强化理论与实战的同步推进。</p>
+            <div class="mt-8 space-y-8">
+                <div class="grid gap-4 sm:grid-cols-[auto_1fr]">
+                    <div class="flex flex-col items-center">
+                        <span class="h-3 w-3 rounded-full bg-[var(--ph-accent)]"></span>
+                        <span class="mt-3 min-h-[4rem] w-px bg-[var(--ph-border)]"></span>
+                    </div>
+                    <div class="pb-6 text-sm leading-7 text-[var(--ph-text-dim)]">
+                        <p class="font-mono text-[0.62rem] tracking-[0.18em] text-[var(--ph-text-muted)]">NOW</p>
+                        <p class="mt-3 text-[var(--ph-text)]">进行中：Java 后端工程实践</p>
+                        <p class="mt-2">围绕 Spring Boot 项目提升接口设计、数据建模与部署能力。</p>
+                    </div>
+                </div>
+                <div class="grid gap-4 sm:grid-cols-[auto_1fr]">
+                    <div class="flex flex-col items-center">
+                        <span class="h-3 w-3 rounded-full border border-[var(--ph-accent)] bg-[var(--ph-bg)]"></span>
+                    </div>
+                    <div class="text-sm leading-7 text-[var(--ph-text-dim)]">
+                        <p class="font-mono text-[0.62rem] tracking-[0.18em] text-[var(--ph-text-muted)]">TARGET / 2026.09</p>
+                        <p class="mt-3 text-[var(--ph-text)]">目标节点：备考 Java 2 级 + 人工智能 1 级</p>
+                        <p class="mt-2">把理论复习和项目实践同步推进，保证输出和考试都能跟上。</p>
+                    </div>
+                </div>
             </div>
         </article>
+    </section>
+
+    <section class="reveal border-t border-[var(--ph-border)] pt-8">
+        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <p class="font-mono text-[0.62rem] tracking-[0.18em] text-[var(--ph-text-muted)]">CONTACT / GITHUB + EMAIL</p>
+            <div class="flex flex-wrap gap-6 text-sm">
+                <a href="https://github.com/YUXIN4798" target="_blank" rel="noopener noreferrer" class="link-slide text-[var(--ph-accent)]">GitHub · YUXIN4798</a>
+                <a href="mailto:479819599@qq.com" class="link-slide text-[var(--ph-accent)]">Mail · 479819599@qq.com</a>
+            </div>
+        </div>
     </section>
 </section>
 </html>
