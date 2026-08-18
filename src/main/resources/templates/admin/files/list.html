@@ -32,7 +32,7 @@
                 <td class="px-4 py-3 text-[var(--ph-text-dim)]" th:text="${#numbers.formatDecimal(file.size / 1024.0, 1, 2)} + ' KB'">0 KB</td>
                 <td class="px-4 py-3 text-[var(--ph-text-dim)]" th:text="${#temporals.format(file.lastModifiedAt, 'yyyy-MM-dd HH:mm')}">2026-08-17 10:00</td>
                 <td class="px-4 py-3">
-                    <a th:href="${file.url}" target="_blank" rel="noopener noreferrer" class="[overflow-wrap:anywhere] text-[var(--ph-accent)] hover:underline" th:text="${file.url}">/uploads/file.png</a>
+                    <a th:href="@{${file.url}}" target="_blank" rel="noopener noreferrer" class="[overflow-wrap:anywhere] text-[var(--ph-accent)] hover:underline" th:text="${file.url}">/uploads/file.png</a>
                 </td>
                 <td class="px-4 py-3">
                     <div class="flex justify-end">
@@ -55,16 +55,23 @@
             if (!form) return;
             form.addEventListener('submit', async (event) => {
                 event.preventDefault();
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    body: new FormData(form)
-                });
-                const payload = await response.json();
-                if (!response.ok) {
-                    alert(payload.error || '上传失败');
-                    return;
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: new FormData(form)
+                    });
+                    const contentType = response.headers.get('content-type') || '';
+                    const payload = contentType.includes('application/json')
+                        ? await response.json()
+                        : { error: '上传失败' };
+                    if (!response.ok) {
+                        alert(payload.error || '上传失败');
+                        return;
+                    }
+                    window.location.reload();
+                } catch (error) {
+                    alert('上传失败，请稍后再试');
                 }
-                window.location.reload();
             });
         })();
     </script>

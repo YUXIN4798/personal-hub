@@ -139,6 +139,33 @@ class ResourceServiceImplTest {
         verify(resourceRepository).incrementDownloadCount(8L);
     }
 
+    @Test
+    void isDownloadAvailable_文件不存在_false() {
+        Resource resource = resource("public");
+        ReflectionTestUtils.setField(resource, "filePath", tempDir.resolve("missing.pdf").toString());
+        ResourceServiceImpl service = new ResourceServiceImpl(resourceRepository, categoryRepository);
+
+        assertThat(service.isDownloadAvailable(resource)).isFalse();
+    }
+
+    @Test
+    void isDownloadAvailable_上传目录文件_true() throws Exception {
+        AppProperties properties = new AppProperties();
+        properties.setUploadDir(tempDir.toString());
+        properties.getUpload().setMaxSize(DataSize.ofMegabytes(5));
+        FileStorageService fileStorageService = new FileStorageService(properties);
+        Path file = tempDir.resolve("sample.png");
+        java.nio.file.Files.writeString(file, "content");
+        Resource resource = resource("public");
+        ReflectionTestUtils.setField(resource, "filePath", "/uploads/sample.png");
+
+        ResourceServiceImpl service = new ResourceServiceImpl(
+                resourceRepository, categoryRepository, resourceTagRepository, fileStorageService
+        );
+
+        assertThat(service.isDownloadAvailable(resource)).isTrue();
+    }
+
     private Resource resource(String visibility) {
         Resource resource = new Resource();
         ReflectionTestUtils.setField(resource, "visibility", visibility);

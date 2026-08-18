@@ -5,17 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${pageTitle} + ' | 曹铭轩 Personal Hub'">曹铭轩 Personal Hub</title>
     <meta name="description" content="曹铭轩的个人数字基地，聚焦 Java 后端与 AI 应用实践。">
-    <script>
-        (function () {
-            try {
-                var storedTheme = window.localStorage.getItem('theme');
-                var systemTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-                document.documentElement.dataset.theme = storedTheme || systemTheme;
-            } catch (error) {
-                document.documentElement.dataset.theme = 'dark';
-            }
-        })();
-    </script>
+    <script th:replace="~{fragments/theme-init :: themeInit}"></script>
     <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body class="min-h-screen text-[var(--ph-text)] antialiased selection:bg-[var(--ph-selection)] selection:text-[var(--ph-accent-contrast)]">

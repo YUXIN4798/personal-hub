@@ -25,8 +25,9 @@
            class="motion-card reveal group min-h-[16rem] border p-6 md:p-8">
             <div class="flex flex-wrap items-start justify-between gap-3">
                 <p class="meta-label text-[0.62rem] text-[var(--ph-text-muted)]" th:text="${resource.version} + ' / Resource'">v1.0 / Resource</p>
-                <span class="font-mono text-xs text-[var(--ph-accent)]"
+                <span th:if="${resource.type == 'file'}" class="font-mono text-xs text-[var(--ph-accent)]"
                       th:text="${#numbers.formatDecimal(resource.fileSize / 1024.0 / 1024.0, 1, 2)} + ' MB'">0 MB</span>
+                <span th:unless="${resource.type == 'file'}" class="font-mono text-xs text-[var(--ph-text-muted)]">—</span>
             </div>
             <h2 class="display mt-6 text-2xl [overflow-wrap:anywhere] text-[var(--ph-text)] md:text-3xl" th:text="${resource.title}">资源名称</h2>
             <p th:if="${!#strings.isEmpty(resource.summary)}" class="[overflow-wrap:anywhere] mt-4 text-sm leading-7 text-[var(--ph-text-dim)]" th:text="${resource.summary}">资源说明</p>

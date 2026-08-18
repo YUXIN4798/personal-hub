@@ -23,6 +23,18 @@ class AdminInterceptorTest {
     }
 
     @Test
+    void preHandle_未登录_带ContextPath时仍重定向到登录页() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/hub/admin/projects");
+        request.setContextPath("/hub");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        boolean allowed = adminInterceptor.preHandle(request, response, new Object());
+
+        assertThat(allowed).isFalse();
+        assertThat(response.getRedirectedUrl()).isEqualTo("/hub/admin/login");
+    }
+
+    @Test
     void preHandle_已登录_放行() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/admin/projects");
         HttpSession session = request.getSession();
