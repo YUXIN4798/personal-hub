@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout('搜索', ~{::content}, '站内搜索：项目、笔记、资源。')}">
+<section th:fragment="content" class="search-page space-y-10" th:attr="data-search-query=${q}">
+    <header class="border-b border-[var(--ph-border)] pb-6">
+        <p class="section-index text-[0.68rem] text-[var(--ph-accent)]">Search / Hub</p>
+        <h1 class="display mt-3 text-4xl text-[var(--ph-text)] md:text-6xl">搜索</h1>
+    </header>
+    <form th:action="@{/search}" method="get" class="search-page-form">
+        <input type="search" name="q" class="search-page-input" th:value="${q}" placeholder="搜索项目 / 笔记 / 资源…" autocomplete="off" maxlength="50">
+        <button type="submit" class="search-page-submit">搜索</button>
+    </form>
+    <p class="search-stats">「<span th:text="${q}">关键词</span>」的搜索结果：<span th:text="${projects.size() + posts.size() + resources.size()}">0</span>条</p>
+
+    <section class="search-group" th:if="${!#lists.isEmpty(projects)}">
+        <h2 class="search-group-title">项目</h2>
+        <ul class="search-results" data-search-highlight>
+            <li class="search-result" th:each="p : ${projects}">
+                <a class="search-result-title" th:href="@{/projects/{slug}(slug=${p.slug})}" th:text="${p.title}">标题</a>
+                <p class="search-result-summary" th:text="${p.summary}">摘要</p>
+            </li>
+        </ul>
+    </section>
+    <section class="search-group" th:if="${!#lists.isEmpty(posts)}">
+        <h2 class="search-group-title">笔记</h2>
+        <ul class="search-results" data-search-highlight>
+            <li class="search-result" th:each="p : ${posts}">
+                <a class="search-result-title" th:href="@{/notes/{slug}(slug=${p.slug})}" th:text="${p.title}">标题</a>
+                <p class="search-result-summary" th:text="${p.summary}">摘要</p>
+            </li>
+        </ul>
+    </section>
+    <section class="search-group" th:if="${!#lists.isEmpty(resources)}">
+        <h2 class="search-group-title">资源</h2>
+        <ul class="search-results" data-search-highlight>
+            <li class="search-result" th:each="r : ${resources}">
+                <a class="search-result-title" th:href="@{/resources/{slug}(slug=${r.slug})}" th:text="${r.title}">标题</a>
+                <p class="search-result-summary" th:text="${r.summary}">摘要</p>
+            </li>
+        </ul>
+    </section>
+
+    <div class="search-empty" th:if="${#lists.isEmpty(projects) && #lists.isEmpty(posts) && #lists.isEmpty(resources)}">
+        <p>没有找到相关结果，换个关键词试试？</p>
+        <a th:href="@{/}" class="search-back-home">← 回首页</a>
+    </div>
+</section>
+</html>

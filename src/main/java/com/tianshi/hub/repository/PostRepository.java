@@ -19,4 +19,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("select p.categoryId as id, count(p) as total from Post p where p.categoryId in :categoryIds group by p.categoryId")
     List<UsageCount> countByCategoryIdIn(@Param("categoryIds") List<Long> categoryIds);
     Page<Post> findByStatus(String status, Pageable pageable);
+
+    @Query("""
+            select p from Post p
+            where p.status = 'published'
+              and (p.title like concat('%', :q, '%')
+                or p.summary like concat('%', :q, '%'))
+            order by p.updatedAt desc, p.id desc
+            """)
+    List<Post> search(@Param("q") String q, Pageable pageable);
 }

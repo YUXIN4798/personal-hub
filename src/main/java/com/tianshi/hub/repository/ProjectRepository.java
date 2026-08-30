@@ -28,4 +28,14 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     Page<Project> findByStatusAndFeatured(String status, boolean featured, Pageable pageable);
 
     Page<Project> findByStatusAndIdNotIn(String status, List<Long> ids, Pageable pageable);
+
+    @Query("""
+            select p from Project p
+            where p.status = 'published'
+              and (p.title like concat('%', :q, '%')
+                or p.summary like concat('%', :q, '%')
+                or p.description like concat('%', :q, '%'))
+            order by p.updatedAt desc, p.id desc
+            """)
+    List<Project> search(@Param("q") String q, Pageable pageable);
 }

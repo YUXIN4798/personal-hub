@@ -31,4 +31,14 @@ public interface ResourceRepository extends JpaRepository<Resource, Long> {
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Resource r SET r.downloadCount = r.downloadCount + 1 WHERE r.id = :id")
     int incrementDownloadCount(@Param("id") Long id);
+
+    @Query("""
+            select r from Resource r
+            where r.visibility = 'public'
+              and (r.title like concat('%', :q, '%')
+                or r.summary like concat('%', :q, '%')
+                or r.description like concat('%', :q, '%'))
+            order by r.updatedAt desc, r.id desc
+            """)
+    List<Resource> search(@Param("q") String q, Pageable pageable);
 }
