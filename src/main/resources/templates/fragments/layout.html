@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(pageTitle, content)">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(pageTitle, content, pageDescription)">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${pageTitle} + ' | 曹铭轩 Personal Hub'">曹铭轩 Personal Hub</title>
-    <meta name="description" content="曹铭轩的个人数字基地，聚焦 Java 后端与 AI 应用实践。">
+    <meta name="description" th:content="${pageDescription} ?: '曹铭轩的个人数字基地，聚焦 Java 后端与 AI 应用实践。'">
     <script th:replace="~{fragments/theme-init :: themeInit}"></script>
     <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
@@ -31,6 +31,10 @@
         <div class="flex flex-col gap-3 text-sm text-[var(--ph-text-muted)] md:flex-row md:items-center md:justify-between">
             <p>© 2026 曹铭轩 · Personal Hub</p>
             <p class="text-[var(--ph-text-dim)]">邮箱：<a href="mailto:479819599@qq.com" class="link-slide text-[var(--ph-accent)]">479819599@qq.com</a> <span class="mx-2 text-[var(--ph-accent)]">·</span> 欢迎交流合作</p>
+        </div>
+        <div class="mt-4 flex flex-col gap-2 text-xs text-[var(--ph-text-dim)] md:flex-row md:items-center md:justify-center">
+            <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" class="hover:text-[var(--ph-accent)]">湘ICP备2026036754号-1</a>
+            <!-- 公安备案号占位：备案通过后加 津公网安备XXXX号 并链接 www.beian.gov.cn -->
         </div>
     </footer>
 </div>
