@@ -3,18 +3,28 @@
     const input = document.querySelector('[data-search-input]');
     const toggle = document.querySelector('[data-search-toggle]');
     const close = document.querySelector('[data-search-close]');
+    let closeTimer = null;
 
     function openSearch() {
         if (!overlay) return;
+        clearTimeout(closeTimer);
         overlay.hidden = false;
         document.body.classList.add('search-open');
-        input?.focus();
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            overlay.classList.add('is-open');
+            input?.focus();
+        }));
     }
 
     function closeSearch() {
-        if (!overlay) return;
-        overlay.hidden = true;
+        if (!overlay || overlay.hidden) return;
+        overlay.classList.remove('is-open');
         document.body.classList.remove('search-open');
+        closeTimer = window.setTimeout(() => {
+            if (!overlay.classList.contains('is-open')) {
+                overlay.hidden = true;
+            }
+        }, 300);
     }
 
     toggle?.addEventListener('click', openSearch);
