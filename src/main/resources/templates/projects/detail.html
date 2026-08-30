@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{fragments/layout :: layout('作品详情', ~{::content})}">
+      th:replace="~{fragments/layout :: layout('作品详情', ~{::content}, '曹铭轩的项目作品详情。')}">
 <article th:fragment="content" class="mx-auto min-h-[55vh] max-w-4xl space-y-10">
     <a th:href="@{/projects}" class="link-slide text-sm text-[var(--ph-text-dim)]">← 返回作品集</a>
     <header class="border-b border-[var(--ph-border)] pb-8">
