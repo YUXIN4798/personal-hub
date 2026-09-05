@@ -476,3 +476,81 @@ body.search-open { overflow: hidden; }
 @media (max-width: 40rem) {
     .search-overlay { padding: 4.5rem 1rem 1.5rem; }
 }
+/* ============ 即时搜索面板（覆盖层内，婉萤 2026-09-05） ============ */
+.search-live {
+    margin-top: 0.875rem;
+    padding-top: 0.875rem;
+    border-top: 1px solid var(--ph-border);
+    max-height: 46vh;
+    overflow-y: auto;
+    animation: searchLiveIn 260ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+@keyframes searchLiveIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.search-live-group-title {
+    margin: 0.75rem 0 0.375rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ph-text-dim);
+}
+.search-live-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+.search-live-item {
+    border-radius: 0.375rem;
+    transition: background-color 180ms ease;
+}
+.search-live-item:hover,
+.search-live-item:focus-within {
+    background: var(--ph-bg-soft);
+}
+.search-live-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    padding: 0.5rem 0.625rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+}
+.search-live-type {
+    align-self: flex-start;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    padding: 0.08rem 0.4rem;
+    border: 1px solid var(--ph-border);
+    border-radius: 999px;
+    color: var(--ph-text-dim);
+}
+.search-live-title {
+    color: var(--ph-text);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+.search-live-item:hover .search-live-title,
+.search-live-item:focus-within .search-live-title {
+    color: var(--ph-accent);
+}
+.search-live-summary {
+    font-size: 0.8rem;
+    color: var(--ph-text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.search-live-empty {
+    padding: 1.25rem 0.5rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--ph-text-muted);
+}
+@media (prefers-reduced-motion: reduce) {
+    .search-live { animation: none; }
+}
