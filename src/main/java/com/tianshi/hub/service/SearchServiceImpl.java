@@ -29,11 +29,19 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public SearchResults search(String query) {
+        String escapedQuery = escapeLike(query);
         PageRequest limit = PageRequest.of(0, MAX_RESULTS_PER_GROUP);
         return new SearchResults(
-                projectRepository.search(query, limit),
-                postRepository.search(query, limit),
-                resourceRepository.search(query, limit)
+                projectRepository.search(escapedQuery, limit),
+                postRepository.search(escapedQuery, limit),
+                resourceRepository.search(escapedQuery, limit)
         );
+    }
+
+    private String escapeLike(String query) {
+        return query
+                .replace("\\", "\\\\")
+                .replace("%", "\\%")
+                .replace("_", "\\_");
     }
 }

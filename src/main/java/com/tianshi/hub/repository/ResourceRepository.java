@@ -35,9 +35,9 @@ public interface ResourceRepository extends JpaRepository<Resource, Long> {
     @Query("""
             select r from Resource r
             where r.visibility = 'public'
-              and (r.title like concat('%', :q, '%')
-                or r.summary like concat('%', :q, '%')
-                or r.description like concat('%', :q, '%'))
+              and (r.title like concat('%', :q, '%') escape '\\'
+                or r.summary like concat('%', :q, '%') escape '\\'
+                or r.description like concat('%', :q, '%') escape '\\')
             order by r.updatedAt desc, r.id desc
             """)
     List<Resource> search(@Param("q") String q, Pageable pageable);

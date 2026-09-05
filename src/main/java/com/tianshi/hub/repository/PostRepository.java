@@ -23,8 +23,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("""
             select p from Post p
             where p.status = 'published'
-              and (p.title like concat('%', :q, '%')
-                or p.summary like concat('%', :q, '%'))
+              and (p.title like concat('%', :q, '%') escape '\\'
+                or p.summary like concat('%', :q, '%') escape '\\'
+                or p.content like concat('%', :q, '%') escape '\\')
             order by p.updatedAt desc, p.id desc
             """)
     List<Post> search(@Param("q") String q, Pageable pageable);

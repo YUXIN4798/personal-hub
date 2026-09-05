@@ -61,7 +61,7 @@ class SearchRepositoryTest {
         post.setTitle("100% search");
         post.setSlug("special-post");
         post.setSummary("safe _ query");
-        post.setContent("ignored");
+        post.setContent("content with % and _");
         post.setStatus("published");
         touch(post);
         postRepository.save(post);
@@ -71,6 +71,21 @@ class SearchRepositoryTest {
         assertThat(postRepository.search("_", PageRequest.of(0, 20))).extracting(Post::getSlug)
                 .contains("special-post");
         assertThat(postRepository.search("'", PageRequest.of(0, 20))).isEmpty();
+    }
+
+    @Test
+    void postSearch_content命中关键词_可以搜到笔记() {
+        Post post = new Post();
+        post.setTitle("Java Notes");
+        post.setSlug("content-post");
+        post.setSummary("alpha");
+        post.setContent("This body contains searchable keyword.");
+        post.setStatus("published");
+        touch(post);
+        postRepository.save(post);
+
+        assertThat(postRepository.search("searchable keyword", PageRequest.of(0, 20))).extracting(Post::getSlug)
+                .containsExactly("content-post");
     }
 
     @Test
